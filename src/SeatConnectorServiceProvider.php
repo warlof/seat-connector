@@ -20,6 +20,7 @@
 
 namespace Warlof\Seat\Connector;
 
+use Illuminate\Routing\Router;
 use Seat\Services\AbstractSeatPlugin;
 
 /**
@@ -27,8 +28,28 @@ use Seat\Services\AbstractSeatPlugin;
  *
  * @package Warlof\Seat\Connector
  */
-class SeatConnectorProvider extends AbstractSeatPlugin
+class SeatConnectorServiceProvider extends AbstractSeatPlugin
 {
+    /**
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
+    public function boot(Router $router)
+    {
+        $this->addCommands();
+        $this->addMigrations();
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.config.php', 'seat-connector.config');
+    }
 
     /**
      * Return the plugin public name as it should be displayed into settings.
@@ -86,27 +107,6 @@ class SeatConnectorProvider extends AbstractSeatPlugin
     public function getVersion(): string
     {
         return config('seat-connector.config.version');
-    }
-
-    /**
-     * Bootstrap the application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->addCommands();
-        $this->addMigrations();
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.config.php', 'seat-connector.config');
     }
 
     /**
