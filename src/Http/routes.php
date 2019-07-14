@@ -33,6 +33,11 @@ Route::group([
             'uses' => 'LogsController@index',
         ]);
 
+        Route::get('/users', [
+            'as' => 'seat-connector.users',
+            'uses' => 'UsersController@index',
+        ]);
+
     });
 
 });

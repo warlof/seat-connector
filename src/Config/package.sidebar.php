@@ -20,19 +20,26 @@
 
 return [
     'seat-connector' => [
-        'name' => 'Connector',
-        'icon' => 'fa-plug',
+        'name'          => 'Connector',
+        'icon'          => 'fa-plug',
         'route_segment' => 'seat-connector',
-        'entries' => [
+        'entries'       => [
             [
-                'name' => 'Logs',
-                'label' => 'web::seat.log',
-                'plural' => true,
-                'icon' => 'fa-list',
-                'route' => 'seat-connector.logs',
+                'name'       => 'Logs',
+                'label'      => 'web::seat.log',
+                'plural'     => true,
+                'icon'       => 'fa-list',
+                'route'      => 'seat-connector.logs',
+                'permission' => 'seat-connector.security',
+            ],
+            [
+                'name'       => 'User Mapping',
+                'label'      => 'seat-connector::seat.user-mapping',
+                'icon'       => 'fa-exchange',
+                'route'      => 'seat-connector.users',
                 'permission' => 'seat-connector.security',
             ],
         ],
-        'permission' => 'seat-connector.view',
+        'permission'    => 'seat-connector.view',
     ],
 ];
