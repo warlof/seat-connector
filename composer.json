@@ -1,0 +1,28 @@
+{
+  "name": "warlof/seat-connector",
+  "description": "Provide basic layer for SeAT connectors.",
+  "type": "seat-plugin",
+  "minimum-stability": "stable",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Warlof Tutsimo",
+      "email": "loic.leuilliot@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Warlof\\Seat\\Connector\\": "src/"
+    }
+  },
+  "require": {
+    "eveseat/services": "^3.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Warlof\\Seat\\Connector\\SeatConnectorServiceProvider"
+      ]
+    }
+  }
+}
