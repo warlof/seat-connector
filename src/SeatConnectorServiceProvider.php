@@ -39,6 +39,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     {
         $this->addCommands();
         $this->addMigrations();
+        $this->addRoutes();
+        $this->addViews();
     }
 
     /**
@@ -49,6 +51,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.config.php', 'seat-connector.config');
+        $this->mergeConfigFrom(__DIR__ . '/Config/package.sidebar.php', 'package.sidebar');
+        $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.permissions.php', 'web.permissions');
     }
 
     /**
@@ -125,5 +129,23 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
         $this->commands([
 
         ]);
+    }
+
+    /**
+     * Register views
+     */
+    private function addViews()
+    {
+        $this->loadViewsFrom(__DIR__ . '/resources/views', 'seat-connector');
+    }
+
+    /**
+     * Import routes
+     */
+    private function addRoutes()
+    {
+        if (! $this->app->routesAreCached()) {
+            include __DIR__ . '/Http/routes.php';
+        }
     }
 }
