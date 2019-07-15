@@ -18,40 +18,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Warlof\Seat\Connector\Models;
+namespace Warlof\Seat\Connector\Http\DataTables\Scopes;
 
-use Illuminate\Database\Eloquent\Model;
-use Seat\Web\Models\Group;
+use Yajra\DataTables\Contracts\DataTableScope;
 
 /**
- * Class User.
+ * Class UserDataTableScope.
  *
- * @package Warlof\Seat\Connector\Models
+ * @package Warlof\Seat\Connector\Http\DataTables\Scopes
  */
-class User extends Model
+class UserDataTableScope implements DataTableScope
 {
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
     /**
      * @var string
      */
-    protected $table = 'seat_connector_users';
+    protected $connector_driver;
 
     /**
-     * @var array
+     * UserDataTableScope constructor.
+     *
+     * @param string $connector_driver
      */
-    protected $fillable = [
-        'connector_type', 'connector_id', 'connector_name', 'seat_group_id',
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function group()
+    public function __construct(?string $connector_driver)
     {
-        return $this->belongsTo(Group::class, 'group_id', 'id');
+        $this->connector_driver = $connector_driver;
+    }
+
+    /**
+     * Apply a query scope.
+     *
+     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+     * @return mixed
+     */
+    public function apply($query)
+    {
+        // apply a dummy filter which will always return no result
+        if (is_null($this->connector_driver))
+            return $query->whereRaw('? = ?', [0, 1]);
+
+        return $query->where('connector_type', $this->connector_driver);
     }
 }

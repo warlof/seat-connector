@@ -10,16 +10,22 @@
       <p>In order to use this page, you need to install a seat-connector driver.</p>
     </div>
   @else
-  <div class="nav-tabs-custom">
+  <div class="nav-tabs-custom" id="seat-connector-users-tabs">
     <ul class="nav nav-tabs">
       @foreach(config('seat-connector.drivers', []) as $metadata)
         @if($loop->first)
           <li class="active">
-            <a href="#tab_{{ $loop->index }}" role="tab" data-toggle="tab" onclick="driverDataTable('tab_{{ $loop->index }}', '{{ route($metadata['user_mapping_data']) }}');">{{ $metadata['name'] }}</a>
+            <a href="#tab_{{ $loop->index }}" role="tab" data-toggle="tab"
+               onclick="driverDataTable('tab_{{ $loop->index }}', '{{ $metadata['name'] }}');">
+              {{ ucfirst($metadata['name']) }}
+            </a>
           </li>
         @else
           <li>
-            <a href="#tab_{{ $loop->index }}" role="tab" data-toggle="tab" onclick="driverDataTable('tab_{{ $loop->index }}', '{{ route($metadata['user_mapping_data']) }}');">{{ $metadata['name'] }}</a>
+            <a href="#tab_{{ $loop->index }}" role="tab" data-toggle="tab"
+               onclick="driverDataTable('tab_{{ $loop->index }}', '{{ $metadata['name'] }}');">
+              {{ ucfirst($metadata['name']) }}
+            </a>
           </li>
         @endif
       @endforeach
@@ -38,15 +44,21 @@
 @stop
 
 @push('javascript')
+  {!! $dataTable->scripts() !!}
+
   <script>
-    function driverDataTable(tab_id, route) {
+    // call the driver route and update displayed table
+    function driverDataTable(tab_id, driver) {
         if (! $.fn.dataTable.isDataTable('#' + tab_id + '_table')) {
             $('#' + tab_id + '_table').DataTable({
                 dom: 'Bfrtip',
                 processing: true,
                 serverSide: true,
                 order: [[0, 'desc']],
-                ajax: route,
+                ajax: '{{ route('seat-connector.users') }}',
+                params: {
+                    'driver': driver
+                },
                 columns: [
                     {data: 'group_id', type: 'num'},
                     {data: 'user_id', type: 'num'},

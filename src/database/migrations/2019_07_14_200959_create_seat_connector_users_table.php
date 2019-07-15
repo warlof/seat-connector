@@ -39,7 +39,7 @@ class CreateSeatConnectorUsersTable extends Migration
 
             $table->string('connector_type');
             $table->string('connector_id');
-            $table->string('name');
+            $table->string('connector_name');
 
             $table->unsignedInteger('group_id');
 
