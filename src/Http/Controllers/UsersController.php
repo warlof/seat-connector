@@ -39,7 +39,7 @@ class UsersController
         $available_drivers = config('seat-connector.drivers', []);
 
         // init the driver using either the query parameter or the first available driver
-        $driver = request()->query('driver') ?: array_get(array_first($available_drivers), 'name');
+        $driver = request()->query('driver') ?: array_get(array_last($available_drivers), 'name');
 
         return $datatable
             ->addScope(new UserDataTableScope($driver))

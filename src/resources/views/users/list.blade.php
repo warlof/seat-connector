@@ -13,17 +13,17 @@
   <div class="nav-tabs-custom" id="seat-connector-users-tabs">
     <ul class="nav nav-tabs">
       @foreach(config('seat-connector.drivers', []) as $metadata)
-        @if($loop->first)
+        @if($loop->last)
           <li class="active">
-            <a href="#tab_{{ $loop->index }}" role="tab" data-toggle="tab"
-               onclick="driverDataTable('tab_{{ $loop->index }}', '{{ $metadata['name'] }}');">
+            <a href="#tab_{{ $metadata['name'] }}" role="tab" data-toggle="tab"
+               onclick="driverDataTable('tab_{{ $metadata['name'] }}', '{{ $metadata['name'] }}');">
               {{ ucfirst($metadata['name']) }}
             </a>
           </li>
         @else
           <li>
-            <a href="#tab_{{ $loop->index }}" role="tab" data-toggle="tab"
-               onclick="driverDataTable('tab_{{ $loop->index }}', '{{ $metadata['name'] }}');">
+            <a href="#tab_{{ $metadata['name'] }}" role="tab" data-toggle="tab"
+               onclick="driverDataTable('tab_{{ $metadata['name'] }}', '{{ $metadata['name'] }}');">
               {{ ucfirst($metadata['name']) }}
             </a>
           </li>
@@ -32,10 +32,10 @@
     </ul>
     <div class="tab-content">
       @foreach(config('seat-connector.drivers',[]) as $metadata)
-        @if($loop->first)
-          @include('seat-connector::users.partials.tabs', ['tab_id' => 'tab_' . $loop->index, 'tab_class' => 'tab-pane active'])
+        @if($loop->last)
+          @include('seat-connector::users.partials.tabs', ['id' => 'tab_' . $metadata['name'], 'class' => 'tab-pane active', 'metadata' => $metadata])
         @else
-          @include('seat-connector::users.partials.tabs', ['tab_id' => 'tab_' . $loop->index, 'tab_class' => 'tab-pane'])
+          @include('seat-connector::users.partials.tabs', ['id' => 'tab_' . $metadata['name'], 'class' => 'tab-pane', 'metadata' => $metadata])
         @endif
       @endforeach
     </div>
@@ -55,16 +55,18 @@
                 processing: true,
                 serverSide: true,
                 order: [[0, 'desc']],
-                ajax: '{{ route('seat-connector.users') }}',
-                params: {
-                    'driver': driver
+                ajax: {
+                    url: '{{ route('seat-connector.users') }}',
+                    data: {
+                        driver: driver
+                    }
                 },
                 columns: [
-                    {data: 'group_id', type: 'num'},
-                    {data: 'user_id', type: 'num'},
-                    {data: 'user_name', type: 'string'},
-                    {data: 'discord_id', type: 'num'},
-                    {data: 'nick', type: 'string'}
+                    {data: 'group_id', name: 'group_id', type: 'num'},
+                    {data: 'character_id', name: 'character_id', type: 'num'},
+                    {data: 'name', name: 'name', type: 'string'},
+                    {data: 'connector_id', name: 'connector_id', type: 'string'},
+                    {data: 'connector_name', name: 'connector_name', type: 'string'}
                 ]
             });
         }
