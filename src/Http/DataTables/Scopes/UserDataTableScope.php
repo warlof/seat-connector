@@ -30,9 +30,9 @@ use Yajra\DataTables\Contracts\DataTableScope;
 class UserDataTableScope implements DataTableScope
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $connector_driver;
+    private $connector_driver;
 
     /**
      * UserDataTableScope constructor.

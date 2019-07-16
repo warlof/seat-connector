@@ -20,6 +20,9 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Warlof\Seat\Connector\Http\DataTables\LogsDataTable;
+use Warlof\Seat\Connector\Http\DataTables\Scopes\LogsDataTableScope;
+
 /**
  * Class LogsController.
  *
@@ -30,8 +33,16 @@ class LogsController
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(LogsDataTable $datatable)
     {
-        return view('seat-connector::logs.list');
+        // retrieve all registered SeAT Connector drivers
+        $available_drivers = config('seat-connector.drivers', []);
+
+        // init the driver using either the query parameter or the first available driver
+        $driver = request()->query('driver') ?: array_get(array_last($available_drivers), 'name');
+
+        return $datatable
+            ->addScope(new LogsDataTableScope($driver))
+            ->render('seat-connector::logs.list');
     }
 }

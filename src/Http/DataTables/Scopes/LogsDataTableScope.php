@@ -18,39 +18,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace Warlof\Seat\Connector\Http\DataTables\Scopes;
+
+use Yajra\DataTables\Contracts\DataTableScope;
 
 /**
- * Class CreateSeatConnectorLogsTable.
+ * Class LogsDataTableScope.
+ *
+ * @package Warlof\Seat\Connector\Http\DataTables\Scopes
  */
-class CreateSeatConnectorLogsTable extends Migration
+class LogsDataTableScope implements DataTableScope
 {
     /**
-     * Run the migrations.
-     *
-     * @return void
+     * @var string|null
      */
-    public function up()
-    {
-        Schema::create('seat_connector_logs', function (Blueprint $table) {
-            $table->string('connector_type');
-            $table->enum('level', ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency']);
-            $table->string('category');
-            $table->mediumText('message');
+    private $connector_driver;
 
-            $table->timestamps();
-        });
+    /**
+     * LogsDataTableScope constructor.
+     *
+     * @param mixed $driver
+     */
+    public function __construct(? string $connector_driver)
+    {
+        $this->connector_driver = $connector_driver;
     }
 
     /**
-     * Reverse the migrations.
+     * Apply a query scope.
      *
-     * @return void
+     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+     * @return mixed
      */
-    public function down()
+    public function apply($query)
     {
-        Schema::dropIfExists('seat_connector_logs');
+        // apply a dummy filter which will always return no result
+        if (is_null($this->connector_driver))
+            return $query->whereRaw('? = ?', [0, 1]);
+
+        return $query->where('connector_type', $this->connector_driver);
     }
 }
