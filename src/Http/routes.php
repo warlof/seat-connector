@@ -38,6 +38,27 @@ Route::group([
             'uses' => 'UsersController@index',
         ]);
 
+        Route::get('/access', [
+            'as' => 'seat-connector.acl',
+            'uses' => 'AccessController@index',
+        ]);
+
+        Route::group([
+            'prefix' => 'api',
+        ], function () {
+
+            Route::get('/roles', [
+                'as' => 'seat-connector.api.roles',
+                'uses' => 'LookupController@getRoles',
+            ]);
+
+            Route::get('/titles', [
+                'as' => 'seat-connector.api.titles',
+                'uses' => 'LookupController@getTitles',
+            ]);
+
+        });
+
     });
 
 });

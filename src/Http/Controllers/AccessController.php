@@ -21,29 +21,19 @@
 namespace Warlof\Seat\Connector\Http\Controllers;
 
 use Seat\Web\Http\Controllers\Controller;
-use Warlof\Seat\Connector\Http\DataTables\Scopes\UserDataTableScope;
-use Warlof\Seat\Connector\Http\DataTables\UserMappingDataTable;
 
 /**
- * Class UsersController.
+ * Class AccessManagementController.
  *
  * @package Warlof\Seat\Connector\Http\Controllers
  */
-class UsersController extends Controller
+class AccessController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(UserMappingDataTable $datatable)
+    public function index()
     {
-        // retrieve all registered SeAT Connector drivers
-        $available_drivers = config('seat-connector.drivers', []);
-
-        // init the driver using either the query parameter or the first available driver
-        $driver = request()->query('driver') ?: array_get(array_last($available_drivers), 'name');
-
-        return $datatable
-            ->addScope(new UserDataTableScope($driver))
-            ->render('seat-connector::users.list');
+        return view('seat-connector::access.list');
     }
 }

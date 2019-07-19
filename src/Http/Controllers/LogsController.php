@@ -20,6 +20,7 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Http\DataTables\LogsDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\LogsDataTableScope;
 
@@ -28,7 +29,7 @@ use Warlof\Seat\Connector\Http\DataTables\Scopes\LogsDataTableScope;
  *
  * @package Warlof\Seat\Connector\Http\Controllers
  */
-class LogsController
+class LogsController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

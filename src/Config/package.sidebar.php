@@ -39,6 +39,13 @@ return [
                 'route'      => 'seat-connector.users',
                 'permission' => 'seat-connector.security',
             ],
+            [
+                'name'       => 'Access Management',
+                'label'      => 'seat-connector::seat.access-management',
+                'icon'       => 'fa-shield',
+                'route'      => 'seat-connector.acl',
+                'permission' => 'seat-connector.security',
+            ],
         ],
         'permission'    => 'seat-connector.view',
     ],
