@@ -23,6 +23,7 @@ namespace Warlof\Seat\Connector\Models;
 use Illuminate\Database\Eloquent\Model;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
 
 /**
@@ -54,7 +55,7 @@ class PermissionGroup extends Model
      */
     public function groups()
     {
-        return $this->morphedByMany(Group::class, 'entity', 'seat_connector_permission_group_entity', 'id', 'entity_id');
+        return $this->morphedByMany(Group::class, 'entity', 'seat_connector_permission_group_entity');
     }
 
     /**
@@ -62,7 +63,7 @@ class PermissionGroup extends Model
      */
     public function corporations()
     {
-        return $this->morphedByMany(CorporationInfo::class, 'entity', 'seat_connector_permission_group_entity', 'corporation_id', 'entity_id');
+        return $this->morphedByMany(CorporationInfo::class, 'entity', 'seat_connector_permission_group_entity');
     }
 
     /**
@@ -70,6 +71,14 @@ class PermissionGroup extends Model
      */
     public function alliances()
     {
-        return $this->morphedByMany(Alliance::class, 'entity', 'seat_connector_permission_group_entity', 'alliance_id', 'entity_id');
+        return $this->morphedByMany(Alliance::class, 'entity', 'seat_connector_permission_group_entity');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function roles()
+    {
+        return $this->morphedByMany(Role::class, 'entity', 'seat_connector_permission_group_entity');
     }
 }
