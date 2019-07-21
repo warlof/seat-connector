@@ -74,7 +74,7 @@ class AccessDataTable extends DataTable
                 'title' => '',
             ])
             ->ajax([
-                'data' => 'function(d) { d.filter_type = $("#connector-table-filters li.active").data("filter"); }',
+                'data' => 'function(d) { d.driver = $("#connector-driver").val(); d.filter_type = $("#connector-table-filters li.active").data("filter"); }',
             ]);
     }
 

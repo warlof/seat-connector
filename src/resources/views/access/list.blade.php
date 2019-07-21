@@ -81,7 +81,13 @@
           minimumInputLength: 3
       });
 
-      $('#connector-permission-group, #connector-driver').select2();
+      $('#connector-driver')
+          .change(function () {
+              window.LaravelDataTables["dataTableBuilder"].ajax.reload();
+          })
+          .select2();
+
+      $('#connector-permission-group').select2();
 
       $('#connector-table-filters li a').click(function() {
           $('#connector-table-filters li.active').removeClass('active');
