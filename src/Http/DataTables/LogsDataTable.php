@@ -41,6 +41,9 @@ class LogsDataTable extends DataTable
             ->make(true);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function query()
     {
         $logs = Log::query()
