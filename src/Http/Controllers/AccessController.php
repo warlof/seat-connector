@@ -29,6 +29,7 @@ use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
 use Warlof\Seat\Connector\Http\DataTables\AccessDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\AccessDataTableScope;
+use Warlof\Seat\Connector\Http\Validations\AccessRuleValidation;
 use Warlof\Seat\Connector\Models\PermissionGroup;
 
 /**
@@ -72,40 +73,70 @@ class AccessController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \Warlof\Seat\Connector\Http\Validations\AccessRuleValidation $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function remove(Request $request)
+    public function create(AccessRuleValidation $request)
     {
-        $filter_type = [
-            Group::class,
-            Role::class,
-            CorporationInfo::class,
-            Alliance::class,
-        ];
-
-        $this->validate($request, [
-            'entity_id'           => 'required|integer',
-            'entity_type'         => 'required|in:' . implode(',', $filter_type),
-            'permission_group_id' => 'required|exists:seat_connector_permission_groups,id',
-        ]);
-
         $group = PermissionGroup::find($request->input('permission_group_id'));
 
         switch ($request->input('entity_type')) {
+            case 'group':
+            case Group::class:
+                $entity = Group::find($request->input('entity_id'));
+                $group->groups()->save($entity);
+                break;
+            case 'role':
+            case Role::class:
+                $entity = Role::find($request->input('entity_id'));
+                $group->roles()->save($entity);
+                break;
+            case 'corporation':
+            case CorporationInfo::class:
+                $entity = CorporationInfo::find($request->input('entity_id'));
+                $group->corporations()->save($entity);
+                break;
+            case 'alliance':
+            case Alliance::class:
+                $entity = Alliance::find($request->input('entity_id'));
+                $group->alliances()->save($entity);
+                break;
+            default:
+                throw new Exception('Unsupported entity type');
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'The rule has been successfully added.');
+    }
+
+    /**
+     * @param \Warlof\Seat\Connector\Http\Validations\AccessRuleValidation $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function remove(AccessRuleValidation $request)
+    {
+        $group = PermissionGroup::find($request->input('permission_group_id'));
+
+        switch ($request->input('entity_type')) {
+            case 'group':
             case Group::class:
                 $entity = Group::find($request->input('entity_id'));
                 $group->groups($entity)->detach();
                 break;
+            case 'role':
             case Role::class:
                 $entity = Role::find($request->input('entity_id'));
                 $group->roles($entity)->detach();
                 break;
+            case 'corporation':
             case CorporationInfo::class:
                 $entity = CorporationInfo::find($request->input('entity_id'));
                 $group->corporations($entity)->detach();
                 break;
+            case 'alliance':
             case Alliance::class:
                 $entity = Alliance::find($request->input('entity_id'));
                 $group->alliances($entity)->detach();

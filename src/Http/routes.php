@@ -29,18 +29,23 @@ Route::group([
     ], function () {
 
         Route::get('/logs', [
-            'as' => 'seat-connector.logs',
+            'as'   => 'seat-connector.logs',
             'uses' => 'LogsController@index',
         ]);
 
         Route::get('/users', [
-            'as' => 'seat-connector.users',
+            'as'   => 'seat-connector.users',
             'uses' => 'UsersController@index',
         ]);
 
         Route::get('/access', [
-            'as' => 'seat-connector.acl',
+            'as'   => 'seat-connector.acl',
             'uses' => 'AccessController@index',
+        ]);
+
+        Route::post('/access', [
+            'as'   => 'seat-connector.acl.create',
+            'uses' => 'AccessController@create',
         ]);
 
         Route::delete('/access', [
