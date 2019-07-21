@@ -20,7 +20,13 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Seat\Eveapi\Models\Alliances\Alliance;
+use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Web\Http\Controllers\Controller;
+use Seat\Web\Models\Acl\Role;
+use Seat\Web\Models\Group;
+use Warlof\Seat\Connector\Http\DataTables\AccessDataTable;
+use Warlof\Seat\Connector\Http\DataTables\Scopes\AccessDataTableScope;
 
 /**
  * Class AccessManagementController.
@@ -30,10 +36,40 @@ use Seat\Web\Http\Controllers\Controller;
 class AccessController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param \Warlof\Seat\Connector\Http\DataTables\AccessDataTable $datatable
+     * @return mixed
      */
-    public function index()
+    public function index(AccessDataTable $datatable)
     {
-        return view('seat-connector::access.list');
+        // retrieve all registered SeAT Connector drivers
+        $available_drivers = config('seat-connector.drivers', []);
+
+        // init the driver using either the query parameter or the first available driver
+        $driver = request()->query('driver', array_get(array_last($available_drivers), 'name'));
+
+        // init the filter type using either the query parameter or public
+        switch (request()->query('filter_type', 'user')) {
+            case 'user':
+                $filter_type = Group::class;
+                break;
+            case 'role':
+                $filter_type = Role::class;
+                break;
+            case 'corporation':
+                $filter_type = CorporationInfo::class;
+                break;
+            case 'alliance':
+                $filter_type = Alliance::class;
+                break;
+        }
+
+        return $datatable
+            ->addScope(new AccessDataTableScope($filter_type, $driver))
+            ->render('seat-connector::access.list');
+    }
+
+    public function remove()
+    {
+        throw new \Symfony\Component\Intl\Exception\MethodNotImplementedException('remove');
     }
 }

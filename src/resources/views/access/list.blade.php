@@ -10,6 +10,7 @@
 @stop
 
 @section('right')
+    @include('seat-connector::access.includes.table')
 @stop
 
 @push('javascript')
@@ -82,8 +83,12 @@
 
       $('#connector-permission-group').select2();
 
-      $(document).ready(function() {
-          getCorporationTitle();
+      $('#connector-table-filters li a').click(function() {
+          $('#connector-table-filters li.active').removeClass('active');
+          $(this).parent().addClass('active');
+
+          window.LaravelDataTables["dataTableBuilder"].ajax.reload();
       });
   </script>
+  {!! $dataTable->scripts() !!}
 @endpush

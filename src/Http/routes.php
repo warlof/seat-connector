@@ -43,6 +43,11 @@ Route::group([
             'uses' => 'AccessController@index',
         ]);
 
+        Route::delete('/access', [
+            'as' => 'seat-connector.acl.remove',
+            'uses' => 'AccessController@remove',
+        ]);
+
         Route::group([
             'prefix' => 'api',
         ], function () {
