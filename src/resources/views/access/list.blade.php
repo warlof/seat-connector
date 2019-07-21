@@ -87,7 +87,20 @@
           })
           .select2();
 
-      $('#connector-permission-group').select2();
+      $('#connector-permission-group').select2({
+          ajax: {
+              url: '{{ route('seat-connector.api.connector_groups') }}',
+              data: function (params) {
+                  return {
+                      search: params.tem,
+                      driver: $('#connector-driver').val()
+                  };
+              },
+              dataType: 'json',
+              cache: true
+          },
+          minimumInputLength: 3
+      });
 
       $('#connector-table-filters li a').click(function() {
           $('#connector-table-filters li.active').removeClass('active');

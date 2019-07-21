@@ -23,6 +23,7 @@ namespace Warlof\Seat\Connector\Http\Controllers;
 use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
+use Warlof\Seat\Connector\Models\PermissionGroup;
 
 /**
  * Class LookupController.
@@ -69,6 +70,27 @@ class LookupController
 
         return response()->json([
             'results' => $roles,
+        ]);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getConnectorGroups(Request $request)
+    {
+        $groups = PermissionGroup::where('name', 'like', '%' . $request->query('q', '') . '%')
+                                 ->where('connector_type', $request->query('driver', ''))
+                                 ->get()
+                                 ->map(function ($group, $key) {
+                                     return [
+                                         'id' => $group->id,
+                                         'text' => $group->name,
+                                     ];
+                                 });
+
+        return response()->json([
+            'results' => $groups,
         ]);
     }
 }

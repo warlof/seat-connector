@@ -53,13 +53,18 @@ Route::group([
         ], function () {
 
             Route::get('/roles', [
-                'as' => 'seat-connector.api.roles',
+                'as'   => 'seat-connector.api.roles',
                 'uses' => 'LookupController@getRoles',
             ]);
 
             Route::get('/titles', [
-                'as' => 'seat-connector.api.titles',
+                'as'   => 'seat-connector.api.titles',
                 'uses' => 'LookupController@getTitles',
+            ]);
+
+            Route::get('/connector-groups', [
+                'as'   => 'seat-connector.api.connector_groups',
+                'uses' => 'LookupController@getConnectorGroups',
             ]);
 
         });
