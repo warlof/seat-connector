@@ -22,6 +22,7 @@ namespace Warlof\Seat\Connector\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
+use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Acl\Role;
 use Warlof\Seat\Connector\Models\PermissionGroup;
 
@@ -30,7 +31,7 @@ use Warlof\Seat\Connector\Models\PermissionGroup;
  *
  * @package Warlof\Seat\Connector\Http\Controllers
  */
-class LookupController
+class LookupController extends Controller
 {
     /**
      * @param \Illuminate\Http\Request $request

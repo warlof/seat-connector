@@ -33,6 +33,14 @@ return [
                 'permission' => 'seat-connector.security',
             ],
             [
+                'name'       => 'Identities',
+                'label'      => 'seat-connector::seat.identities',
+                'plural'     => true,
+                'icon'       => 'fa-address-card',
+                'route'      => 'seat-connector.identities',
+                'permission' => 'seat-connector.view',
+            ],
+            [
                 'name'       => 'User Mapping',
                 'label'      => 'seat-connector::seat.user_mapping',
                 'icon'       => 'fa-exchange',

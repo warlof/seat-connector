@@ -21,7 +21,6 @@
 namespace Warlof\Seat\Connector\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Web\Http\Controllers\Controller;

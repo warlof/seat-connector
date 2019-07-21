@@ -24,6 +24,11 @@ Route::group([
     'middleware' => ['web', 'auth', 'locale'],
 ], function () {
 
+    Route::get('/identities', [
+        'as'   => 'seat-connector.identities',
+        'uses' => 'IdentitiesController@index',
+    ]);
+
     Route::group([
         'middleware' => 'bouncer:seat-connector.security',
     ], function () {

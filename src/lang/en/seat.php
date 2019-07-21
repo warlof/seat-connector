@@ -31,4 +31,6 @@ return [
     'character_name'     => 'Character Name',
     'connector_id'       => 'Connector ID',
     'connector_name'     => 'Connector Name',
+
+    'identities'         => 'Identity|Identities',
 ];

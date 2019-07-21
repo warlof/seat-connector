@@ -40,8 +40,11 @@ class CreateSeatConnectorUsersTable extends Migration
             $table->string('connector_type');
             $table->string('connector_id');
             $table->string('connector_name');
+            $table->string('unique_id');
 
             $table->unsignedInteger('group_id');
+
+            $table->timestamps();
 
             $table->unique(['connector_type', 'connector_id'], 'uk_users_connector');
             $table->unique(['connector_type', 'group_id'], 'uk_users_seat_group');

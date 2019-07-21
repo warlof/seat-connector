@@ -18,35 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Warlof\Seat\Connector\Models;
+namespace Warlof\Seat\Connector\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Model;
-use Seat\Web\Models\Group;
+use Seat\Web\Http\Controllers\Controller;
+use Warlof\Seat\Connector\Models\User;
 
 /**
- * Class User.
+ * Class IdentitiesController.
  *
- * @package Warlof\Seat\Connector\Models
+ * @package Warlof\Seat\Connector\Http\Controllers
  */
-class User extends Model
+class IdentitiesController extends Controller
 {
     /**
-     * @var string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    protected $table = 'seat_connector_users';
-
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'connector_type', 'connector_id', 'connector_name', 'seat_group_id',
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function group()
+    public function index()
     {
-        return $this->belongsTo(Group::class, 'group_id', 'id');
+        $drivers = collect(config('seat-connector.drivers', []));
+        $identities = User::all();
+
+        return view('seat-connector::identities.list', compact('drivers', 'identities'));
     }
 }
