@@ -71,6 +71,7 @@ class AccessDataTable extends DataTable
             ->columns($this->getColumns())
             ->addAction([
                 'class' => 'text-right',
+                'title' => '',
             ])
             ->ajax([
                 'data' => 'function(d) { d.filter_type = $("#connector-table-filters li.active").data("filter"); }',
@@ -86,12 +87,12 @@ class AccessDataTable extends DataTable
             'entity_name' => [
                 'name'  => 'entity_name',
                 'data'  => 'entity_name',
-                'title' => 'Entity Name',
+                'title' => trans('seat-connector::seat.entity_name'),
             ],
             'name' => [
                 'name'  => 'name',
                 'data'  => 'name',
-                'title' => 'Connector Group',
+                'title' => trans('seat-connector::seat.permission_group'),
             ],
         ];
     }

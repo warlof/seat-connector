@@ -41,6 +41,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
         $this->addMigrations();
         $this->addRoutes();
         $this->addViews();
+        $this->addTranslations();
     }
 
     /**
@@ -147,5 +148,13 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
         if (! $this->app->routesAreCached()) {
             include __DIR__ . '/Http/routes.php';
         }
+    }
+
+    /**
+     * Import translations
+     */
+    private function addTranslations()
+    {
+        $this->loadTranslationsFrom(__DIR__ . '/lang', 'seat-connector');
     }
 }

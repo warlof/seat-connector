@@ -1,7 +1,7 @@
 @extends('web::layouts.grids.3-9')
 
-@section('title', trans('web::seat.access-management'))
-@section('page_header', trans('web::seat.access-management'))
+@section('title', trans('seat-connector::seat.access_management'))
+@section('page_header', trans('seat-connector::seat.access_management'))
 
 @section('left')
 
@@ -81,7 +81,7 @@
           minimumInputLength: 3
       });
 
-      $('#connector-permission-group').select2();
+      $('#connector-permission-group, #connector-driver').select2();
 
       $('#connector-table-filters li a').click(function() {
           $('#connector-table-filters li.active').removeClass('active');

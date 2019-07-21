@@ -1,15 +1,14 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{ trans('seat-connector::seat.toolbox') }}</h3>
+<div class="box box-solid">
+  <div class="box-header with-border">
+    <i class="fa fa-plus"></i>
+    <h3 class="box-title">{{ trans('seat-connector::seat.toolbox') }}</h3>
   </div>
-  <div class="panel-body">
+  <div class="box-body">
     <form role="form" action="#" method="post">
       {{ csrf_field() }}
 
-      <div class="box-body">
-
         <div class="form-group">
-          <label for="connector-driver">{{ trans('seat-connector::driver') }}</label>
+          <label for="connector-driver">{{ trans('seat-connector::seat.driver') }}</label>
           <select name="connector-driver" id="connector-driver" class="form-control">
             @foreach(config('seat-connector.drivers') as $driver => $metadata)
               <option value="{{ $driver }}">{{ ucfirst($metadata['name']) }}</option>
@@ -59,12 +58,9 @@
           <select name="connector-permission-group" id="connector-permission-group" class="form-control"></select>
         </div>
 
-      </div>
-
-      <div class="box-footer">
-        <button type="submit" class="btn btn-primary pull-right">{{ trans('web::seat.add') }}</button>
-      </div>
-
     </form>
+  </div>
+  <div class="box-footer">
+    <button type="submit" class="btn btn-success pull-right">{{ trans('web::seat.add') }}</button>
   </div>
 </div>

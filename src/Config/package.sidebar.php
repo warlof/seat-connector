@@ -34,14 +34,14 @@ return [
             ],
             [
                 'name'       => 'User Mapping',
-                'label'      => 'seat-connector::seat.user-mapping',
+                'label'      => 'seat-connector::seat.user_mapping',
                 'icon'       => 'fa-exchange',
                 'route'      => 'seat-connector.users',
                 'permission' => 'seat-connector.security',
             ],
             [
                 'name'       => 'Access Management',
-                'label'      => 'seat-connector::seat.access-management',
+                'label'      => 'seat-connector::seat.access_management',
                 'icon'       => 'fa-shield',
                 'route'      => 'seat-connector.acl',
                 'permission' => 'seat-connector.security',

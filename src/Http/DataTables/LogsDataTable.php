@@ -72,10 +72,26 @@ class LogsDataTable extends DataTable
     public function getColumns()
     {
         return [
-            'created_at',
-            'level',
-            'category',
-            'message',
+            [
+                'name' => 'created_at',
+                'data' => 'created_at',
+                'title' => trans('seat-connector::seat.datetime'),
+            ],
+            [
+                'name' => 'level',
+                'data' => 'level',
+                'title' => trans('seat-connector::seat.level'),
+            ],
+            [
+                'name' => 'category',
+                'data' => 'category',
+                'title' => trans('seat-connector::seat.category'),
+            ],
+            [
+                'name' => 'message',
+                'data' => 'message',
+                'title' => trans('seat-connector::seat.message'),
+            ],
         ];
     }
 }

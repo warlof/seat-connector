@@ -1,7 +1,7 @@
 @extends('web::layouts.grids.12')
 
-@section('title', trans_choice('seat-connector::seat.user-mapping', 0))
-@section('page_header', trans_choice('seat-connector::seat.user-mapping', 0))
+@section('title', trans('seat-connector::seat.user_mapping'))
+@section('page_header', trans('seat-connector::seat.user_mapping'))
 
 @section('full')
   @if(config('seat-connector.drivers', []) == [])
