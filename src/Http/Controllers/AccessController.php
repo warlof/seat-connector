@@ -20,6 +20,8 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Exception;
+use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Web\Http\Controllers\Controller;
@@ -27,6 +29,7 @@ use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
 use Warlof\Seat\Connector\Http\DataTables\AccessDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\AccessDataTableScope;
+use Warlof\Seat\Connector\Models\PermissionGroup;
 
 /**
  * Class AccessManagementController.
@@ -68,8 +71,51 @@ class AccessController extends Controller
             ->render('seat-connector::access.list');
     }
 
-    public function remove()
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function remove(Request $request)
     {
-        throw new \Symfony\Component\Intl\Exception\MethodNotImplementedException('remove');
+        $filter_type = [
+            Group::class,
+            Role::class,
+            CorporationInfo::class,
+            Alliance::class,
+        ];
+
+        $this->validate($request, [
+            'entity_id'           => 'required|integer',
+            'entity_type'         => 'required|in:' . implode(',', $filter_type),
+            'permission_group_id' => 'required|exists:seat_connector_permission_groups,id',
+        ]);
+
+        $group = PermissionGroup::find($request->input('permission_group_id'));
+
+        switch ($request->input('entity_type')) {
+            case Group::class:
+                $entity = Group::find($request->input('entity_id'));
+                $group->groups($entity)->detach();
+                break;
+            case Role::class:
+                $entity = Role::find($request->input('entity_id'));
+                $group->roles($entity)->detach();
+                break;
+            case CorporationInfo::class:
+                $entity = CorporationInfo::find($request->input('entity_id'));
+                $group->corporations($entity)->detach();
+                break;
+            case Alliance::class:
+                $entity = Alliance::find($request->input('entity_id'));
+                $group->alliances($entity)->detach();
+                break;
+            default:
+                throw new Exception('Unsupported entity type');
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'The rule has been successfully removed.');
     }
 }
