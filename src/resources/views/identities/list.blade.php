@@ -9,7 +9,7 @@
 
     @foreach ($row as $driver => $metadata)
 
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="small-box bg-gray">
           <div class="inner">
             <h4 class="text-uppercase">
