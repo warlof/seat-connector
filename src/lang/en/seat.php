@@ -14,7 +14,7 @@ return [
     'alliance_filter'    => 'Alliance Filter',
 
     'driver'             => 'Driver',
-    'permission_group'   => 'Connector Group',
+    'sets'               => 'Set|Sets',
     'access'             => 'Access',
     'entity_name'        => 'Entity Name',
 

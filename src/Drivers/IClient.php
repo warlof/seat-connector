@@ -28,10 +28,9 @@ namespace Warlof\Seat\Connector\Drivers;
 interface IClient
 {
     /**
-     * @param array $arguments
      * @return \Warlof\Seat\Connector\Drivers\IClient
      */
-    public static function getInstance(array $arguments = []): IClient;
+    public static function getInstance(): IClient;
 
     /**
      * @return \Warlof\Seat\Connector\Drivers\IUser[]
@@ -39,9 +38,9 @@ interface IClient
     public function getUsers(): array;
 
     /**
-     * @return \Warlof\Seat\Connector\Drivers\IPermissionGroup[]
+     * @return \Warlof\Seat\Connector\Drivers\ISet[]
      */
-    public function getGroups(): array;
+    public function getSets(): array;
 
     /**
      * @param string $id
@@ -51,7 +50,7 @@ interface IClient
 
     /**
      * @param string $id
-     * @return \Warlof\Seat\Connector\Drivers\IPermissionGroup|null
+     * @return \Warlof\Seat\Connector\Drivers\ISet|null
      */
-    public function getGroup(string $id): ?IPermissionGroup;
+    public function getSet(string $id): ?ISet;
 }

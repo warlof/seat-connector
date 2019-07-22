@@ -31,7 +31,7 @@ use Seat\Web\Models\Group;
  *
  * @package Warlof\Seat\Connector\Models
  */
-class PermissionGroup extends Model
+class Set extends Model
 {
     /**
      * @var bool
@@ -41,7 +41,7 @@ class PermissionGroup extends Model
     /**
      * @var string
      */
-    protected $table = 'seat_connector_permission_groups';
+    protected $table = 'seat_connector_sets';
 
     /**
      * @var array
@@ -55,7 +55,7 @@ class PermissionGroup extends Model
      */
     public function groups()
     {
-        return $this->morphedByMany(Group::class, 'entity', 'seat_connector_permission_group_entity');
+        return $this->morphedByMany(Group::class, 'entity', 'seat_connector_set_entity');
     }
 
     /**
@@ -63,7 +63,7 @@ class PermissionGroup extends Model
      */
     public function corporations()
     {
-        return $this->morphedByMany(CorporationInfo::class, 'entity', 'seat_connector_permission_group_entity');
+        return $this->morphedByMany(CorporationInfo::class, 'entity', 'seat_connector_set_entity');
     }
 
     /**
@@ -71,7 +71,7 @@ class PermissionGroup extends Model
      */
     public function alliances()
     {
-        return $this->morphedByMany(Alliance::class, 'entity', 'seat_connector_permission_group_entity');
+        return $this->morphedByMany(Alliance::class, 'entity', 'seat_connector_set_entity');
     }
 
     /**
@@ -79,6 +79,6 @@ class PermissionGroup extends Model
      */
     public function roles()
     {
-        return $this->morphedByMany(Role::class, 'entity', 'seat_connector_permission_group_entity');
+        return $this->morphedByMany(Role::class, 'entity', 'seat_connector_set_entity');
     }
 }

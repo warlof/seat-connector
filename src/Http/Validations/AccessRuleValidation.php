@@ -58,9 +58,9 @@ class AccessRuleValidation extends FormRequest
         ];
 
         return [
-            'entity_id'           => 'required|integer',
-            'entity_type'         => 'required|in:' . implode(',', $filter_type),
-            'permission_group_id' => 'required|exists:seat_connector_permission_groups,id',
+            'entity_id'   => 'required|integer',
+            'entity_type' => 'required|in:' . implode(',', $filter_type),
+            'set_id'      => 'required|exists:seat_connector_sets,id',
         ];
     }
 }

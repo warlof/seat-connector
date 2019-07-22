@@ -29,7 +29,7 @@ use Seat\Web\Models\Group;
 use Warlof\Seat\Connector\Http\DataTables\AccessDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\AccessDataTableScope;
 use Warlof\Seat\Connector\Http\Validations\AccessRuleValidation;
-use Warlof\Seat\Connector\Models\PermissionGroup;
+use Warlof\Seat\Connector\Models\Set;
 
 /**
  * Class AccessManagementController.
@@ -78,7 +78,7 @@ class AccessController extends Controller
      */
     public function create(AccessRuleValidation $request)
     {
-        $group = PermissionGroup::find($request->input('permission_group_id'));
+        $group = Set::find($request->input('set_id'));
 
         switch ($request->input('entity_type')) {
             case 'group':
@@ -117,7 +117,7 @@ class AccessController extends Controller
      */
     public function remove(AccessRuleValidation $request)
     {
-        $group = PermissionGroup::find($request->input('permission_group_id'));
+        $group = Set::find($request->input('set_id'));
 
         switch ($request->input('entity_type')) {
             case 'group':

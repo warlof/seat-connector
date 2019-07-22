@@ -26,7 +26,7 @@ use Seat\Services\Models\UserSetting;
 use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
 use Seat\Web\Models\User;
-use Warlof\Seat\Connector\Models\PermissionGroup;
+use Warlof\Seat\Connector\Models\Set;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -92,7 +92,7 @@ class AccessDataTable extends DataTable
             'name' => [
                 'name'  => 'name',
                 'data'  => 'name',
-                'title' => trans('seat-connector::seat.permission_group'),
+                'title' => trans_choice('seat-connector::seat.sets', 0),
             ],
         ];
     }
@@ -102,19 +102,19 @@ class AccessDataTable extends DataTable
      */
     private function getCorporationQuery()
     {
-        $query = PermissionGroup::
-            join('seat_connector_permission_group_entity', 'permission_group_id', 'id')
+        $query = Set::
+            join('seat_connector_set_entity', 'set_id', 'id')
             ->join((new CorporationInfo())->getTable(), function ($join) {
                 $join->on('entity_id', 'corporation_id');
                 $join->where('entity_type', CorporationInfo::class);
             })
             ->select(
-                'seat_connector_permission_groups.id',
-                'seat_connector_permission_groups.connector_type',
-                'seat_connector_permission_groups.connector_id',
-                'seat_connector_permission_groups.name',
-                'seat_connector_permission_group_entity.entity_type',
-                'seat_connector_permission_group_entity.entity_id',
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name',
+                'seat_connector_set_entity.entity_type',
+                'seat_connector_set_entity.entity_id',
                 (new CorporationInfo())->getTable() . '.name as entity_name');
 
         return $query;
@@ -125,19 +125,19 @@ class AccessDataTable extends DataTable
      */
     private function getAllianceQuery()
     {
-        $query = PermissionGroup::
-            join('seat_connector_permission_group_entity', 'permission_group_id', 'id')
+        $query = Set::
+            join('seat_connector_set_entity', 'set_id', 'id')
             ->join((new Alliance())->getTable(), function ($join) {
                 $join->on('entity_id', 'alliance_id');
                 $join->where('entity_type', Alliance::class);
             })
             ->select(
-                'seat_connector_permission_groups.id',
-                'seat_connector_permission_groups.connector_type',
-                'seat_connector_permission_groups.connector_id',
-                'seat_connector_permission_groups.name',
-                'seat_connector_permission_group_entity.entity_type',
-                'seat_connector_permission_group_entity.entity_id',
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name',
+                'seat_connector_set_entity.entity_type',
+                'seat_connector_set_entity.entity_id',
                 (new Alliance())->getTable() . '.name as entity_name');
 
         return $query;
@@ -148,19 +148,19 @@ class AccessDataTable extends DataTable
      */
     private function getRoleQuery()
     {
-        $query = PermissionGroup::
-            join('seat_connector_permission_group_entity', 'permission_group_id', 'id')
+        $query = Set::
+            join('seat_connector_set_entity', 'set_id', 'id')
             ->join((new Role())->getTable(), function ($join) {
                 $join->on('entity_id', (new Role())->getTable() . '.id');
                 $join->where('entity_type', Role::class);
             })
             ->select(
-                'seat_connector_permission_groups.id',
-                'seat_connector_permission_groups.connector_type',
-                'seat_connector_permission_groups.connector_id',
-                'seat_connector_permission_groups.name',
-                'seat_connector_permission_group_entity.entity_type',
-                'seat_connector_permission_group_entity.entity_id',
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name',
+                'seat_connector_set_entity.entity_type',
+                'seat_connector_set_entity.entity_id',
                 (new Role())->getTable() . '.title as entity_name');
 
         return $query;
@@ -171,8 +171,8 @@ class AccessDataTable extends DataTable
      */
     private function getGroupQuery()
     {
-        $query = PermissionGroup::
-            join('seat_connector_permission_group_entity', 'permission_group_id', 'id')
+        $query = Set::
+            join('seat_connector_set_entity', 'set_id', 'id')
             ->join((new Group())->getTable(), function ($join) {
                 $join->on('entity_id', (new Group())->getTable() . '.id');
                 $join->where('entity_type', Group::class);
@@ -183,12 +183,12 @@ class AccessDataTable extends DataTable
             })
             ->join((new User())->getTable(), (new User())->getTable() . '.id', 'value')
             ->select(
-                'seat_connector_permission_groups.id',
-                'seat_connector_permission_groups.connector_type',
-                'seat_connector_permission_groups.connector_id',
-                'seat_connector_permission_groups.name',
-                'seat_connector_permission_group_entity.entity_type',
-                'seat_connector_permission_group_entity.entity_id',
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name',
+                'seat_connector_set_entity.entity_type',
+                'seat_connector_set_entity.entity_id',
                 (new User())->getTable() . '.name as entity_name');
 
         return $query;

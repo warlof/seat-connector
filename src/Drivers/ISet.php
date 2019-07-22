@@ -21,11 +21,11 @@
 namespace Warlof\Seat\Connector\Drivers;
 
 /**
- * Interface IPermissionGroup
+ * Interface ISet
  *
  * @package Warlof\Seat\Connector\Drivers
  */
-interface IPermissionGroup
+interface ISet
 {
     /**
      * @return string

@@ -87,9 +87,9 @@
           })
           .select2();
 
-      $('#connector-permission-group').select2({
+      $('#connector-set').select2({
           ajax: {
-              url: '{{ route('seat-connector.api.connector_groups') }}',
+              url: '{{ route('seat-connector.api.sets') }}',
               data: function (params) {
                   return {
                       search: params.tem,

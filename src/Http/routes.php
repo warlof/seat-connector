@@ -72,9 +72,9 @@ Route::group([
                 'uses' => 'LookupController@getTitles',
             ]);
 
-            Route::get('/connector-groups', [
-                'as'   => 'seat-connector.api.connector_groups',
-                'uses' => 'LookupController@getConnectorGroups',
+            Route::get('/sets', [
+                'as'   => 'seat-connector.api.sets',
+                'uses' => 'LookupController@getSets',
             ]);
 
         });

@@ -54,8 +54,8 @@
         </div>
 
         <div class="form-group">
-          <label for="connector-permission-group">{{ trans('seat-connector::seat.permission_group') }}</label>
-          <select name="permission_group_id" id="connector-permission-group" class="form-control"></select>
+          <label for="connector-set">{{ trans_choice('seat-connector::seat.sets', 1) }}</label>
+          <select name="set_id" id="connector-set" class="form-control"></select>
         </div>
 
     </form>

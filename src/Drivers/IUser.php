@@ -43,17 +43,17 @@ interface IUser
     public function getName(): string;
 
     /**
-     * @return \Warlof\Seat\Connector\Drivers\IPermissionGroup[]
+     * @return \Warlof\Seat\Connector\Drivers\ISet[]
      */
-    public function getGroups(): array;
+    public function getSets(): array;
 
     /**
-     * @param \Warlof\Seat\Connector\Drivers\IPermissionGroup $group
+     * @param \Warlof\Seat\Connector\Drivers\ISet $group
      */
-    public function addGroup(IPermissionGroup $group);
+    public function addSet(ISet $group);
 
     /**
-     * @param \Warlof\Seat\Connector\Drivers\IPermissionGroup $group
+     * @param \Warlof\Seat\Connector\Drivers\ISet $group
      */
-    public function removeGroup(IPermissionGroup $group);
+    public function removeSet(ISet $group);
 }

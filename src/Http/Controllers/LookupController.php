@@ -24,7 +24,7 @@ use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Acl\Role;
-use Warlof\Seat\Connector\Models\PermissionGroup;
+use Warlof\Seat\Connector\Models\Set;
 
 /**
  * Class LookupController.
@@ -78,20 +78,20 @@ class LookupController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getConnectorGroups(Request $request)
+    public function getSets(Request $request)
     {
-        $groups = PermissionGroup::where('name', 'like', '%' . $request->query('q', '') . '%')
-                                 ->where('connector_type', $request->query('driver', ''))
-                                 ->get()
-                                 ->map(function ($group, $key) {
-                                     return [
-                                         'id' => $group->id,
-                                         'text' => $group->name,
-                                     ];
-                                 });
+        $sets = Set::where('name', 'like', '%' . $request->query('q', '') . '%')
+                   ->where('connector_type', $request->query('driver', ''))
+                   ->get()
+                   ->map(function ($group, $key) {
+                       return [
+                           'id' => $group->id,
+                           'text' => $group->name,
+                       ];
+                   });
 
         return response()->json([
-            'results' => $groups,
+            'results' => $sets,
         ]);
     }
 }

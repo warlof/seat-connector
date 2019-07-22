@@ -65,6 +65,6 @@ class AccessDataTableScope implements DataTableScope
         if (is_null($this->connector_driver))
             return $query->whereRaw('? = ?', [0, 1]);
 
-        return $query->where('seat_connector_permission_groups.connector_type', $this->connector_driver);
+        return $query->where('seat_connector_sets.connector_type', $this->connector_driver);
     }
 }

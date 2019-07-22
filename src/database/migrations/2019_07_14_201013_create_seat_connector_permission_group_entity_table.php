@@ -23,9 +23,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreateSeatConnectorPermissionGroupEntityTable.
+ * Class CreateSeatConnectorSetEntityTable.
  */
-class CreateSeatConnectorPermissionGroupEntityTable extends Migration
+class CreateSeatConnectorSetEntityTable extends Migration
 {
     /**
      * Run the migrations.
@@ -34,19 +34,19 @@ class CreateSeatConnectorPermissionGroupEntityTable extends Migration
      */
     public function up()
     {
-        Schema::create('seat_connector_permission_group_entity', function (Blueprint $table) {
+        Schema::create('seat_connector_set_entity', function (Blueprint $table) {
 
-            $table->unsignedInteger('permission_group_id');
+            $table->unsignedInteger('set_id');
             $table->string('entity_type');
             $table->bigInteger('entity_id');
 
-            $table->primary(['permission_group_id', 'entity_type', 'entity_id'], 'pk_permission_group_entity');
+            $table->primary(['set_id', 'entity_type', 'entity_id'], 'pk_set_entity');
 
             Schema::disableForeignKeyConstraints();
 
-            $table->foreign('permission_group_id', 'fk_permission_groups')
+            $table->foreign('set_id', 'fk_sets')
                 ->references('id')
-                ->on('seat_connector_permission_groups')
+                ->on('seat_connector_sets')
                 ->onDelete('cascade');
 
             Schema::enableForeignKeyConstraints();
@@ -60,6 +60,6 @@ class CreateSeatConnectorPermissionGroupEntityTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seat_connector_permission_group_entity');
+        Schema::dropIfExists('seat_connector_set_entity');
     }
 }

@@ -23,9 +23,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreateSeatConnectorPermissionGroupsTable.
+ * Class CreateSeatConnectorSetsTable.
  */
-class CreateSeatConnectorPermissionGroupsTable extends Migration
+class CreateSeatConnectorSetsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -34,14 +34,14 @@ class CreateSeatConnectorPermissionGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('seat_connector_permission_groups', function (Blueprint $table) {
+        Schema::create('seat_connector_sets', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('connector_type');
             $table->string('connector_id');
             $table->string('name');
 
-            $table->unique(['connector_type', 'connector_id'], 'uk_permission_groups_connector');
+            $table->unique(['connector_type', 'connector_id'], 'uk_sets_connector');
         });
     }
 
@@ -52,6 +52,6 @@ class CreateSeatConnectorPermissionGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seat_connector_permission_groups');
+        Schema::dropIfExists('seat_connector_sets');
     }
 }
