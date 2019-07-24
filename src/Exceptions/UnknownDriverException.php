@@ -18,40 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Warlof\Seat\Connector\Drivers;
+namespace Warlof\Seat\Connector\Exceptions;
+
+use Exception;
 
 /**
- * Interface IClient
+ * Class UnknownDriverException.
  *
- * @package Warlof\Seat\Connector\Drivers
+ * @package Warlof\Seat\Connector\Commands
  */
-interface IClient
+class UnknownDriverException extends Exception
 {
-    /**
-     * @return \Warlof\Seat\Connector\Drivers\IClient
-     * @throws \Warlof\Seat\Connector\Exceptions\DriverSettingsException
-     */
-    public static function getInstance(): IClient;
 
-    /**
-     * @return \Warlof\Seat\Connector\Drivers\IUser[]
-     */
-    public function getUsers(): array;
-
-    /**
-     * @return \Warlof\Seat\Connector\Drivers\ISet[]
-     */
-    public function getSets(): array;
-
-    /**
-     * @param string $id
-     * @return \Warlof\Seat\Connector\Drivers\IUser|null
-     */
-    public function getUser(string $id): ?IUser;
-
-    /**
-     * @param string $id
-     * @return \Warlof\Seat\Connector\Drivers\ISet|null
-     */
-    public function getSet(string $id): ?ISet;
 }

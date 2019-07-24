@@ -74,6 +74,8 @@ class DriverUpdateSets implements ShouldQueue
 
     /**
      * Process the job
+     *
+     * @throws \Warlof\Seat\Connector\Jobs\MissingDriverClientException
      */
     public function handle()
     {
@@ -82,9 +84,13 @@ class DriverUpdateSets implements ShouldQueue
 
         // build the config key related to the requested driver
         $config_key = sprintf('seat-connector.drivers.%s.client', $this->driver);
+        $client = config($config_key);
+
+        if (is_null($config_key) || ! class_exists($client))
+            throw new MissingDriverClientException(sprintf('The client for driver %s is missing.', $this->driver));
 
         // get the driver client
-        $this->client = (config($config_key))::getInstance();
+        $this->client = $client::getInstance();
 
         // retrieve all sets for the active driver
         $sets = $this->client->getSets();
