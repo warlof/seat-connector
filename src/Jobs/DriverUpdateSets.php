@@ -73,7 +73,7 @@ class DriverUpdateSets implements ShouldQueue
     }
 
     /**
-     * Process the job
+     * Process the job.
      *
      * @throws \Warlof\Seat\Connector\Jobs\MissingDriverClientException
      */

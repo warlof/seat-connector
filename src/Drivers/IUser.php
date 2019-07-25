@@ -43,6 +43,11 @@ interface IUser
     public function getName(): string;
 
     /**
+     * @param string $name
+     */
+    public function setName(string $name);
+
+    /**
      * @return \Warlof\Seat\Connector\Drivers\ISet[]
      */
     public function getSets(): array;

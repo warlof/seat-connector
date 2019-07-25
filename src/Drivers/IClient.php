@@ -34,6 +34,11 @@ interface IClient
     public static function getInstance(): IClient;
 
     /**
+     * @return int
+     */
+    public function getNicknameMaxSize(): int;
+
+    /**
      * @return \Warlof\Seat\Connector\Drivers\IUser[]
      */
     public function getUsers(): array;
