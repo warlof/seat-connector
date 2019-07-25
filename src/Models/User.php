@@ -49,4 +49,134 @@ class User extends Model
     {
         return $this->belongsTo(Group::class, 'group_id', 'id');
     }
+
+    /**
+     * @return bool
+     */
+    public function isEnabledAccount(): bool
+    {
+        return ($this->group->users->count() == $this->group->users->where('active', true)->count());
+    }
+
+    /**
+     * @return bool
+     */
+    public function areAllTokensValid(): bool
+    {
+        return $this->group->refresh_tokens->count() == $this->group->users->count();
+    }
+
+    /**
+     * @param string $set_id
+     * @return bool
+     */
+    public function isAllowedSet(string $set_id): bool
+    {
+        return in_array($set_id, $this->allowedSets());
+    }
+
+    /**
+     * @return array
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    public function allowedSets(): array
+    {
+        $strict_mode = setting('seat-connector.strict', true);
+
+        $active_tokens = $this->group->refresh_tokens;
+
+        if (empty($active_tokens))
+            return [];
+
+        if ($strict_mode && ! $this->areAllTokensValid())
+            return [];
+
+        if (! $this->isEnabledAccount())
+            return [];
+
+        $rows = $this->getSetGroups()
+            ->union($this->getSetRoles())
+            ->union($this->getSetCorporations())
+            //->union($this->getSetCorporationTitles()) // TODO : implement
+            ->union($this->getSetAlliances())
+            //->union($this->getSetPublics()) // TODO : implement
+            ->get();
+
+        return $rows->unique('connector_id')->pluck('connector_id')->toArray();
+    }
+
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSetGroups()
+    {
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->whereHas('groups', function ($query) {
+                $query->where('entity_id', $this->group_id);
+            })
+            ->select('connector_id');
+
+        return $rows;
+    }
+
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSetRoles()
+    {
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('entity_id', $this->group->roles->pluck('id'));
+            })
+            ->select('connector_id');
+
+        return $rows;
+    }
+
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSetCorporations()
+    {
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->whereHas('corporations', function ($query) {
+                $corporations = $this->group->users->map(function ($item) {
+                    return $item->character->corporation_id;
+                });
+
+                $query->whereIn('entity_id', $corporations);
+            })
+            ->select('connector_id');
+
+        return $rows;
+    }
+
+    /**
+     * TODO : Not implemented yet - need core refactor
+     */
+    public function getSetCorporationTitles()
+    {
+    }
+
+    public function getSetAlliances()
+    {
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->whereHas('alliances', function ($query) {
+                $alliances = $this->group->users->map(function ($item) {
+                    return $item->character->alliance_id;
+                });
+
+                $query->whereIn('entity_id', $alliances);
+            })
+            ->select('connector_id');
+
+        return $rows;
+    }
+
+    /**
+     * TODO : Not implemented yet - need design
+     */
+    public function getSetPublics()
+    {
+    }
 }
