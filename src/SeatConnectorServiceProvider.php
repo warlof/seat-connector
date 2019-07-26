@@ -22,6 +22,7 @@ namespace Warlof\Seat\Connector;
 
 use Illuminate\Routing\Router;
 use Seat\Services\AbstractSeatPlugin;
+use Warlof\Seat\Connector\Commands\DriverApplyPolicies;
 use Warlof\Seat\Connector\Commands\DriverUpdateSets;
 
 /**
@@ -130,6 +131,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     {
         $this->commands([
             DriverUpdateSets::class,
+            DriverApplyPolicies::class,
         ]);
     }
 
