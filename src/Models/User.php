@@ -43,6 +43,11 @@ class User extends Model
     ];
 
     /**
+     * @var array
+     */
+    private $allowed_sets = [];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function group()
@@ -69,6 +74,7 @@ class User extends Model
     /**
      * @param string $set_id
      * @return bool
+     * @throws \Seat\Services\Exceptions\SettingException
      */
     public function isAllowedSet(string $set_id): bool
     {
@@ -94,6 +100,9 @@ class User extends Model
         if (! $this->isEnabledAccount())
             return [];
 
+        if (! empty($this->allowed_sets))
+            return $this->allowed_sets;
+
         $rows = $this->getSetGroups()
             ->union($this->getSetRoles())
             ->union($this->getSetCorporations())
@@ -102,7 +111,9 @@ class User extends Model
             //->union($this->getSetPublics()) // TODO : implement
             ->get();
 
-        return $rows->unique('connector_id')->pluck('connector_id')->toArray();
+        $this->allowed_sets = $rows->unique('connector_id')->pluck('connector_id')->toArray();
+
+        return $this->allowed_sets;
     }
 
     /**
