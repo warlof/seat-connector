@@ -148,9 +148,13 @@ class DriverApplyPolicies implements ShouldQueue
                 $user->addSet($set);
             }
         }
-        
+
+        // check if a nickname update is required
         if (! is_null($new_nickname)) {
             $user->setName($new_nickname);
+
+            $profile->connector_name = $new_nickname;
+            $profile->save();
         }
     }
 
