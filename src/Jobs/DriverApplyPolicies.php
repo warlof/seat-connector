@@ -65,6 +65,9 @@ class DriverApplyPolicies implements ShouldQueue
 
     /**
      * Process the job.
+     *
+     * @throws \Warlof\Seat\Connector\Jobs\MissingDriverClientException
+     * @throws \Seat\Services\Exceptions\SettingException
      */
     public function handle()
     {
@@ -76,8 +79,12 @@ class DriverApplyPolicies implements ShouldQueue
 
         $this->client = $client::getInstance();
 
+        $this->client->getSets();
+
+        // collect all users from the active driver
         $users = $this->client->getUsers();
 
+        // loop over each entity and apply policy
         foreach ($users as $user) {
 
             $this->applyPolicy($user);
@@ -87,6 +94,7 @@ class DriverApplyPolicies implements ShouldQueue
 
     /**
      * @param \Warlof\Seat\Connector\Drivers\IUser $user
+     * @throws \Seat\Services\Exceptions\SettingException
      */
     private function applyPolicy(IUser $user)
     {
@@ -98,15 +106,22 @@ class DriverApplyPolicies implements ShouldQueue
                              ->where('connector_id', $user->getClientId())
                              ->first();
 
+        // in case the user is unknown of SeAT; skip the process
+        if (is_null($profile))
+            return;
+
+        // determine which nickname should be used by the user
         $expected_nickname = $this->buildConnectorNickname($profile);
         if ($user->getName() !== $expected_nickname)
             $new_nickname = $expected_nickname;
 
+        // collect all sets which are assigned to the user and determine if they are valid
         foreach ($user->getSets() as $set) {
             if ($this->terminator || ! $profile->isAllowedSet($set->getId()))
                 $pending_drops->push($set->getId());
         }
 
+        // if the process is not running in terminator mode, retrieve all valid sets for the current user
         if (! $this->terminator) {
             $sets = $profile->allowedSets();
 
@@ -116,15 +131,18 @@ class DriverApplyPolicies implements ShouldQueue
             }
         }
 
+        // check if there is a set to update
         $are_sets_outdated = $pending_adds->isNotEmpty() || $pending_drops->isNotEmpty();
 
         if ($are_sets_outdated) {
 
+            // drop all sets which have been marked for a removal
             foreach ($pending_drops as $set_id) {
                 $set = $this->client->getSet($set_id);
                 $user->removeSet($set);
             }
 
+            // add all sets which have been marked for an addition
             foreach ($pending_adds as $set_id) {
                 $set = $this->client->getSet($set_id);
                 $user->addSet($set);
