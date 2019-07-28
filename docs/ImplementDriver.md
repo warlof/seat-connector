@@ -7,10 +7,14 @@ Your driver implementation must meat the minimal structure bellow :
 /Config
 /Config/{driver}-connector.config.php
 /Config/seat-connector.config.php
-/Drivers
-/Drivers/{Driver}Client.php
-/Drivers/{Driver}User.php
-/Drivers/{Driver}Set.php
+/Driver
+/Driver/{Driver}Client.php
+/Driver/{Driver}User.php
+/Driver/{Driver}Set.php
+/Http
+/Http/routes.php
+/Http/Controllers
+/Http/Controllers/RegistrationController.php
 /{Driver}ConnectorServiceProvider.php
 ```
 
@@ -73,3 +77,99 @@ It can be either channels, server groups, or anything else.
 
 This method can return an `ISet` related to a "thing" you want limit access using connector rules.
 It may return `null` which mean no "thing" related to the `ID` sent in parameter has been found.
+
+## ISet
+
+ISet is the representation of your platform user group. It can be a channel, a role, a group or whatever word is used on your platform to call an user pair place.
+
+It must contain the following methods :
+
+ - getId(): string
+ - getName(): string
+ - getMembers(): array
+ - addMember(IUser user)
+ - removeMember(IUser user)
+
+### getId()
+
+This method is used by the connector to determine the Set identifier on your platform.
+To improve flexibility, this method have to return a string value - which can be parse by your driver in order to do its own business logic.
+
+### getName()
+
+This method is used by the connector to determine the Set name on your platform.
+
+### getMembers()
+
+This method is used by the connector to list users which are currently in the Set.
+
+### addMember()
+
+This method is used by the connector to add an user inside the Set.
+
+### removeMember()
+
+This method is used by the connector to remove an user from the Set.
+
+## IUser
+
+IUser is the representation of your platform physical user. It can be a chatter, speaker, member or whatever word is used on your platform to call a human.
+
+It must contain the following methods :
+
+ - getClientId(): string
+ - getUniqueId(): string
+ - getName(): string
+ - setName(string name)
+ - getSets(): array
+ - addSet(ISet set)
+ - removeSet(ISet set)
+
+### getClientId()
+
+This method is used by the connector to determine the User identifier on your platform.
+To improve flexibility, this method have to return a string value - which can be parse by your driver in order to do its own business logic.
+
+### getUniqueId()
+
+This method is used by the connector to ensure an user is unique across all user *rendez-vous* place on your platform.
+To improve flexibility, this method have to return a string value - which can be parse by your driver in order to do its own business logic.
+
+### getName()
+
+This method is used by the connector to determine the User nickname on your platform.
+
+### setName()
+
+This method is used by the connector to update the user nickname on your platform according to the SeAT owner policy.
+
+**IMPORTANT**
+> You must take care of the nickname limit from your platform while implementing `setName` method.
+However, please do not throw an exception as the user will not be able to truncated its character name - neither the SeAT instance owner.
+
+### getSets()
+
+This method is used by the connector to figure in which set the user is actually.
+
+### addSet()
+
+This method is used by the connector to grant a new Set to the user.
+
+### removeSet()
+
+This method is used by the connector to revoke a Set from the user.
+
+# Routes
+
+Your driver must implement at least one route of type `GET` called `seat-connector.drivers.{driver}.registration`.
+Where **{driver}** must be your driver configuration key.
+
+This route will be called by SeAT while the user will attempt to register himself to the platform you're providing support for (and join it).
+
+# Examples
+
+You can find some implementation example of the new connector on repository listed bellow :
+
+ - ~~[Slackbot - Slack Connector Driver](https://github.com/warlof/slackbot)~~
+ - [Discord - Discord Connector Driver](https://github.com/warlof/seat-discord-connector/tree/seat-connector)
+ - ~~[Teamspeak - Teamspeak Connector Driver](https://github.com/warlof/seat-teamspeak)~~
