@@ -21,6 +21,7 @@
 namespace Warlof\Seat\Connector\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Web\Models\Group;
 
 /**
@@ -189,5 +190,28 @@ class User extends Model
      */
     public function getSetPublics()
     {
+    }
+
+    /**
+     * @return string
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    public function buildConnectorNickname(): string
+    {
+        $character = $this->group->main_character;
+        if (is_null($character))
+            $character = $this->group->users->first()->character;
+
+        $nickname = $character->name;
+
+        if (setting('seat-connector.ticker', true)) {
+            $corporation = CorporationInfo::find($character->corporation_id);
+            $format = setting('seat-connector.format', true) ?: '[%s] %s';
+
+            if (! is_null($corporation))
+                $nickname = sprintf($format, $corporation->ticker, $nickname);
+        }
+
+        return $nickname;
     }
 }

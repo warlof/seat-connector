@@ -111,7 +111,7 @@ class DriverApplyPolicies implements ShouldQueue
             return;
 
         // determine which nickname should be used by the user
-        $expected_nickname = $this->buildConnectorNickname($profile);
+        $expected_nickname = $profile->buildConnectorNickname();
         if ($user->getName() !== $expected_nickname)
             $new_nickname = $expected_nickname;
 
@@ -156,29 +156,5 @@ class DriverApplyPolicies implements ShouldQueue
             $profile->connector_name = $new_nickname;
             $profile->save();
         }
-    }
-
-    /**
-     * @param \Warlof\Seat\Connector\Models\User $user
-     * @return string
-     * @throws \Seat\Services\Exceptions\SettingException
-     */
-    private function buildConnectorNickname(User $user): string
-    {
-        $character = $user->group->main_character;
-        if (is_null($character))
-            $character = $user->group->users->first()->character;
-
-        $nickname = $character->name;
-
-        if (setting('seat-connector.ticker', true)) {
-            $corporation = CorporationInfo::find($character->corporation_id);
-            $format = setting('seat-connector.format', true) ?: '[%s] %s';
-
-            if (! is_null($corporation))
-                $nickname = sprintf($format, $corporation->ticker, $nickname);
-        }
-
-        return Str::limit($nickname, $this->client->getNicknameMaxSize(), '');
     }
 }
