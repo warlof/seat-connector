@@ -36,7 +36,7 @@ class IdentitiesController extends Controller
     public function index()
     {
         $drivers = collect(config('seat-connector.drivers', []));
-        $identities = User::where('group_id', auth()->user()->group_id);
+        $identities = User::where('group_id', auth()->user()->group_id)->get();
 
         return view('seat-connector::identities.list', compact('drivers', 'identities'));
     }
