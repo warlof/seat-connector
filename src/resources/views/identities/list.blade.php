@@ -15,4 +15,6 @@
 
   @endforeach
 
+  @yield('identity-modal')
+
 @stop
