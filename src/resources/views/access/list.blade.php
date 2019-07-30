@@ -62,7 +62,7 @@
               url: '{{ route('seat-connector.api.titles') }}',
               data: function (params) {
                   return {
-                      search: params.term,
+                      q: params.term,
                       corporation_id: $('#connector-filter-corporation').val()
                   };
               },
@@ -92,7 +92,7 @@
               url: '{{ route('seat-connector.api.sets') }}',
               data: function (params) {
                   return {
-                      search: params.tem,
+                      q: params.term,
                       driver: $('#connector-driver').val()
                   };
               },
