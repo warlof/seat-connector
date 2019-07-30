@@ -25,7 +25,7 @@
         </dd>
         <dt>Status</dt>
         <dd>
-          @if($identity = $identities->where('connector_type', $driver)->first())
+          @if($identities->where('connector_type', $driver)->isNotEmpty())
             <i class="text-green">registered</i>
           @else
             <i class="text-red">unregistered</i>
@@ -38,7 +38,7 @@
         <i class="fa {{ $metadata['icon'] }}"></i>
       </div>
     @endif
-    <a class="small-box-footer" href="{{ route(sprintf('seat-connector.drivers.%s.registration', $driver)) }}">
+    <a class="small-box-footer" href="{{ route(sprintf('seat-connector.drivers.%s.registration', $driver)) }}" target="_blank">
       <i class="fa fa-arrow-circle-right"></i>
       Join Server
     </a>
