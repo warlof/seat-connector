@@ -56,7 +56,7 @@ class DriverUpdateSets extends Command
                 'Please install at least one driver in order to be able to use this command.');
 
         // request user confirmation before queuing jobs
-        if (is_null($drivers_parameter)) {
+        if (empty($drivers_parameter)) {
             if (! $this->confirm('Sets from all installed drivers will be synchronized. Do you wish to continue?', true))
                 return;
         } else {
@@ -73,7 +73,7 @@ class DriverUpdateSets extends Command
         foreach ($drivers as $driver) {
 
             // in case a driver has been specified and the current driver does not match, skip it
-            if (! is_null($drivers_parameter) && ! in_array($driver, $drivers_parameter))
+            if (! empty($drivers_parameter) && ! in_array($driver, $drivers_parameter))
                 continue;
 
             // enqueue a job for the specified driver

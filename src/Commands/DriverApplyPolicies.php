@@ -40,7 +40,7 @@ class DriverApplyPolicies extends Command
                 'Please install at least one driver in order to be able to use this command.');
 
         // request user confirmation before queuing jobs
-        if (is_null($drivers_parameter)) {
+        if (empty($drivers_parameter)) {
             if (! $this->confirm('Sets from all installed drivers will be synchronized. Do you wish to continue?', true))
                 return;
         } else {
@@ -56,7 +56,7 @@ class DriverApplyPolicies extends Command
 
         foreach ($drivers as $driver) {
 
-            if (! is_null($drivers_parameter) && ! in_array($driver, $drivers_parameter))
+            if (! empty($drivers_parameter) && ! in_array($driver, $drivers_parameter))
                 continue;
 
             dispatch(new \Warlof\Seat\Connector\Jobs\DriverApplyPolicies($driver, $terminator))->onQueue('high');
