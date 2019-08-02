@@ -36,14 +36,11 @@ class LogsController extends Controller
      */
     public function index(LogsDataTable $datatable)
     {
-        // retrieve all registered SeAT Connector drivers
-        $available_drivers = config('seat-connector.drivers', []);
-
-        // init the driver using either the query parameter or the first available driver
-        $driver = request()->query('driver') ?: array_get(array_last($available_drivers), 'name');
+        $level  = request()->query('level')  ?: '';
+        $driver = request()->query('driver') ?: '';
 
         return $datatable
-            ->addScope(new LogsDataTableScope($driver))
+            ->addScope(new LogsDataTableScope($driver, $level))
             ->render('seat-connector::logs.list');
     }
 }

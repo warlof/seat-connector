@@ -30,7 +30,12 @@ use Yajra\DataTables\Contracts\DataTableScope;
 class LogsDataTableScope implements DataTableScope
 {
     /**
-     * @var string|null
+     * @var string
+     */
+    private $level;
+
+    /**
+     * @var string
      */
     private $connector_driver;
 
@@ -39,8 +44,9 @@ class LogsDataTableScope implements DataTableScope
      *
      * @param mixed $driver
      */
-    public function __construct(? string $connector_driver)
+    public function __construct(string $connector_driver, string $level)
     {
+        $this->level = $level;
         $this->connector_driver = $connector_driver;
     }
 
@@ -52,10 +58,14 @@ class LogsDataTableScope implements DataTableScope
      */
     public function apply($query)
     {
-        // apply a dummy filter which will always return no result
-        if (is_null($this->connector_driver))
-            return $query->whereRaw('? = ?', [0, 1]);
+        // limit entries regarding the requested driver
+        if (! empty($this->level))
+            $query->where('level', $this->level);
 
-        return $query->where('connector_type', $this->connector_driver);
+        // limit entries regarding the requested driver
+        if (! empty($this->connector_driver))
+            $query->where('connector_type', $this->connector_driver);
+
+        return $query;
     }
 }
