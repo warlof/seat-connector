@@ -2,14 +2,14 @@
 
 namespace Warlof\Seat\Connector\Jobs;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Str;
-use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Warlof\Seat\Connector\Drivers\IUser;
+use Warlof\Seat\Connector\Models\Log;
 use Warlof\Seat\Connector\Models\User;
 
 /**
@@ -87,7 +87,21 @@ class DriverApplyPolicies implements ShouldQueue
         // loop over each entity and apply policy
         foreach ($users as $user) {
 
-            $this->applyPolicy($user);
+            try {
+
+                $this->applyPolicy($user);
+
+            } catch (Exception $e) {
+
+                Log::create([
+                    'connector_type' => $this->driver,
+                    'level'          => 'error',
+                    'category'       => 'policy',
+                    'message'        => sprintf('Unable to update the user %s. %s',
+                        $user->getName(), $e->getMessage()),
+                ]);
+
+            }
 
         }
     }
@@ -147,6 +161,14 @@ class DriverApplyPolicies implements ShouldQueue
                 $set = $this->client->getSet($set_id);
                 $user->addSet($set);
             }
+
+            Log::create([
+                'connector_type' => $this->driver,
+                'level'          => 'info',
+                'category'       => 'policy',
+                'message'        => sprintf('Groups has successfully been updated for the user %s (%s) from group %d.',
+                    '', $user->getName(), $profile->group->id),
+            ]);
         }
 
         // check if a nickname update is required
@@ -155,6 +177,14 @@ class DriverApplyPolicies implements ShouldQueue
 
             $profile->connector_name = $new_nickname;
             $profile->save();
+
+            Log::create([
+                'connector_type' => $this->driver,
+                'level'          => 'info',
+                'category'       => 'policy',
+                'message'        => sprintf('Nickname from the user %s (%s) from group %d has been updated.',
+                    '', $user->getName(), $profile->group->id),
+            ]);
         }
     }
 }
