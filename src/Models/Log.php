@@ -43,6 +43,6 @@ class Log extends Model
      * @var array
      */
     protected $fillable = [
-        'connector', 'level', 'category', 'message',
+        'connector_type', 'level', 'category', 'message',
     ];
 }
