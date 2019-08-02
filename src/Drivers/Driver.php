@@ -49,7 +49,7 @@ class Driver
         $this->settings = collect();
 
         foreach ($config['settings'] as $field)
-            $this->settings->push(new Field($field));
+            $this->settings->push(new Field($this->name, $field));
     }
 
     /**

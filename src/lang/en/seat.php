@@ -2,6 +2,7 @@
 
 return [
     'settings'           => 'Settings',
+    'save'               => 'Save',
 
     'toolbox'            => 'Toolbox',
     'access_management'  => 'Access Management',
