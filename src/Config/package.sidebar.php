@@ -54,6 +54,13 @@ return [
                 'route'      => 'seat-connector.acl',
                 'permission' => 'seat-connector.security',
             ],
+            [
+                'name'       => 'Settings',
+                'label'      => 'seat-connector::seat.settings',
+                'icon'       => 'fa-cogs',
+                'route'      => 'seat-connector.settings',
+                'permission' => 'superuser',
+            ],
         ],
         'permission'    => 'seat-connector.view',
     ],

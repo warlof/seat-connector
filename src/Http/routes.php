@@ -30,6 +30,17 @@ Route::group([
     ]);
 
     Route::group([
+        'middleware' => 'bouncer:superuser',
+    ], function () {
+
+        Route::get('/settings', [
+            'as' => 'seat-connector.settings',
+            'uses' => 'SettingsController@index',
+        ]);
+
+    });
+
+    Route::group([
         'middleware' => 'bouncer:seat-connector.security',
     ], function () {
 

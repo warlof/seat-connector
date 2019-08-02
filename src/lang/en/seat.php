@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'settings'           => 'Settings',
+
     'toolbox'            => 'Toolbox',
     'access_management'  => 'Access Management',
     'user_mapping'       => 'User Mapping',
