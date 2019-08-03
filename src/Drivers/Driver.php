@@ -101,38 +101,38 @@ class Driver
     private function checkStructure(array $structure)
     {
         foreach (['name', 'icon', 'client', 'settings'] as $attribute) {
-            if (! array_key_exists($attribute, $structure))
-                throw new InvalidDriverException(sprintf('Driver configuration must have a %s field', $attribute));
+            $this->checkPropertyStructure($structure, $attribute);
         }
 
-        if (! is_string($structure['name']))
-            throw new InvalidDriverException('Driver configuration name field must be of string type');
-
-        if (! is_string($structure['icon']))
-            throw new InvalidDriverException('Driver configuration icon field must be of string type');
-
-        if (! is_string($structure['client']))
-            throw new InvalidDriverException('Driver configuration client field must be of string type');
-
-        if (! class_exists($structure['client']))
-            throw new InvalidDriverException('Driver configuration client field must refer to an existing class');
-
-        if (! is_array($structure['settings']))
-            throw new InvalidDriverException('Driver configuration settings field must be of array type');
-
-        if (is_null($structure['name']) || empty($structure['name']))
-            throw new InvalidDriverException('Driver configuration name field is mandatory');
-
-        if (is_null($structure['icon']) || empty($structure['icon']))
-            throw new InvalidDriverException('Driver configuration icon field is mandatory');
-
-        if (is_null($structure['client']) || empty($structure['client']))
-            throw new InvalidDriverException('Driver configuration client field is mandatory');
-
-        if (is_null($structure['settings']))
-            throw new InvalidDriverException('Driver configuration settings field is mandatory');
-
         $this->checkSettingsStructure($structure['settings']);
+    }
+
+    /**
+     * @param array $structure
+     * @param string $property
+     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
+     */
+    private function checkPropertyStructure(array $structure, string $property)
+    {
+        if (! array_key_exists($property, $structure))
+            throw new InvalidDriverException(sprintf('Driver configuration must have a %s field', $property));
+
+        if (is_null($structure[$property]) || empty($structure[$property]))
+            throw new InvalidDriverException(sprintf('Driver configuration %s field is mandatory', $property));
+
+        switch ($property) {
+            case 'client':
+                if (! class_exists($structure[$property]))
+                    throw new InvalidDriverException(sprintf('Driver configuration %s field must refer to an existing class', $property));
+                break;
+            case 'settings':
+                if (! is_array($structure[$property]))
+                    throw new InvalidDriverException(sprintf('Driver configuration %s field must be of array type', $property));
+                break;
+            default:
+                if (! is_string($structure[$property]))
+                    throw new InvalidDriverException(sprintf('Driver configuration %s field must be of string type', $property));
+        }
     }
 
     /**
@@ -146,19 +146,20 @@ class Driver
             throw new InvalidDriverException('Driver configuration settings field must have at least one field definition');
 
         foreach ($settings as $field) {
+
+            if (! is_array($field))
+                throw new InvalidDriverSettingsException('Driver configuration settings fields must be of array type');
+
             $this->checkSettingsFieldStructure($field);
         }
     }
 
     /**
-     * @param $field
+     * @param array $field
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
      */
-    private function checkSettingsFieldStructure($field)
+    private function checkSettingsFieldStructure(array $field)
     {
-        if (! is_array($field))
-            throw new InvalidDriverSettingsException('Driver configuration settings fields must be of array type');
-
         foreach (['name', 'label', 'type'] as $attribute) {
             if (! array_key_exists($attribute, $field))
                 throw new InvalidDriverSettingsException(sprintf('Driver configuration settings fields must have a %s field', $attribute));
