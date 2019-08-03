@@ -55,25 +55,29 @@ class UserController extends ApiController
      *                  type="string",
      *                  format="uri",
      *                  property="first",
-     *                  description="First page"
+     *                  description="First page",
+     *                  example="https://example.com/api/v2/seat-connector/users?page=1"
      *              ),
      *              @SWG\Property(
      *                  type="string",
      *                  format="uri",
      *                  property="last",
-     *                  description="Last page"
+     *                  description="Last page",
+     *                  example="https://example.com/api/v2/seat-connector/users?page=3"
      *              ),
      *              @SWG\Property(
      *                  type="string",
      *                  format="uri",
      *                  property="prev",
-     *                  description="Previous page"
+     *                  description="Previous page",
+     *                  example="https://example.com/api/v2/seat-connector/users?page=1"
      *              ),
      *              @SWG\Property(
      *                  type="string",
      *                  format="uri",
      *                  property="next",
-     *                  description="Next page"
+     *                  description="Next page",
+     *                  example="https://example.com/api/v2/seat-connector/users?page=3"
      *              )
      *          ),
      *          @SWG\Property(
@@ -82,52 +86,56 @@ class UserController extends ApiController
      *              description="Information related to the paginated response",
      *              @SWG\Property(
      *                  type="integer",
+     *                  minimum=1,
      *                  property="current_page",
-     *                  description="The current page"
+     *                  description="The current page",
+     *                  example=2
      *              ),
      *              @SWG\Property(
      *                  type="integer",
+     *                  minimum=1,
      *                  property="from",
-     *                  description="The first entity number on the page"
+     *                  description="The first entity number on the page",
+     *                  example=16
      *              ),
      *              @SWG\Property(
      *                  type="integer",
+     *                  minimum=1,
      *                  property="last_page",
-     *                  description="The last page available"
+     *                  description="The last page available",
+     *                  example=3
      *              ),
      *              @SWG\Property(
      *                  type="string",
      *                  format="uri",
      *                  property="path",
-     *                  description="The base endpoint"
+     *                  description="The base endpoint",
+     *                  example="https://example.com/api/v2/seat-connector/users"
      *              ),
      *              @SWG\Property(
      *                  type="integer",
+     *                  minimum=1,
      *                  property="per_page",
-     *                  description="The pagination step"
+     *                  description="The pagination step",
+     *                  example=15
      *              ),
      *              @SWG\Property(
      *                  type="integer",
+     *                  minimum=1,
      *                  property="to",
-     *                  description="The last entity number on the page"
+     *                  description="The last entity number on the page",
+     *                  example=30
      *              ),
      *              @SWG\Property(
      *                  type="integer",
+     *                  minimum=0,
      *                  property="total",
-     *                  description="The total of available entities"
+     *                  description="The total of available entities",
+     *                  example=35
      *              )
      *          )
-     *      ),
-     *      examples={
-     *          "application/json": {
-     *              {
-     *                  "group_id": 1,
-     *                  "connector_type": "discord",
-     *                  "connector_id": "133312047051046912",
-     *                  "connector_name": "Demo User"
-     *              }
-     *          }
-     *     }),
+     *      )
+     *     ),
      *     @SWG\Response(response=400, description="Bad request"),
      *     @SWG\Response(response=401, description="Unauthorized")
      * )

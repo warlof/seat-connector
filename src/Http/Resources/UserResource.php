@@ -32,27 +32,32 @@ use Illuminate\Http\Resources\Json\Resource;
  * )
  *
  * @SWG\Property(
- *     format="int",
+ *     type="integer",
+ *     minimum=1,
  *     description="SeAT Group ID",
- *     property="group_id"
+ *     property="group_id",
+ *     example=1
  * )
  *
  * @SWG\Property(
- *     format="string",
+ *     type="string",
  *     description="SeAT Connector driver",
- *     property="connector_type"
+ *     property="connector_type",
+ *     example="discord"
  * )
  *
  * @SWG\Property(
- *     format="string",
+ *     type="string",
  *     description="SeAT Connector entity ID for this driver",
- *     property="connector_id"
+ *     property="connector_id",
+ *     example="133312047051046912"
  * )
  *
  * @SWG\Property(
- *     format="string",
+ *     type="string",
  *     description="SeAT Connector entity name for this driver",
- *     property="connector_name"
+ *     property="connector_name",
+ *     example="Demo User"
  * )
  *
  * @package Warlof\Seat\Connector\Http\Resources
