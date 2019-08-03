@@ -5,7 +5,7 @@ Your driver implementation must meat the minimal structure bellow :
 ```
 /
 /Config
-/Config/{driver}-connector.config.php
+/Config/{driver}.config.php
 /Config/seat-connector.config.php
 /Driver
 /Driver/{Driver}Client.php
@@ -15,6 +15,7 @@ Your driver implementation must meat the minimal structure bellow :
 /Http/routes.php
 /Http/Controllers
 /Http/Controllers/RegistrationController.php
+/Http/Controllers/SettingsController.php
 /{Driver}ConnectorServiceProvider.php
 ```
 
@@ -24,19 +25,58 @@ The file called `seat-connector.config.php` must contain a structure like this :
 
 ```
 [
-    'label' => {driver label},
-    'icon'  => {driver icon},
-    'client' => {driver client},
+    'label'    => {driver label},
+    'icon'     => {driver icon},
+    'client'   => {driver client},
+    'settings' => {driver settings fields},
 ];
 ```
 
 Upper attributes functions are described in the table bellow :
 
-| Attribute | Function                                                                                 |
-| --------- | ---------------------------------------------------------------------------------------- |
-| `label`   | It is the value which will be used as display in SeAT. You can use a translation string  |
-| `icon`    | Use a Font-Awesome class - it will be used on `identities` page for display purpose only |
-| `client`  | Provide the **FQDN** to your `IClient` implementation                                    |
+| Attribute  | Function                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------- |
+| `label`    | It is the value which will be used as display in SeAT. You can use a translation string  |
+| `icon`     | Use a Font-Awesome class - it will be used on `identities` page for display purpose only |
+| `client`   | Provide the **FQDN** to your `IClient` implementation                                    |
+| `settings` | Provide a form definition which will be used to generate the driver settings form        |
+
+The `settings` property myst contain an array of fields definition. At least one field is mandatory.
+Field structure must meet the format bellow :
+
+```
+[
+    'name'  => {field name},
+    'label' => {field caption},
+    'type'  => {field type},
+]
+```
+
+| Attribute | Function                                                                                                   |
+| --------- | ---------------------------------------------------------------------------------------------------------- |
+| `name`    | It will be used as `name` attribute under the generated field                                              |
+| `label`   | This must be a valid caption string - it will be used inside a `trans` function during the form generation |
+| `type`    | This will determine the type of field which must be generated for the form                                 |
+
+The field name will also be used by the connector to search its existing value inside settings.
+
+**IMPORTANT**
+> Your driver must store and read all its settings inside the global setting path `seat-connector.drivers.{driver}` (replace `{driver}` by your driver key).
+>
+> All your settings will be stored and read as an object.
+
+# Routes
+
+Your driver must register at least the 3 routes bellow. They will be used by the connector in order to proceed settings update and user registration.
+Replace `{driver}` by your driver configuration key.
+
+| Method   | Name                                                    | Path                                             |
+| -------- | ------------------------------------------------------- | ------------------------------------------------ |
+| **GET**  | `seat-connector.drivers.{driver}.registration`          | `/seat-connector/registration/{driver}`          |
+| **GET**  | `seat-connector.drivers.{driver}.registration.callback` | `/seat-connector/registration/{driver}/callback` |
+| **POST** | `seat-connector.drivers.{driver}.settings`              | `/seat-connector/settings/{driver}`              |
+
+In case the platform for which you want to provide a driver is using OAuth flow, please consider using [Socialite](https://socialiteproviders.netlify.com) as its easy to implement and already provides support for a lot of platforms.
 
 # Classes
 
@@ -159,17 +199,11 @@ This method is used by the connector to grant a new Set to the user.
 
 This method is used by the connector to revoke a Set from the user.
 
-# Routes
-
-Your driver must implement at least one route of type `GET` called `seat-connector.drivers.{driver}.registration`.
-Where **{driver}** must be your driver configuration key.
-
-This route will be called by SeAT while the user will attempt to register himself to the platform you're providing support for (and join it).
-
 # Examples
 
 You can find some implementation example of the new connector on repository listed bellow :
 
- - ~~[Slackbot - Slack Connector Driver](https://github.com/warlof/slackbot)~~
+ - [Slackbot - Slack Connector Driver](https://github.com/warlof/slackbot)
  - [Discord - Discord Connector Driver](https://github.com/warlof/seat-discord-connector/tree/seat-connector)
- - ~~[Teamspeak - Teamspeak Connector Driver](https://github.com/warlof/seat-teamspeak)~~
+ - [Teamspeak - Teamspeak Connector Driver](https://github.com/warlof/seat-teamspeak)
+ 
