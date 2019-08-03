@@ -92,13 +92,7 @@ class User extends Model
 
         $active_tokens = $this->group->refresh_tokens;
 
-        if (empty($active_tokens))
-            return [];
-
-        if ($strict_mode && ! $this->areAllTokensValid())
-            return [];
-
-        if (! $this->isEnabledAccount())
+        if (empty($active_tokens) || ($strict_mode && ! $this->areAllTokensValid()) || ! $this->isEnabledAccount())
             return [];
 
         if (! empty($this->allowed_sets))

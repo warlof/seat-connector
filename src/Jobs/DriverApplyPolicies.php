@@ -93,13 +93,8 @@ class DriverApplyPolicies implements ShouldQueue
 
             } catch (Exception $e) {
 
-                Log::create([
-                    'connector_type' => $this->driver,
-                    'level'          => 'error',
-                    'category'       => 'policy',
-                    'message'        => sprintf('Unable to update the user %s. %s',
-                        $user->getName(), $e->getMessage()),
-                ]);
+                $this->log('error', 'policy', sprintf('Unable to update the user %s. %s',
+                        $user->getName(), $e->getMessage()));
 
             }
 
@@ -114,8 +109,6 @@ class DriverApplyPolicies implements ShouldQueue
     {
         $sets          = null;
         $new_nickname  = null;
-        $pending_drops = collect();
-        $pending_adds  = collect();
         $profile       = User::where('connector_type', $this->driver)
                              ->where('connector_id', $user->getClientId())
                              ->first();
@@ -129,62 +122,120 @@ class DriverApplyPolicies implements ShouldQueue
         if ($user->getName() !== $expected_nickname)
             $new_nickname = $expected_nickname;
 
+        $user_sets = $user->getSets();
+
         // collect all sets which are assigned to the user and determine if they are valid
-        foreach ($user->getSets() as $set) {
-            if ($this->terminator || ! $profile->isAllowedSet($set->getId()))
-                $pending_drops->push($set->getId());
-        }
+        $pending_drops = $this->getDroppableSets($profile, $user_sets);
 
-        // if the process is not running in terminator mode, retrieve all valid sets for the current user
-        if (! $this->terminator) {
-            $sets = $profile->allowedSets();
-
-            foreach ($sets as $set_id) {
-                if (! in_array($set_id, $user->getSets()))
-                    $pending_adds->push($set_id);
-            }
-        }
+        // collect all valid sets for the current user
+        $pending_adds = $this->getGrantableSets($profile, $user_sets);
 
         // check if there is a set to update
         $are_sets_outdated = $pending_adds->isNotEmpty() || $pending_drops->isNotEmpty();
 
-        if ($are_sets_outdated) {
-
-            // drop all sets which have been marked for a removal
-            foreach ($pending_drops as $set_id) {
-                $set = $this->client->getSet($set_id);
-                $user->removeSet($set);
-            }
-
-            // add all sets which have been marked for an addition
-            foreach ($pending_adds as $set_id) {
-                $set = $this->client->getSet($set_id);
-                $user->addSet($set);
-            }
-
-            Log::create([
-                'connector_type' => $this->driver,
-                'level'          => 'info',
-                'category'       => 'policy',
-                'message'        => sprintf('Groups has successfully been updated for the user %s (%s) from group %d.',
-                    '', $user->getName(), $profile->group->id),
-            ]);
-        }
+        if ($are_sets_outdated)
+            $this->updateUserSets($user, $profile, $pending_adds->toArray(), $pending_drops->toArray());
 
         // check if a nickname update is required
-        if (! is_null($new_nickname)) {
-            $user->setName($new_nickname);
+        if (! is_null($new_nickname))
+            $this->updateUserProfile($user, $profile, $new_nickname);
+    }
 
-            $profile->connector_name = $new_nickname;
-            $profile->save();
+    /**
+     * @param \Warlof\Seat\Connector\Models\User $profile
+     * @param \Warlof\Seat\Connector\Drivers\ISet[] $sets
+     * @return \Illuminate\Support\Collection
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    private function getDroppableSets(User $profile, array $sets)
+    {
+        $pending_drops = collect();
 
-            Log::create([
-                'connector_type' => $this->driver,
-                'level'          => 'info',
-                'category'       => 'policy',
-                'message'        => sprintf('Nickname from the user %s (%s) from group %d has been updated.',
-                    '', $user->getName(), $profile->group->id),
-            ]);
+        foreach ($sets as $set) {
+            if ($this->terminator || ! $profile->isAllowedSet($set->getId()))
+                $pending_drops->push($set->getId());
         }
+
+        return $pending_drops;
+    }
+
+    /**
+     * @param \Warlof\Seat\Connector\Models\User $profile
+     * @param \Warlof\Seat\Connector\Drivers\ISet[] $sets
+     * @return \Illuminate\Support\Collection
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    private function getGrantableSets(User $profile, array $sets)
+    {
+        $pending_adds = collect();
+
+        if ($this->terminator)
+            return $pending_adds;
+
+        $allowed_sets = $profile->allowedSets();
+
+        foreach ($allowed_sets as $set_id) {
+            if (! in_array($set_id, $sets))
+                $pending_adds->push($set_id);
+        }
+
+        return $pending_adds;
+    }
+
+    /**
+     * @param \Warlof\Seat\Connector\Drivers\IUser $user
+     * @param \Warlof\Seat\Connector\Models\User $profile
+     * @param array $pending_adds
+     * @param array $pending_drops
+     */
+    private function updateUserSets(IUser $user, User $profile, array $pending_adds, array $pending_drops)
+    {
+        // drop all sets which have been marked for a removal
+        foreach ($pending_drops as $set_id) {
+            $set = $this->client->getSet($set_id);
+            $user->removeSet($set);
+        }
+
+        // add all sets which have been marked for an addition
+        foreach ($pending_adds as $set_id) {
+            $set = $this->client->getSet($set_id);
+            $user->addSet($set);
+        }
+
+        $this->log('info', 'policy',
+            sprintf('Groups has successfully been updated for the user %s (%s) from group %d.',
+                '', $user->getName(), $profile->group->id));
+    }
+
+    /**
+     * @param \Warlof\Seat\Connector\Drivers\IUser $user
+     * @param \Warlof\Seat\Connector\Models\User $profile
+     * @param string $nickname
+     */
+    private function updateUserProfile(IUser $user, User $profile, string $nickname)
+    {
+        $user->setName($nickname);
+
+        $profile->connector_name = $nickname;
+        $profile->save();
+
+        $this->log('info', 'policy',
+            sprintf('Nickname from the user %s (%s) from group %d has been updated.',
+                '', $user->getName(), $profile->group->id));
+    }
+
+    /**
+     * @param string $level
+     * @param string $category
+     * @param string $message
+     */
+    private function log(string $level, string $category, string $message)
+    {
+        Log::create([
+            'connector_type' => $this->driver,
+            'level'          => $level,
+            'category'       => $category,
+            'message'        => $message,
+        ]);
     }
 }
