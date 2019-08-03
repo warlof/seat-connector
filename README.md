@@ -23,11 +23,11 @@ You can manage users, policies, logs and everything for the same plugin and it w
 
 You'll find bellow all supported platforms
 
-| Platform      | Latest Version                                                                                                 | Maintainer     | Composer Chain                  | Repository                                       |
-| ------------- | -------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------- | ------------------------------------------------ |
-| **Teamspeak** | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-teamspeak?style=for-the-badge)         | Warlof Tutsimo | `warlof/seat-teamspeak`         | https://github.com/warlof/seat-teamspeak         |
-| **Discord**   | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-discord-connector?style=for-the-badge) | Warlof Tutsimo | `warlof/seat-discord-connector` | https://github.com/warlof/seat-discord-connector |
-| **Slack**     | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/slackbot?style=for-the-badge)               | Warlof Tutsimo | `warlof/slackbot`               | https://github.com/warlof/slackbot               |
+| Platform      | Latest Version                                                                                                 | Maintainer     | Composer Chain                  | Repository                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------- | -------------------------------------------------------- |
+| **Teamspeak** | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-teamspeak?style=for-the-badge)         | Warlof Tutsimo | `warlof/seat-teamspeak`         | [view](https://github.com/warlof/seat-teamspeak)         |
+| **Discord**   | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-discord-connector?style=for-the-badge) | Warlof Tutsimo | `warlof/seat-discord-connector` | [view](https://github.com/warlof/seat-discord-connector) |
+| **Slack**     | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/slackbot?style=for-the-badge)               | Warlof Tutsimo | `warlof/slackbot`               | [view](https://github.com/warlof/slackbot)               |
 
 # Installation
 
