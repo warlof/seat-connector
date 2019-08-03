@@ -44,6 +44,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
         $this->addRoutes();
         $this->addViews();
         $this->addTranslations();
+        $this->addApiEndpoints();
     }
 
     /**
@@ -159,5 +160,22 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     private function addTranslations()
     {
         $this->loadTranslationsFrom(__DIR__ . '/lang', 'seat-connector');
+    }
+
+    /**
+     * Import API endpoints
+     */
+    private function addApiEndpoints()
+    {
+        $current_annotations = config('l5-swagger.paths.annotations');
+        if (! is_array($current_annotations))
+            $current_annotations = [$current_annotations];
+
+        config([
+            'l5-swagger.paths.annotations' => array_unique(array_merge($current_annotations, [
+                __DIR__ . '/Http/Resources',
+                __DIR__ . '/Http/Controllers/Api/V2',
+            ])),
+        ]);
     }
 }

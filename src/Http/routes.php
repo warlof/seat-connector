@@ -20,73 +20,101 @@
 
 Route::group([
     'namespace' => 'Warlof\Seat\Connector\Http\Controllers',
-    'prefix'    => 'seat-connector',
-    'middleware' => ['web', 'auth', 'locale'],
 ], function () {
 
-    Route::get('/identities', [
-        'as'   => 'seat-connector.identities',
-        'uses' => 'IdentitiesController@index',
-    ]);
-
     Route::group([
-        'middleware' => 'bouncer:superuser',
+        'prefix'    => 'seat-connector',
+        'middleware' => ['web', 'auth', 'locale'],
     ], function () {
 
-        Route::get('/settings', [
-            'as' => 'seat-connector.settings',
-            'uses' => 'SettingsController@index',
+        Route::get('/identities', [
+            'as' => 'seat-connector.identities',
+            'uses' => 'IdentitiesController@index',
         ]);
+
+        Route::group([
+            'middleware' => 'bouncer:superuser',
+        ], function () {
+
+            Route::get('/settings', [
+                'as' => 'seat-connector.settings',
+                'uses' => 'SettingsController@index',
+            ]);
+
+        });
+
+        Route::group([
+            'middleware' => 'bouncer:seat-connector.security',
+        ], function () {
+
+            Route::get('/logs', [
+                'as' => 'seat-connector.logs',
+                'uses' => 'LogsController@index',
+            ]);
+
+            Route::get('/users', [
+                'as' => 'seat-connector.users',
+                'uses' => 'UsersController@index',
+            ]);
+
+            Route::get('/access', [
+                'as' => 'seat-connector.acl',
+                'uses' => 'AccessController@index',
+            ]);
+
+            Route::post('/access', [
+                'as' => 'seat-connector.acl.create',
+                'uses' => 'AccessController@create',
+            ]);
+
+            Route::delete('/access', [
+                'as' => 'seat-connector.acl.remove',
+                'uses' => 'AccessController@remove',
+            ]);
+
+            Route::group([
+                'prefix' => 'api',
+            ], function () {
+
+                Route::get('/roles', [
+                    'as' => 'seat-connector.api.roles',
+                    'uses' => 'LookupController@getRoles',
+                ]);
+
+                Route::get('/titles', [
+                    'as' => 'seat-connector.api.titles',
+                    'uses' => 'LookupController@getTitles',
+                ]);
+
+                Route::get('/sets', [
+                    'as' => 'seat-connector.api.sets',
+                    'uses' => 'LookupController@getSets',
+                ]);
+
+            });
+
+        });
 
     });
 
     Route::group([
-        'middleware' => 'bouncer:seat-connector.security',
+        'namespace'  => 'Api',
+        'middleware' => ['api.request', 'api.auth'],
+        'prefix'     => 'api',
     ], function () {
 
-        Route::get('/logs', [
-            'as'   => 'seat-connector.logs',
-            'uses' => 'LogsController@index',
-        ]);
-
-        Route::get('/users', [
-            'as'   => 'seat-connector.users',
-            'uses' => 'UsersController@index',
-        ]);
-
-        Route::get('/access', [
-            'as'   => 'seat-connector.acl',
-            'uses' => 'AccessController@index',
-        ]);
-
-        Route::post('/access', [
-            'as'   => 'seat-connector.acl.create',
-            'uses' => 'AccessController@create',
-        ]);
-
-        Route::delete('/access', [
-            'as' => 'seat-connector.acl.remove',
-            'uses' => 'AccessController@remove',
-        ]);
-
         Route::group([
-            'prefix' => 'api',
+            'namespace' => 'V2',
+            'prefix'    => 'v2',
         ], function () {
 
-            Route::get('/roles', [
-                'as'   => 'seat-connector.api.roles',
-                'uses' => 'LookupController@getRoles',
-            ]);
+            Route::group([
+                'prefix' => 'seat-connector',
+            ], function () {
 
-            Route::get('/titles', [
-                'as'   => 'seat-connector.api.titles',
-                'uses' => 'LookupController@getTitles',
-            ]);
+                Route::get('/users', 'UserController@index');
 
-            Route::get('/sets', [
-                'as'   => 'seat-connector.api.sets',
-                'uses' => 'LookupController@getSets',
-            ]);
+            });
 
         });
 
