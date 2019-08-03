@@ -17,7 +17,7 @@
             <h4 class="box-title">{{ ucfirst($driver->name) }}</h4>
           </div>
           <div class="box-body">
-            <form role="form" method="post" id="{{ sprintf('seat-connector-%s', $key) }}" action="{{ route(sprintf('seat-connector.drivers.%s.setup', $key)) }}">
+            <form role="form" method="post" id="{{ sprintf('seat-connector-%s', $key) }}" action="{{ route(sprintf('seat-connector.drivers.%s.settings', $key)) }}">
               {{ csrf_field() }}
 
               @foreach($driver->settings as $field)
