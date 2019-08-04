@@ -2,8 +2,9 @@
 
 namespace Warlof\Seat\Connector\Drivers;
 
-use Warlof\Seat\Connector\Exceptions\InvalidDriverException;
 use Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException;
+use Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsType;
+use Warlof\Seat\Connector\Exceptions\MissingDriverSettingsField;
 
 /**
  * Class Driver.
@@ -37,7 +38,6 @@ class Driver
      *
      * @param array $config
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
-     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
      */
     public function __construct(array $config)
     {
@@ -96,76 +96,95 @@ class Driver
     /**
      * @param array $structure
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
-     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
      */
     private function checkStructure(array $structure)
     {
-        foreach (['name', 'icon', 'client', 'settings'] as $attribute) {
-            $this->checkPropertyStructure($structure, $attribute);
-        }
+        $configuration_schema = [
+            'name:string',
+            'icon:string',
+            'client:class',
+            'settings:array' => [
+                'name:string',
+                'label:string',
+                'type:enum(email,hidden,number,password,text,url)',
+            ],
+        ];
 
-        $this->checkSettingsStructure($structure['settings']);
+        $this->validate($configuration_schema, $structure);
     }
 
     /**
+     * @param array $schema
      * @param array $structure
-     * @param string $property
-     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
+     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
+     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsType
+     * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverSettingsField
      */
-    private function checkPropertyStructure(array $structure, string $property)
+    private function validate(array $schema, array $structure)
     {
-        if (! array_key_exists($property, $structure))
-            throw new InvalidDriverException(sprintf('Driver configuration must have a %s field', $property));
+        foreach ($schema as $element => $component) {
 
-        if (is_null($structure[$property]) || empty($structure[$property]))
-            throw new InvalidDriverException(sprintf('Driver configuration %s field is mandatory', $property));
+            if (is_int($element))
+                $element = $component;
 
-        switch ($property) {
-            case 'client':
-                if (! class_exists($structure[$property]))
-                    throw new InvalidDriverException(sprintf('Driver configuration %s field must refer to an existing class', $property));
-                break;
-            case 'settings':
-                if (! is_array($structure[$property]))
-                    throw new InvalidDriverException(sprintf('Driver configuration %s field must be of array type', $property));
+            $property = $this->validateNode($element, $structure);
+
+            if (! is_array($component))
+                continue;
+
+            foreach ($component as $sub_element) {
+                foreach ($structure[$property] as $value) {
+                    $this->validateNode($sub_element, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $node
+     * @param $value
+     * @return mixed
+     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
+     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsType
+     * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverSettingsField
+     */
+    private function validateNode(string $node, $value)
+    {
+        $parts    = explode(':', $node);
+        $property = $parts[0];
+        $type     = $parts[1];
+
+        if (! array_key_exists($property, $value))
+            throw new MissingDriverSettingsField(sprintf('The property %s is missing.', $property));
+
+        if (! $this->is($type, $value[$property]))
+            throw new InvalidDriverSettingsType(sprintf('The property %s must be of type %s.', $property, $type));
+
+        if (is_null($value) || empty($value))
+            throw new InvalidDriverSettingsException(sprintf('The property %s is mandatory.', $property));
+
+        return $property;
+    }
+
+    /**
+     * @param string $type
+     * @param $value
+     * @return bool
+     */
+    private function is(string $type, $value)
+    {
+        $method = sprintf('is_%s', $type);
+
+        switch (true) {
+            case ($type == 'class'):
+                if (! is_string($value)) return false;
+                return class_exists($value, true);
+            case (strpos($type, 'enum') === 0):
+                $types = explode(',', substr($type, 5, -1));
+                return in_array($value, $types);
                 break;
             default:
-                if (! is_string($structure[$property]))
-                    throw new InvalidDriverException(sprintf('Driver configuration %s field must be of string type', $property));
-        }
-    }
-
-    /**
-     * @param array $settings
-     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
-     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
-     */
-    private function checkSettingsStructure(array $settings)
-    {
-        if (count($settings) == 0)
-            throw new InvalidDriverException('Driver configuration settings field must have at least one field definition');
-
-        foreach ($settings as $field) {
-
-            if (! is_array($field))
-                throw new InvalidDriverSettingsException('Driver configuration settings fields must be of array type');
-
-            $this->checkSettingsFieldStructure($field);
-        }
-    }
-
-    /**
-     * @param array $field
-     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
-     */
-    private function checkSettingsFieldStructure(array $field)
-    {
-        foreach (['name', 'label', 'type'] as $attribute) {
-            if (! array_key_exists($attribute, $field))
-                throw new InvalidDriverSettingsException(sprintf('Driver configuration settings fields must have a %s field', $attribute));
-
-            if (! is_string($field['name']))
-                throw new InvalidDriverSettingsException(sprintf('Driver configuration settings fields %s field must be of string type', $attribute));
+                return $method($value);
         }
     }
 }

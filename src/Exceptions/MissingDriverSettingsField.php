@@ -1,13 +1,14 @@
 <?php
 
+
 namespace Warlof\Seat\Connector\Exceptions;
 
 /**
- * Class InvalidDriverSettingsException.
+ * Class MissingDriverSettingsField.
  *
  * @package Warlof\Seat\Connector\Exceptions
  */
-class InvalidDriverSettingsException extends InvalidDriverException
+class MissingDriverSettingsField extends InvalidDriverException
 {
 
 }
