@@ -98,11 +98,11 @@ class User extends Model
         if (! empty($this->allowed_sets))
             return $this->allowed_sets;
 
-        $rows = $this->getSetGroups()
-            ->union($this->getSetRoles())
-            ->union($this->getSetCorporations())
-            //->union($this->getSetCorporationTitles()) // TODO : implement
-            ->union($this->getSetAlliances())
+        $rows = $this->getGroupSets()
+            ->union($this->getRoleSets())
+            ->union($this->getCorporationSets())
+            ->union($this->getTitleSets())
+            ->union($this->getAllianceSets())
             //->union($this->getSetPublics()) // TODO : implement
             ->get();
 
@@ -114,7 +114,7 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Query\Builder
      */
-    public function getSetGroups()
+    public function getGroupSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('groups', function ($query) {
@@ -128,7 +128,7 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Query\Builder
      */
-    public function getSetRoles()
+    public function getRoleSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('roles', function ($query) {
@@ -142,7 +142,7 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Query\Builder
      */
-    public function getSetCorporations()
+    public function getCorporationSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('corporations', function ($query) {
@@ -160,7 +160,7 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Query\Builder
      */
-    public function getSetCorporationTitles()
+    public function getTitleSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('titles', function ($query) {
@@ -175,7 +175,7 @@ class User extends Model
         return $rows;
     }
 
-    public function getSetAlliances()
+    public function getAllianceSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('alliances', function ($query) {
