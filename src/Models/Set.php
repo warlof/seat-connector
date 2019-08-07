@@ -23,6 +23,7 @@ namespace Warlof\Seat\Connector\Models;
 use Illuminate\Database\Eloquent\Model;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
 
@@ -80,5 +81,13 @@ class Set extends Model
     public function roles()
     {
         return $this->morphedByMany(Role::class, 'entity', 'seat_connector_set_entity');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function titles()
+    {
+        return $this->morphedByMany(CorporationTitle::class, 'entity', 'seat_connector_set_entity');
     }
 }

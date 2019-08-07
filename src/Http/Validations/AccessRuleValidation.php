@@ -23,6 +23,7 @@ namespace Warlof\Seat\Connector\Http\Validations;
 use Illuminate\Foundation\Http\FormRequest;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
 
@@ -55,6 +56,8 @@ class AccessRuleValidation extends FormRequest
             CorporationInfo::class,
             'alliance',
             Alliance::class,
+            'title',
+            CorporationTitle::class,
         ];
 
         return [

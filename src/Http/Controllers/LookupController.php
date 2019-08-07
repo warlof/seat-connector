@@ -44,8 +44,8 @@ class LookupController extends Controller
             ->get()
             ->map(function ($title, $key) {
                 return [
-                    'id'   => $title->title_id,
-                    'text' => $title->name,
+                    'id'   => $title->id,
+                    'text' => strip_tags($title->name),
                 ];
             });
 

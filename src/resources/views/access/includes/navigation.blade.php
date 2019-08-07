@@ -2,6 +2,9 @@
   <li role="presentation" data-filter="alliance">
     <a href="#">{{ trans('seat-connector::seat.alliance_filter') }}</a>
   </li>
+  <li role="presentation" data-filter="title">
+    <a href="#">{{ trans('seat-connector::seat.title_filter') }}</a>
+  </li>
   <li role="presentation" data-filter="corporation">
     <a href="#">{{ trans('seat-connector::seat.corporation_filter') }}</a>
   </li>

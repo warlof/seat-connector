@@ -22,6 +22,7 @@ namespace Warlof\Seat\Connector\Http\DataTables;
 
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Services\Models\UserSetting;
 use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
@@ -48,6 +49,9 @@ class AccessDataTable extends DataTable
             ->editColumn('action', function ($row) {
                 return view('seat-connector::access.includes.buttons.remove', compact('row'));
             })
+            ->editColumn('entity_name', function ($row) {
+                return strip_tags($row->entity_name);
+            })
             ->make(true);
     }
 
@@ -57,6 +61,7 @@ class AccessDataTable extends DataTable
     public function query()
     {
         return $this->applyScopes($this->getCorporationQuery())
+            ->union($this->applyScopes($this->getTitleQuery()))
             ->union($this->applyScopes($this->getAllianceQuery()))
             ->union($this->applyScopes($this->getRoleQuery()))
             ->union($this->applyScopes($this->getGroupQuery()));
@@ -114,6 +119,29 @@ class AccessDataTable extends DataTable
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
                 (new CorporationInfo())->getTable() . '.name as entity_name');
+
+        return $query;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function getTitleQuery()
+    {
+        $query = Set::
+            join('seat_connector_set_entity', 'set_id', 'seat_connector_sets.id')
+            ->join((new CorporationTitle())->getTable(), function ($join) {
+                $join->on('entity_id', (new CorporationTitle())->getTable() . '.id')
+                    ->where('entity_type', CorporationTitle::class);
+            })
+            ->select(
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name',
+                'seat_connector_set_entity.entity_type',
+                'seat_connector_set_entity.entity_id',
+                (new CorporationTitle())->getTable() . '.name as entity_name');
 
         return $query;
     }

@@ -23,6 +23,7 @@ namespace Warlof\Seat\Connector\Http\Controllers;
 use Exception;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Acl\Role;
 use Seat\Web\Models\Group;
@@ -61,6 +62,9 @@ class AccessController extends Controller
             case 'corporation':
                 $filter_type = CorporationInfo::class;
                 break;
+            case 'title':
+                $filter_type = CorporationTitle::class;
+                break;
             case 'alliance':
                 $filter_type = Alliance::class;
                 break;
@@ -95,6 +99,11 @@ class AccessController extends Controller
             case CorporationInfo::class:
                 $entity = CorporationInfo::find($request->input('entity_id'));
                 $group->corporations()->save($entity);
+                break;
+            case 'title':
+            case CorporationTitle::class:
+                $entity = CorporationTitle::find($request->input('entity_id'));
+                $group->titles()->save($entity);
                 break;
             case 'alliance':
             case Alliance::class:
@@ -134,6 +143,11 @@ class AccessController extends Controller
             case CorporationInfo::class:
                 $entity = CorporationInfo::find($request->input('entity_id'));
                 $group->corporations($entity)->detach();
+                break;
+            case 'title':
+            case CorporationTitle::class:
+                $entity = CorporationTitle::find($request->input('entity_id'));
+                $group->titles($entity)->detech();
                 break;
             case 'alliance':
             case Alliance::class:

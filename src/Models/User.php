@@ -158,10 +158,21 @@ class User extends Model
     }
 
     /**
-     * TODO : Not implemented yet - need core refactor
+     * @return \Illuminate\Database\Query\Builder
      */
     public function getSetCorporationTitles()
     {
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->whereHas('titles', function ($query) {
+                $titles = $this->group->users->map(function ($item) {
+                    return $item->character->titles->pluck('title_id');
+                });
+
+                $query->whereIn('entity_id', $titles->flatten());
+            })
+            ->select('connector_id');
+
+        return $rows;
     }
 
     public function getSetAlliances()
