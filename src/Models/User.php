@@ -165,7 +165,7 @@ class User extends Model
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('titles', function ($query) {
                 $titles = $this->group->users->map(function ($item) {
-                    return $item->character->titles->pluck('title_id');
+                    return $item->character->titles->pluck('id');
                 });
 
                 $query->whereIn('entity_id', $titles->flatten());
@@ -175,6 +175,9 @@ class User extends Model
         return $rows;
     }
 
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
     public function getAllianceSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
