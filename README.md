@@ -1,4 +1,4 @@
-# seat-connector
+# SeAT-Connector
 Provide basic layer for SeAT connectors
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-connector?style=for-the-badge)](https://packagist.org/packages/warlof/seat-connector)
