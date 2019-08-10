@@ -25,9 +25,9 @@ You'll find bellow all supported platforms
 
 | Platform      | Latest Version                                                                                                 | Maintainer     | Composer Chain                  | Repository                                               |
 | ------------- | -------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------- | -------------------------------------------------------- |
-| **Teamspeak** | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-teamspeak?style=for-the-badge)         | Warlof Tutsimo | `warlof/seat-teamspeak`         | [view](https://github.com/warlof/seat-teamspeak)         |
-| **Discord**   | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-discord-connector?style=for-the-badge) | Warlof Tutsimo | `warlof/seat-discord-connector` | [view](https://github.com/warlof/seat-discord-connector) |
-| **Slack**     | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/slackbot?style=for-the-badge)               | Warlof Tutsimo | `warlof/slackbot`               | [view](https://github.com/warlof/slackbot)               |
+| **Teamspeak** | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-teamspeak?style=for-the-badge)         | Warlof Tutsimo | `warlof/seat-teamspeak:dev-seat-connector`         | [view](https://github.com/warlof/seat-teamspeak)         |
+| **Discord**   | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-discord-connector?style=for-the-badge) | Warlof Tutsimo | `warlof/seat-discord-connector:dev-seat-connector` | [view](https://github.com/warlof/seat-discord-connector) |
+| **Slack**     | ![Latest Stable Version](https://img.shields.io/packagist/v/warlof/slackbot?style=for-the-badge)               | Warlof Tutsimo | `warlof/slackbot:dev-seat-connector`               | [view](https://github.com/warlof/slackbot)               |
 
 # Installation
 
