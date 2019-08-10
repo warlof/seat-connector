@@ -103,7 +103,7 @@ class User extends Model
             ->union($this->getCorporationSets())
             ->union($this->getTitleSets())
             ->union($this->getAllianceSets())
-            //->union($this->getSetPublics()) // TODO : implement
+            ->union($this->getPublicSets())
             ->get();
 
         $this->allowed_sets = $rows->unique('connector_id')->pluck('connector_id')->toArray();
@@ -194,10 +194,14 @@ class User extends Model
     }
 
     /**
-     * TODO : Not implemented yet - need design
+     * @return \Illuminate\Database\Query\Builder
      */
-    public function getSetPublics()
+    public function getPublicSets()
     {
+        $rows = Set::where('is_public', true)
+            ->select('connector_id');
+
+        return $rows;
     }
 
     /**

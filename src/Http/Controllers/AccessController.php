@@ -53,6 +53,9 @@ class AccessController extends Controller
 
         // init the filter type using either the query parameter or public
         switch (request()->query('filter_type', 'user')) {
+            case 'public':
+                $filter_type = 'public';
+                break;
             case 'user':
                 $filter_type = Group::class;
                 break;
@@ -85,6 +88,10 @@ class AccessController extends Controller
         $group = Set::find($request->input('set_id'));
 
         switch ($request->input('entity_type')) {
+            case 'public':
+                $group->is_public = true;
+                $group->save();
+                break;
             case 'group':
             case Group::class:
                 $entity = Group::find($request->input('entity_id'));
@@ -114,6 +121,11 @@ class AccessController extends Controller
                 throw new Exception('Unsupported entity type');
         }
 
+        if ($group->is_public && $request->input('entity_type') != 'public') {
+            $group->is_public = false;
+            $group->save();
+        }
+
         return redirect()
             ->back()
             ->with('success', 'The rule has been successfully added.');
@@ -129,6 +141,10 @@ class AccessController extends Controller
         $group = Set::find($request->input('set_id'));
 
         switch ($request->input('entity_type')) {
+            case 'public':
+                $group->is_public = false;
+                $group->save();
+                break;
             case 'group':
             case Group::class:
                 $entity = Group::find($request->input('entity_id'));

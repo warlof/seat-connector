@@ -48,7 +48,7 @@ class Set extends Model
      * @var array
      */
     protected $fillable = [
-        'connector_type', 'connector_id', 'name',
+        'connector_type', 'connector_id', 'name', 'is_public',
     ];
 
     /**
@@ -89,5 +89,26 @@ class Set extends Model
     public function titles()
     {
         return $this->morphedByMany(CorporationTitle::class, 'entity', 'seat_connector_set_entity');
+    }
+
+    /**
+     * @param array $options
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        if (! parent::save($options))
+            return false;
+
+        // in case the set has been registered in public filter - detach all existing filters
+        if ($this->is_public) {
+            $this->groups()->sync([]);
+            $this->corporations()->sync([]);
+            $this->alliances()->sync([]);
+            $this->roles()->sync([]);
+            $this->titles()->sync([]);
+        }
+
+        return true;
     }
 }

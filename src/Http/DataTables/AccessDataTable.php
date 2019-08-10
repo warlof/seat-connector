@@ -64,7 +64,8 @@ class AccessDataTable extends DataTable
             ->union($this->applyScopes($this->getTitleQuery()))
             ->union($this->applyScopes($this->getAllianceQuery()))
             ->union($this->applyScopes($this->getRoleQuery()))
-            ->union($this->applyScopes($this->getGroupQuery()));
+            ->union($this->applyScopes($this->getGroupQuery()))
+            ->union($this->applyScopes($this->getPublicQuery()));
     }
 
     /**
@@ -216,6 +217,20 @@ class AccessDataTable extends DataTable
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
                 (new User())->getTable() . '.name as entity_name');
+
+        return $query;
+    }
+
+    private function getPublicQuery()
+    {
+        $query = Set::where('is_public', true)
+            ->select(
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name'
+            )
+            ->selectRaw('? as entity_type, ? as entity_id, ? as entity_name', ['public', '0', '']);
 
         return $query;
     }

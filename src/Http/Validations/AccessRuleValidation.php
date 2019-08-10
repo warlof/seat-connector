@@ -48,6 +48,7 @@ class AccessRuleValidation extends FormRequest
     public function rules()
     {
         $filter_type = [
+            'public',
             'group',
             Group::class,
             'role',
@@ -61,7 +62,7 @@ class AccessRuleValidation extends FormRequest
         ];
 
         return [
-            'entity_id'   => 'required|integer',
+            'entity_id'   => 'required_unless:entity_type,public|integer',
             'entity_type' => 'required|in:' . implode(',', $filter_type),
             'set_id'      => 'required|exists:seat_connector_sets,id',
         ];
