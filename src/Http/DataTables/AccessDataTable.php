@@ -91,11 +91,11 @@ class AccessDataTable extends DataTable
     {
         return [
             'entity_name' => [
-                'name'  => 'entity_name',
+                'data'  => 'entity_name',
                 'title' => trans('seat-connector::seat.entity_name'),
             ],
             'name' => [
-                'name'  => 'name',
+                'data'  => 'name',
                 'title' => trans_choice('seat-connector::seat.sets', 0),
             ],
         ];

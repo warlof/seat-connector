@@ -81,23 +81,23 @@ class UserMappingDataTable extends DataTable
     {
         return [
             [
-                'name'  => 'group_id',
+                'data'  => 'group_id',
                 'title' => trans('seat-connector::seat.group_id'),
             ],
             [
-                'name'  => 'character_id',
+                'data'  => 'character_id',
                 'title' => trans('seat-connector::seat.character_id'),
             ],
             [
-                'name'  => 'name',
+                'data'  => 'name',
                 'title' => trans('seat-connector::seat.character_name'),
             ],
             [
-                'name'  => 'connector_id',
+                'data'  => 'connector_id',
                 'title' => trans('seat-connector::seat.connector_id'),
             ],
             [
-                'name'  => 'connector_name',
+                'data'  => 'connector_name',
                 'title' => trans('seat-connector::seat.connector_name'),
             ],
         ];

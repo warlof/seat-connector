@@ -81,23 +81,23 @@ class LogsDataTable extends DataTable
     {
         return [
             [
-                'name' => 'created_at',
+                'data' => 'created_at',
                 'title' => trans('seat-connector::seat.datetime'),
             ],
             [
-                'name' => 'level',
+                'data' => 'level',
                 'title' => trans('seat-connector::seat.level'),
             ],
             [
-                'name' => 'connector_type',
+                'data' => 'connector_type',
                 'title' => trans('seat-connector::seat.driver'),
             ],
             [
-                'name' => 'category',
+                'data' => 'category',
                 'title' => trans('seat-connector::seat.category'),
             ],
             [
-                'name' => 'message',
+                'data' => 'message',
                 'title' => trans('seat-connector::seat.message'),
             ],
         ];
