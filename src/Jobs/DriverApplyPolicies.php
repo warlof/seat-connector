@@ -175,7 +175,9 @@ class DriverApplyPolicies implements ShouldQueue
         $allowed_sets = $profile->allowedSets();
 
         foreach ($allowed_sets as $set_id) {
-            if (! in_array($set_id, $sets))
+            if (empty(array_filter($sets, function ($set) use ($set_id) {
+                return $set->getId() == $set_id;
+            })))
                 $pending_adds->push($set_id);
         }
 
