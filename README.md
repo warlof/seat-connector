@@ -2,7 +2,7 @@
 Provide basic layer for SeAT connectors
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/warlof/seat-connector?style=for-the-badge)](https://packagist.org/packages/warlof/seat-connector)
-[![Downloads](https://img.shields.io/github/downloads/warlof/seat-connector/total?style=for-the-badge)](https://packagist.org/packages/warlof/seat-connector)
+[![Downloads](https://img.shields.io/packagist/dt/warlof/seat-connector?style=for-the-badge)](https://packagist.org/packages/warlof/seat-connector)
 [![Latest Stable Version](https://img.shields.io/badge/SeAT-3.0.x-blueviolet?style=for-the-badge)](https://github.com/eveseat/seat)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/warlof/seat-connector?style=for-the-badge)](https://codeclimate.com/github/warlof/seat-connector/maintainability)
 [![License](https://img.shields.io/github/license/warlof/seat-connector?style=for-the-badge)](https://github.com/warlof/seat-connector/blob/master/LICENSE)
