@@ -14,8 +14,11 @@
   <li role="presentation" data-filter="user">
     <a href="#">{{ trans('seat-connector::seat.user_filter') }}</a>
   </li>
-  <li role="presentation" class="active" data-filter="public">
+  <li role="presentation" data-filter="public">
     <a href="#">{{ trans('seat-connector::seat.public_filter') }}</a>
+  </li>
+  <li role="presentation" data-filter="" class="active">
+    <a href="#">{{ trans('seat-connector::seat.all_filter') }}</a>
   </li>
   <li class="pull-left header">
     <i class="fa fa-shield"></i>

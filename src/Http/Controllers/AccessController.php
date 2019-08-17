@@ -45,6 +45,8 @@ class AccessController extends Controller
      */
     public function index(AccessDataTable $datatable)
     {
+        $filter_type = '';
+
         // retrieve all registered SeAT Connector drivers
         $available_drivers = config('seat-connector.drivers', []);
 

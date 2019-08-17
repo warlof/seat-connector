@@ -59,7 +59,8 @@ class AccessDataTableScope implements DataTableScope
      */
     public function apply($query)
     {
-        $query->having('entity_type', $this->filter_type);
+        if (! empty($this->filter_type))
+            $query->having('entity_type', $this->filter_type);
 
         // apply a dummy filter which will always return no result
         if (is_null($this->connector_driver))
