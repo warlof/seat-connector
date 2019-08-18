@@ -97,27 +97,32 @@ class AccessController extends Controller
             case 'group':
             case Group::class:
                 $entity = Group::find($request->input('entity_id'));
-                $group->groups()->save($entity);
+                if (! $group->groups()->where('id', $entity->id)->exists())
+                    $group->groups()->save($entity);
                 break;
             case 'role':
             case Role::class:
                 $entity = Role::find($request->input('entity_id'));
-                $group->roles()->save($entity);
+                if (! $group->roles()->where('id', $entity->id)->exists())
+                    $group->roles()->save($entity);
                 break;
             case 'corporation':
             case CorporationInfo::class:
                 $entity = CorporationInfo::find($request->input('entity_id'));
-                $group->corporations()->save($entity);
+                if (! $group->corporations()->where('corporation_id', $entity->corporation_id)->exists())
+                    $group->corporations()->save($entity);
                 break;
             case 'title':
             case CorporationTitle::class:
                 $entity = CorporationTitle::find($request->input('entity_id'));
-                $group->titles()->save($entity);
+                if (! $group->titles()->where('id', $entity->id)->exists())
+                    $group->titles()->save($entity);
                 break;
             case 'alliance':
             case Alliance::class:
                 $entity = Alliance::find($request->input('entity_id'));
-                $group->alliances()->save($entity);
+                if (! $group->alliances()->where('alliance_id', $entity->alliance_id)->exists())
+                    $group->alliances()->save($entity);
                 break;
             default:
                 throw new Exception('Unsupported entity type');
