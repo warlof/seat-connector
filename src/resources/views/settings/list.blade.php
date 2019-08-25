@@ -82,12 +82,12 @@
             <div class="row">
 
               <div class="col-md-6">
-                <button type="button" role="button" class="btn btn-success btn-block btn-flat">Update Sets</button>
+                <button type="button" role="button" class="btn btn-success btn-block btn-flat" disabled>Update Sets</button>
                 <span class="help-block">This will update known Sets from selected Drivers.</span>
               </div>
 
               <div class="col-md-6">
-                <button type="button" role="button" class="btn btn-danger btn-block btn-flat">Reset Everybody</button>
+                <button type="button" role="button" class="btn btn-danger btn-block btn-flat" disabled>Reset Everybody</button>
                 <span class="help-block">This will remove all Set from every Users on selected Drivers.</span>
               </div>
 
@@ -96,12 +96,12 @@
             <div class="row">
 
               <div class="col-md-6">
-                <button type="button" role="button" class="btn btn-success btn-block btn-flat">Sync. Users</button>
+                <button type="button" role="button" class="btn btn-success btn-block btn-flat" disabled>Sync. Users</button>
                 <span class="help-block">This will apply Users policy to selected Drivers.</span>
               </div>
 
               <div class="col-md-6">
-                <select class="form-control">
+                <select class="form-control" disabled>
                   <option value="">All Drivers</option>
                   @foreach($drivers as $key => $driver)
                   <option value="{{ $key }}">{{ ucfirst($driver->name) }}</option>
