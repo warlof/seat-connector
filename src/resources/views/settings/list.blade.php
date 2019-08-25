@@ -15,11 +15,20 @@
         </div>
         <div class="panel-body">
           <form method="post" id="seat-connector-setup">
+            {{ csrf_field() }}
             <div class="form-group">
               <label for="security-level">Security Level</label>
               <select id="security-level" name="security-level" class="form-control">
-                <option>Strict</option>
-                <option>Normal</option>
+                @if(setting('seat-connector.strict', true))
+                  <option value="strict" selected>Strict</option>
+                @else
+                  <option value="strict">Strict</option>
+                @endif
+                @if(setting('seat-connector.strict', true))
+                    <option value="normal">Normal</option>
+                @else
+                  <option value="normal" selected>Normal</option>
+                @endif
               </select>
             </div>
             <div class="form-group">
@@ -27,16 +36,16 @@
               <div class="radio">
                 <label>
                   @if(setting('seat-connector.ticker', true))
-                    <input type="radio" id="use-ticker" name="use-ticker" value="false" /> No
+                    <input type="radio" id="use-ticker" name="use-ticker" value="0" /> No
                   @else
-                    <input type="radio" id="use-ticker" name="use-ticker" value="false" checked /> No
+                    <input type="radio" id="use-ticker" name="use-ticker" value="0" checked /> No
                   @endif
                 </label>
                 <label>
                   @if(setting('seat-connector.ticker', true))
-                  <input type="radio" id="use-ticker" name="use-ticker" checked /> Yes
+                  <input type="radio" id="use-ticker" name="use-ticker" value="1" checked /> Yes
                   @else
-                  <input type="radio" id="use-ticker" name="use-ticker" /> Yes
+                  <input type="radio" id="use-ticker" name="use-ticker" value="1" /> Yes
                   @endif
                 </label>
               </div>
@@ -52,7 +61,7 @@
           </form>
         </div>
         <div class="panel-footer clearfix">
-          <button type="button" class="btn btn-success pull-right" form="seat-connector-setup">{{ trans('seat-connector::seat.save') }}</button>
+          <button type="submit" class="btn btn-success pull-right" form="seat-connector-setup">{{ trans('seat-connector::seat.save') }}</button>
         </div>
       </div>
 

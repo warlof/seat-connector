@@ -23,12 +23,12 @@ Route::group([
 ], function () {
 
     Route::group([
-        'prefix'    => 'seat-connector',
+        'prefix'     => 'seat-connector',
         'middleware' => ['web', 'auth', 'locale'],
     ], function () {
 
         Route::get('/identities', [
-            'as' => 'seat-connector.identities',
+            'as'   => 'seat-connector.identities',
             'uses' => 'IdentitiesController@index',
         ]);
 
@@ -37,8 +37,13 @@ Route::group([
         ], function () {
 
             Route::get('/settings', [
-                'as' => 'seat-connector.settings',
+                'as'   => 'seat-connector.settings',
                 'uses' => 'SettingsController@index',
+            ]);
+
+            Route::post('/settings', [
+                'as'   => 'seat-connector.settings',
+                'uses' => 'SettingsController@update',
             ]);
 
         });
@@ -48,27 +53,27 @@ Route::group([
         ], function () {
 
             Route::get('/logs', [
-                'as' => 'seat-connector.logs',
+                'as'   => 'seat-connector.logs',
                 'uses' => 'LogsController@index',
             ]);
 
             Route::get('/users', [
-                'as' => 'seat-connector.users',
+                'as'   => 'seat-connector.users',
                 'uses' => 'UsersController@index',
             ]);
 
             Route::get('/access', [
-                'as' => 'seat-connector.acl',
+                'as'   => 'seat-connector.acl',
                 'uses' => 'AccessController@index',
             ]);
 
             Route::post('/access', [
-                'as' => 'seat-connector.acl.create',
+                'as'   => 'seat-connector.acl.create',
                 'uses' => 'AccessController@create',
             ]);
 
             Route::delete('/access', [
-                'as' => 'seat-connector.acl.remove',
+                'as'   => 'seat-connector.acl.remove',
                 'uses' => 'AccessController@remove',
             ]);
 
@@ -77,17 +82,17 @@ Route::group([
             ], function () {
 
                 Route::get('/roles', [
-                    'as' => 'seat-connector.api.roles',
+                    'as'   => 'seat-connector.api.roles',
                     'uses' => 'LookupController@getRoles',
                 ]);
 
                 Route::get('/titles', [
-                    'as' => 'seat-connector.api.titles',
+                    'as'   => 'seat-connector.api.titles',
                     'uses' => 'LookupController@getTitles',
                 ]);
 
                 Route::get('/sets', [
-                    'as' => 'seat-connector.api.sets',
+                    'as'   => 'seat-connector.api.sets',
                     'uses' => 'LookupController@getSets',
                 ]);
 

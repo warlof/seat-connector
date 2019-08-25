@@ -20,6 +20,7 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Drivers\Driver;
 
@@ -45,5 +46,26 @@ class SettingsController extends Controller
         }
 
         return view('seat-connector::settings.list', compact('drivers'));
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    public function update(Request $request)
+    {
+        $request->validate([
+            'security-level' => 'required|in:strict,normal',
+            'use-ticker'     => 'required|boolean',
+            'prefix-format'  => 'required|string',
+        ]);
+
+        setting(['seat-connector.ticker', $request->input('use-ticker') == '1'], true);
+        setting(['seat-connector.strict', $request->input('security-level') == 'strict'], true);
+        setting(['seat-connector.format', $request->input('prefix-format')], true);
+
+        return redirect()->back()
+            ->with('success', 'SeAT Connector has been updated.');
     }
 }
