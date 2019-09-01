@@ -235,10 +235,10 @@ class DriverApplyPolicies implements ShouldQueue
      */
     private function updateUserProfile(IUser $user, User $profile, string $nickname)
     {
-        $user->setName($nickname);
+        if ($user->setName($nickname)) {
 
-        $profile->connector_name = $nickname;
-        $profile->save();
+            $profile->connector_name = $nickname;
+            $profile->save();
 
             event(new EventLogger($this->driver, 'info', 'policy',
                 sprintf('Nickname from the user %s (%s) from group %d has been updated.',

@@ -44,8 +44,9 @@ interface IUser
 
     /**
      * @param string $name
+     * @return bool
      */
-    public function setName(string $name);
+    public function setName(string $name): bool;
 
     /**
      * @return \Warlof\Seat\Connector\Drivers\ISet[]
