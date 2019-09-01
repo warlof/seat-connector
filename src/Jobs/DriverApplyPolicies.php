@@ -71,6 +71,10 @@ class DriverApplyPolicies implements ShouldQueue
         $this->driver     = $driver;
         $this->terminator = $terminator;
         $this->tags       = array_merge($this->tags, [$driver]);
+
+        if ($terminator) {
+            $this->tags = array_merge($this->tags, ['terminator']);
+        }
     }
 
     /**

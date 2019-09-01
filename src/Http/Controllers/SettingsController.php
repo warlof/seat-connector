@@ -21,6 +21,7 @@
 namespace Warlof\Seat\Connector\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Drivers\Driver;
 
@@ -31,6 +32,15 @@ use Warlof\Seat\Connector\Drivers\Driver;
  */
 class SettingsController extends Controller
 {
+    /**
+     * return array
+     */
+    const ALLOWED_COMMANDS = [
+        'seat-connector:sync:sets',
+        'seat-connector:apply:policies',
+        'seat-connector:apply:policies --terminator',
+    ];
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
@@ -67,5 +77,32 @@ class SettingsController extends Controller
 
         return redirect()->back()
             ->with('success', 'SeAT Connector has been updated.');
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     */
+    public function dispatch(Request $request)
+    {
+        $drivers = array_merge(array_keys(config('seat-connector.drivers', [])), ['']);
+
+        $request->validate([
+            'command' => sprintf('required|in:%s', implode(',', self::ALLOWED_COMMANDS)),
+            'driver'  => sprintf('in:%s', implode(',', $drivers)),
+        ]);
+
+        $arguments      = [];
+        $command_string = explode(' ', $request->input('command'));
+        $command        = array_first($command_string);
+
+        // add requested driver filter to command arguments, if any
+        if (! empty($request->input('driver')))
+            $arguments['--driver'][0] = $request->input('driver');
+
+        // add terminator option to command arguments, if any
+        if (count($command_string) > 1)
+            $arguments['--terminator'] = true;
+
+        Artisan::call($command, $arguments);
     }
 }

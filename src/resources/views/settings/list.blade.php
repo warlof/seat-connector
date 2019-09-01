@@ -82,12 +82,12 @@
             <div class="row">
 
               <div class="col-md-6">
-                <button type="button" role="button" class="btn btn-success btn-block btn-flat" disabled>Update Sets</button>
+                <button type="button" role="button" id="seat-connector-sets" class="btn btn-success btn-block btn-flat">Update Sets</button>
                 <span class="help-block">This will update known Sets from selected Drivers.</span>
               </div>
 
               <div class="col-md-6">
-                <button type="button" role="button" class="btn btn-danger btn-block btn-flat" disabled>Reset Everybody</button>
+                <button type="button" role="button" id="seat-connector-terminator" class="btn btn-danger btn-block btn-flat">Reset Everybody</button>
                 <span class="help-block">This will remove all Set from every Users on selected Drivers.</span>
               </div>
 
@@ -96,12 +96,12 @@
             <div class="row">
 
               <div class="col-md-6">
-                <button type="button" role="button" class="btn btn-success btn-block btn-flat" disabled>Sync. Users</button>
+                <button type="button" role="button" id="seat-connector-policy" class="btn btn-success btn-block btn-flat">Sync. Users</button>
                 <span class="help-block">This will apply Users policy to selected Drivers.</span>
               </div>
 
               <div class="col-md-6">
-                <select class="form-control" disabled>
+                <select id="driver-selector" class="form-control">
                   <option value="">All Drivers</option>
                   @foreach($drivers as $key => $driver)
                   <option value="{{ $key }}">{{ ucfirst($driver->name) }}</option>
@@ -123,7 +123,7 @@
               <dt>Use Ticker</dt>
               <dd>If yes is selected, the Character Corporation Ticker will be added to the name according to <code>prefix mask</code>.</dd>
 
-              <dt>Prefix mask</dt>
+              <dt>Prefix Mask</dt>
               <dd>This is the pattern which will define how ticker must be put. <code>%s</code> is a Joker. They will be replaced in the following order : <i>ticker</i>, <i>character name</i>.</dd>
             </dl>
 
@@ -178,3 +178,33 @@
   @endforeach
 
 @stop
+
+@push('javascript')
+  <script>
+    $('#seat-connector-sets, #seat-connector-policy, #seat-connector-terminator').on('click', function (e) {
+        var command = '';
+        var driver  = $('#driver-selector').val();
+
+        switch (e.target.id) {
+            case 'seat-connector-sets':
+                command = 'seat-connector:sync:sets';
+                break;
+            case 'seat-connector-policy':
+                command = 'seat-connector:apply:policies';
+                break;
+            case 'seat-connector-terminator':
+                command = 'seat-connector:apply:policies --terminator';
+                break;
+        }
+
+        $.ajax({
+            'method': 'post',
+            'url': '{{ route('seat-connector.settings.command') }}',
+            'data': {
+                'driver': driver,
+                'command': command
+            },
+        });
+    });
+  </script>
+@endpush

@@ -46,6 +46,11 @@ Route::group([
                 'uses' => 'SettingsController@update',
             ]);
 
+            Route::post('/settings/command', [
+                'as'   => 'seat-connector.settings.command',
+                'uses' => 'SettingsController@dispatch',
+            ]);
+
         });
 
         Route::group([
