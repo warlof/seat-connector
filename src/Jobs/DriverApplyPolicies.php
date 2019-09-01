@@ -27,7 +27,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Warlof\Seat\Connector\Drivers\IUser;
-use Warlof\Seat\Connector\Models\Log;
+use Warlof\Seat\Connector\Events\EventLogger;
 use Warlof\Seat\Connector\Models\User;
 
 /**
@@ -111,8 +111,9 @@ class DriverApplyPolicies implements ShouldQueue
 
             } catch (Exception $e) {
 
-                $this->log('error', 'policy', sprintf('Unable to update the user %s. %s',
-                        $user->getName(), $e->getMessage()));
+                event(new EventLogger($this->driver, 'error', 'policy',
+                    sprintf('Unable to update the user %s. %s',
+                        $user->getName(), $e->getMessage())));
 
             }
 
@@ -222,9 +223,9 @@ class DriverApplyPolicies implements ShouldQueue
             $user->addSet($set);
         }
 
-        $this->log('info', 'policy',
+        event(new EventLogger($this->driver, 'info', 'policy',
             sprintf('Groups has successfully been updated for the user %s (%s) from group %d.',
-                '', $user->getName(), $profile->group->id));
+                '', $user->getName(), $profile->group->id)));
     }
 
     /**
@@ -239,23 +240,9 @@ class DriverApplyPolicies implements ShouldQueue
         $profile->connector_name = $nickname;
         $profile->save();
 
-        $this->log('info', 'policy',
-            sprintf('Nickname from the user %s (%s) from group %d has been updated.',
-                '', $user->getName(), $profile->group->id));
-    }
-
-    /**
-     * @param string $level
-     * @param string $category
-     * @param string $message
-     */
-    private function log(string $level, string $category, string $message)
-    {
-        Log::create([
-            'connector_type' => $this->driver,
-            'level'          => $level,
-            'category'       => $category,
-            'message'        => $message,
-        ]);
+            event(new EventLogger($this->driver, 'info', 'policy',
+                sprintf('Nickname from the user %s (%s) from group %d has been updated.',
+                    '', $user->getName(), $profile->group->id)));
+        }
     }
 }

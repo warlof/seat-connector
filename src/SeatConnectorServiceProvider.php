@@ -21,9 +21,12 @@
 namespace Warlof\Seat\Connector;
 
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Event;
 use Seat\Services\AbstractSeatPlugin;
 use Warlof\Seat\Connector\Commands\DriverApplyPolicies;
 use Warlof\Seat\Connector\Commands\DriverUpdateSets;
+use Warlof\Seat\Connector\Events\EventLogger;
+use Warlof\Seat\Connector\Listeners\LoggerListener;
 
 /**
  * Class SeatConnectorProvider.
@@ -45,6 +48,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
         $this->addViews();
         $this->addTranslations();
         $this->addApiEndpoints();
+        $this->addEvents();
     }
 
     /**
@@ -177,5 +181,13 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
                 __DIR__ . '/Http/Controllers/Api/V2',
             ])),
         ]);
+    }
+
+    /**
+     * Register events listeners
+     */
+    private function addEvents()
+    {
+        Event::listen(EventLogger::class, LoggerListener::class);
     }
 }

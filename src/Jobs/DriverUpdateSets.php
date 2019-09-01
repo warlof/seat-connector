@@ -25,7 +25,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Warlof\Seat\Connector\Models\Log;
+use Warlof\Seat\Connector\Events\EventLogger;
 use Warlof\Seat\Connector\Models\Set;
 
 /**
@@ -115,11 +115,6 @@ class DriverUpdateSets implements ShouldQueue
             ->whereNotIn('connector_id', $processed_sets)
             ->delete();
 
-        Log::create([
-            'connector_type' => $this->driver,
-            'level'          => 'info',
-            'category'       => 'sets',
-            'message'        => 'Sets metadata has been updated.',
-        ]);
+        event(new EventLogger($this->driver, 'info', 'sets', 'Sets metadata has been updated.'));
     }
 }
