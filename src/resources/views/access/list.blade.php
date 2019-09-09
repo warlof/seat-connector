@@ -45,7 +45,7 @@
               dataType: 'json',
               cache: true
           },
-          minimumInputLength: 3
+          minimumInputLength: 1
       });
 
       $('#connector-filter-corporation').select2({
@@ -69,7 +69,7 @@
               dataType: 'json',
               cache: true
           },
-          minimumInputLength: 3
+          minimumInputLength: 1
       });
 
       $('#connector-filter-alliance').select2({
@@ -99,7 +99,7 @@
               dataType: 'json',
               cache: true
           },
-          minimumInputLength: 3
+          minimumInputLength: 1
       });
 
       $('#connector-table-filters li a').click(function() {
