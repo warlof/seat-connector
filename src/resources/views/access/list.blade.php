@@ -18,7 +18,7 @@
       $('#connector-filter-type').change(function() {
           var filter_type = $('#connector-filter-type').val();
 
-          $.each(['connector-filter-group', 'connector-filter-role', 'connector-filter-corporation', 'connector-filter-title', 'connector-filter-alliance'], function (key, value) {
+          $.each(['connector-filter-groups', 'connector-filter-roles', 'connector-filter-corporations', 'connector-filter-titles', 'connector-filter-alliances'], function (key, value) {
               if (value === ('connector-filter-' + filter_type)) {
                   $(('#' + value)).prop('disabled', false);
               } else {
@@ -26,11 +26,11 @@
               }
           });
 
-          if (filter_type === 'title')
-              $('#connector-filter-corporation, #connector-filter-title').prop('disabled', false);
+          if (filter_type === 'titles')
+              $('#connector-filter-corporations, #connector-filter-titles').prop('disabled', false);
       }).select2();
 
-      $('#connector-filter-group').select2({
+      $('#connector-filter-groups').select2({
           ajax: {
               url: '{{ route('fastlookup.groups') }}',
               dataType: 'json',
@@ -39,7 +39,7 @@
           minimumInputLength: 3
       });
 
-      $('#connector-filter-role').select2({
+      $('#connector-filter-roles').select2({
           ajax: {
               url: '{{ route('seat-connector.api.roles') }}',
               dataType: 'json',
@@ -48,7 +48,7 @@
           minimumInputLength: 1
       });
 
-      $('#connector-filter-corporation').select2({
+      $('#connector-filter-corporations').select2({
           ajax: {
               url: '{{ route('fastlookup.corporations') }}',
               dataType: 'json',
@@ -57,13 +57,13 @@
           minimumInputLength: 3
       });
 
-      $('#connector-filter-title').select2({
+      $('#connector-filter-titles').select2({
           ajax: {
               url: '{{ route('seat-connector.api.titles') }}',
               data: function (params) {
                   return {
                       q: params.term,
-                      corporation_id: $('#connector-filter-corporation').val()
+                      corporation_id: $('#connector-filter-corporations').val()
                   };
               },
               dataType: 'json',
@@ -72,7 +72,7 @@
           minimumInputLength: 1
       });
 
-      $('#connector-filter-alliance').select2({
+      $('#connector-filter-alliances').select2({
           ajax: {
               url: '{{ route('fastlookup.alliances') }}',
               dataType: 'json',

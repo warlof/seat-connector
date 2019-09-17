@@ -20,7 +20,6 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
-use Exception;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
@@ -54,23 +53,23 @@ class AccessController extends Controller
         $driver = request()->query('driver', array_get(array_last($available_drivers), 'name'));
 
         // init the filter type using either the query parameter or public
-        switch (request()->query('filter_type', 'user')) {
+        switch (request()->query('filter_type', 'groups')) {
             case 'public':
                 $filter_type = 'public';
                 break;
-            case 'user':
+            case 'groups':
                 $filter_type = Group::class;
                 break;
-            case 'role':
+            case 'roles':
                 $filter_type = Role::class;
                 break;
-            case 'corporation':
+            case 'corporations':
                 $filter_type = CorporationInfo::class;
                 break;
-            case 'title':
+            case 'titles':
                 $filter_type = CorporationTitle::class;
                 break;
-            case 'alliance':
+            case 'alliances':
                 $filter_type = Alliance::class;
                 break;
         }
@@ -87,51 +86,31 @@ class AccessController extends Controller
      */
     public function create(AccessRuleValidation $request)
     {
-        $group = Set::find($request->input('set_id'));
+        $entity_type = $request->input('entity_type');
 
-        switch ($request->input('entity_type')) {
-            case 'public':
-                $group->is_public = true;
-                $group->save();
+        switch ($entity_type) {
+            case 'alliances':
+                $entity_pk = 'alliance_id';
                 break;
-            case 'group':
-            case Group::class:
-                $entity = Group::find($request->input('entity_id'));
-                if (! $group->groups()->where('id', $entity->id)->exists())
-                    $group->groups()->save($entity);
-                break;
-            case 'role':
-            case Role::class:
-                $entity = Role::find($request->input('entity_id'));
-                if (! $group->roles()->where('id', $entity->id)->exists())
-                    $group->roles()->save($entity);
-                break;
-            case 'corporation':
-            case CorporationInfo::class:
-                $entity = CorporationInfo::find($request->input('entity_id'));
-                if (! $group->corporations()->where('corporation_id', $entity->corporation_id)->exists())
-                    $group->corporations()->save($entity);
-                break;
-            case 'title':
-            case CorporationTitle::class:
-                $entity = CorporationTitle::find($request->input('entity_id'));
-                if (! $group->titles()->where('id', $entity->id)->exists())
-                    $group->titles()->save($entity);
-                break;
-            case 'alliance':
-            case Alliance::class:
-                $entity = Alliance::find($request->input('entity_id'));
-                if (! $group->alliances()->where('alliance_id', $entity->alliance_id)->exists())
-                    $group->alliances()->save($entity);
+            case 'corporations':
+                $entity_pk = 'corporation_id';
                 break;
             default:
-                throw new Exception('Unsupported entity type');
+                $entity_pk = 'id';
         }
 
-        if ($group->is_public && $request->input('entity_type') != 'public') {
-            $group->is_public = false;
-            $group->save();
+        $set = Set::find($request->input('set_id'));
+
+        if ($entity_type != 'public') {
+            if ($set->$entity_type()->where($entity_pk, $request->input('entity_id'))->exists())
+                return redirect()->back()
+                    ->with('warning', 'The rule already exists. Nothing has been changed.');
+
+            $set->$entity_type()->attach($request->input('entity_id'));
         }
+
+        $set->is_public = $entity_type == 'public';
+        $set->save();
 
         return redirect()
             ->back()
@@ -145,44 +124,60 @@ class AccessController extends Controller
      */
     public function remove(AccessRuleValidation $request)
     {
-        $group = Set::find($request->input('set_id'));
+        $entity_type = $this->classAlias($request->input('entity_type'));
 
-        switch ($request->input('entity_type')) {
-            case 'public':
-                $group->is_public = false;
-                $group->save();
+        switch ($entity_type) {
+            case 'alliances':
+                $entity_pk = 'alliance_id';
                 break;
-            case 'group':
-            case Group::class:
-                $entity = Group::find($request->input('entity_id'));
-                $group->groups($entity)->detach();
-                break;
-            case 'role':
-            case Role::class:
-                $entity = Role::find($request->input('entity_id'));
-                $group->roles($entity)->detach();
-                break;
-            case 'corporation':
-            case CorporationInfo::class:
-                $entity = CorporationInfo::find($request->input('entity_id'));
-                $group->corporations($entity)->detach();
-                break;
-            case 'title':
-            case CorporationTitle::class:
-                $entity = CorporationTitle::find($request->input('entity_id'));
-                $group->titles($entity)->detech();
-                break;
-            case 'alliance':
-            case Alliance::class:
-                $entity = Alliance::find($request->input('entity_id'));
-                $group->alliances($entity)->detach();
+            case 'corporations':
+                $entity_pk = 'corporation_id';
                 break;
             default:
-                throw new Exception('Unsupported entity type');
+                $entity_pk = 'id';
+        }
+
+        $set = Set::find($request->input('set_id'));
+
+        if ($entity_type != 'public') {
+            if (! $set->$entity_type()->where($entity_pk, $request->input('entity_id'))->exists())
+                return redirect()->back()
+                    ->with('error', 'The rule does not exists.');
+
+            $set->$entity_type()->detach($request->input('entity_id'));
+        }
+
+        if ($entity_type == 'public') {
+            $set->is_public = false;
+            $set->save();
         }
 
         return redirect()
             ->back()
             ->with('success', 'The rule has been successfully removed.');
+    }
+
+    /**
+     * Map Connector class to user friendly alias
+     *
+     * @param string $class_name
+     * @return string
+     */
+    private function classAlias(string $class_name): string
+    {
+        switch ($class_name) {
+            case Group::class:
+                return 'groups';
+            case Role::class:
+                return 'roles';
+            case CorporationInfo::class:
+                return 'corporations';
+            case CorporationTitle::class:
+                return 'titles';
+            case Alliance::class:
+                return 'alliances';
+            default:
+                return $class_name;
+        }
     }
 }

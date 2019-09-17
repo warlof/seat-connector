@@ -49,15 +49,15 @@ class AccessRuleValidation extends FormRequest
     {
         $filter_type = [
             'public',
-            'group',
+            'groups',
             Group::class,
-            'role',
+            'roles',
             Role::class,
-            'corporation',
+            'corporations',
             CorporationInfo::class,
-            'alliance',
+            'alliances',
             Alliance::class,
-            'title',
+            'titles',
             CorporationTitle::class,
         ];
 

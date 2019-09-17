@@ -1,17 +1,17 @@
 <ul class="nav nav-tabs pull-right" id="connector-table-filters">
-  <li role="presentation" data-filter="alliance">
+  <li role="presentation" data-filter="alliances">
     <a href="#">{{ trans('seat-connector::seat.alliance_filter') }}</a>
   </li>
-  <li role="presentation" data-filter="title">
+  <li role="presentation" data-filter="titles">
     <a href="#">{{ trans('seat-connector::seat.title_filter') }}</a>
   </li>
-  <li role="presentation" data-filter="corporation">
+  <li role="presentation" data-filter="corporations">
     <a href="#">{{ trans('seat-connector::seat.corporation_filter') }}</a>
   </li>
-  <li role="presentation" data-filter="role">
+  <li role="presentation" data-filter="roles">
   <a href="#">{{ trans('seat-connector::seat.role_filter') }}</a>
   </li>
-  <li role="presentation" data-filter="user">
+  <li role="presentation" data-filter="groups">
     <a href="#">{{ trans('seat-connector::seat.user_filter') }}</a>
   </li>
   <li role="presentation" data-filter="public">
