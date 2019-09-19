@@ -198,7 +198,8 @@ class User extends Model
      */
     public function getPublicSets()
     {
-        $rows = Set::where('is_public', true)
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->where('is_public', true)
             ->select('connector_id');
 
         return $rows;
