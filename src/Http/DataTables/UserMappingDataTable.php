@@ -40,6 +40,15 @@ class UserMappingDataTable extends DataTable
     {
         return datatables()
             ->eloquent($this->applyScopes($this->query()))
+            ->filterColumn('group_id', function ($query, $keyword) {
+                $query->whereRaw('users.group_id LIKE ?', ["%{$keyword}%"]);
+            })
+            ->filterColumn('character_id', function ($query, $keyword) {
+                $query->whereRaw('characters_infos.character_id LIKE ?', ["%{$keyword}%"]);
+            })
+            ->filterColumn('name', function ($query, $keyword) {
+                $query->whereRaw('value LIKE ?', ["%{$keyword}%"]);
+            })
             ->make(true);
     }
 
