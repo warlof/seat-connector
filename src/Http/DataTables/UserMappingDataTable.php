@@ -40,6 +40,9 @@ class UserMappingDataTable extends DataTable
     {
         return datatables()
             ->eloquent($this->applyScopes($this->query()))
+            ->editColumn('action', function ($row) {
+                return view('seat-connector::users.partials.delete', compact('row'));
+            })
             ->filterColumn('group_id', function ($query, $keyword) {
                 $query->whereRaw(
                     sprintf('%s.group_id LIKE ?', (new User())->getTable()),
@@ -70,6 +73,7 @@ class UserMappingDataTable extends DataTable
             })
             ->leftJoin((new CharacterInfo())->getTable(), 'character_id', '=', 'value')
             ->select(
+                (new User())->getTable() . '.id',
                 (new User())->getTable() . '.group_id',
                 'connector_id',
                 'connector_name',
@@ -86,7 +90,8 @@ class UserMappingDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->columns($this->getColumns());
+            ->columns($this->getColumns())
+            ->addAction();
     }
 
     /**

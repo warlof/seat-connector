@@ -67,6 +67,11 @@ Route::group([
                 'uses' => 'UsersController@index',
             ]);
 
+            Route::delete('/users/{id}', [
+                'as'   => 'seat-connector.users.destroy',
+                'uses' => 'UsersController@destroy',
+            ]);
+
             Route::get('/access', [
                 'as'   => 'seat-connector.acl',
                 'uses' => 'AccessController@index',

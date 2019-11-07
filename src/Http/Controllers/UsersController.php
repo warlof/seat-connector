@@ -20,9 +20,11 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Exception;
 use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\UserDataTableScope;
 use Warlof\Seat\Connector\Http\DataTables\UserMappingDataTable;
+use Warlof\Seat\Connector\Models\User;
 
 /**
  * Class UsersController.
@@ -45,5 +47,51 @@ class UsersController extends Controller
         return $datatable
             ->addScope(new UserDataTableScope($driver))
             ->render('seat-connector::users.list');
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(int $id)
+    {
+        // attempt to retrieve requested identity
+        $identity = User::find($id);
+
+        if (is_null($identity))
+            return redirect()->back()
+                ->with('error', 'An error occurred attempting to delete the user mapping. Identity is not found.');
+
+        // load driver instance
+        $config_key = sprintf('seat-connector.drivers.%s.client', $identity->connector_type);
+        $client = config($config_key);
+
+        if (is_null($config_key) || ! class_exists($client))
+            return redirect()->back()
+                ->with('error', sprintf('The client for driver %s is missing.', $identity->connector_type));
+
+        try {
+            $instance = $client::getInstance();
+
+            // retrieve platform user
+            $user = $instance->getUser($identity->connector_id);
+
+            // request platform user sets
+            $sets = $user->getSets();
+
+            // drop all sets
+            foreach ($sets as $set) {
+                $user->removeSet($set);
+            }
+
+            // remove user identity
+            $identity->delete();
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
+
+        return redirect()->back()
+            ->with('success', 'Identity has been successfully dropped.');
     }
 }
