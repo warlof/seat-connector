@@ -66,7 +66,8 @@
                     {data: 'character_id', name: 'character_id', type: 'num'},
                     {data: 'name', name: 'name', type: 'string'},
                     {data: 'connector_id', name: 'connector_id', type: 'string'},
-                    {data: 'connector_name', name: 'connector_name', type: 'string'}
+                    {data: 'connector_name', name: 'connector_name', type: 'string'},
+                    {data: 'action', name: 'action', title: 'Action', 'orderable': false, 'searchable': false, 'exportable': false, 'printable': false, 'footer': '', 'defaultContent': ''}
                 ]
             });
         }
