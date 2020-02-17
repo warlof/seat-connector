@@ -224,6 +224,19 @@ class DriverApplyPolicies implements ShouldQueue
         // add all sets which have been marked for an addition
         foreach ($pending_adds as $set_id) {
             $set = $this->client->getSet($set_id);
+
+            if (! $set) {
+                logger()->error('Unable to retrieve a valid set from platform.', [
+                    'platform' => $this->driver,
+                    'set ID'   => $set_id,
+                ]);
+
+                event(new EventLogger($this->driver, 'critical', 'policy',
+                    sprintf('Unable to retrieve a valid set with ID %s from platform.', $set_id)));
+
+                continue;
+            }
+
             $user->addSet($set);
         }
 
