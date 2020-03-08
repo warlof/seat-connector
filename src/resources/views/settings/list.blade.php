@@ -53,7 +53,7 @@
             <div class="form-group">
               <label for="prefix-format">Prefix mask</label>
               @if(setting('seat-connector.format', true) == '')
-                <input type="text" id="prefix-format" name="prefix-format" class="form-control" value="[%s] %s" />
+                <input type="text" id="prefix-format" name="prefix-format" class="form-control" value="[%2$s] %1$s" />
               @else
                 <input type="text" id="prefix-format" name="prefix-format" class="form-control" value="{{ setting('seat-connector.format', true) }}" />
               @endif

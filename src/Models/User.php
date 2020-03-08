@@ -21,6 +21,7 @@
 namespace Warlof\Seat\Connector\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Web\Models\Group;
 
@@ -219,10 +220,16 @@ class User extends Model
 
         if (setting('seat-connector.ticker', true)) {
             $corporation = CorporationInfo::find($character->corporation_id);
-            $format = setting('seat-connector.format', true) ?: '[%s] %s';
+            $alliance = is_null($character->alliance_id) ? null : Alliance::find($character->alliance_id);
+            $format = setting('seat-connector.format', true) ?: '[%2$s] %1$s';
 
             if (! is_null($corporation))
-                $nickname = sprintf($format, $corporation->ticker, $nickname);
+                $corp_ticker = $corporation->ticker ?? '';
+
+            if (! is_null($alliance)) 
+                $alliance_ticker = $alliance->ticker ?? '';
+            
+            $nickname = sprintf($format, $nickname, $corporation->ticker, $alliance_ticker);
         }
 
         return $nickname;
