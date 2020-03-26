@@ -53,9 +53,8 @@ class UserDataTableScope implements DataTableScope
     public function apply($query)
     {
         // apply a dummy filter which will always return no result
-        if (is_null($this->connector_driver))
-            return $query->whereRaw('? = ?', [0, 1]);
-
-        return $query->where('connector_type', $this->connector_driver);
+        return is_null($this->connector_driver) ?
+            $query->whereRaw('? = ?', [0, 1]) :
+            $query->where('connector_type', $this->connector_driver);
     }
 }

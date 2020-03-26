@@ -23,7 +23,7 @@ namespace Warlof\Seat\Connector\Models;
 use Illuminate\Database\Eloquent\Model;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
-use Seat\Web\Models\Group;
+use Seat\Web\Models\User as SeatUser;
 
 /**
  * Class User.
@@ -52,9 +52,9 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function group()
+    public function user()
     {
-        return $this->belongsTo(Group::class, 'group_id', 'id');
+        return $this->belongsTo(SeatUser::class, 'user_id', 'id');
     }
 
     /**
@@ -62,7 +62,7 @@ class User extends Model
      */
     public function isEnabledAccount(): bool
     {
-        return ($this->group->users->count() == $this->group->users->where('active', true)->count());
+        return $this->user->active;
     }
 
     /**
@@ -70,7 +70,7 @@ class User extends Model
      */
     public function areAllTokensValid(): bool
     {
-        return $this->group->refresh_tokens->count() == $this->group->users->count();
+        return $this->user->refresh_tokens->count() == $this->user->characters->count();
     }
 
     /**
@@ -91,7 +91,7 @@ class User extends Model
     {
         $strict_mode = setting('seat-connector.strict', true);
 
-        $active_tokens = $this->group->refresh_tokens;
+        $active_tokens = $this->user->refresh_tokens;
 
         if (empty($active_tokens) || ($strict_mode && ! $this->areAllTokensValid()) || ! $this->isEnabledAccount())
             return [];
@@ -99,7 +99,7 @@ class User extends Model
         if (! empty($this->allowed_sets))
             return $this->allowed_sets;
 
-        $rows = $this->getGroupSets()
+        $rows = $this->getUserSets()
             ->union($this->getRoleSets())
             ->union($this->getCorporationSets())
             ->union($this->getTitleSets())
@@ -115,11 +115,11 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Query\Builder
      */
-    public function getGroupSets()
+    public function getUserSets()
     {
         $rows = Set::where('connector_type', $this->connector_type)
-            ->whereHas('groups', function ($query) {
-                $query->where('entity_id', $this->group_id);
+            ->whereHas('users', function ($query) {
+                $query->where('entity_id', $this->user_id);
             })
             ->select('connector_id');
 
@@ -133,7 +133,7 @@ class User extends Model
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('roles', function ($query) {
-                $query->whereIn('entity_id', $this->group->roles->pluck('id'));
+                $query->whereIn('entity_id', $this->user->roles->pluck('id'));
             })
             ->select('connector_id');
 
@@ -147,9 +147,7 @@ class User extends Model
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('corporations', function ($query) {
-                $corporations = $this->group->users->map(function ($item) {
-                    return $item->character->corporation_id;
-                });
+                $corporations = $this->user->characters->pluck('corporation_id');
 
                 $query->whereIn('entity_id', $corporations);
             })
@@ -165,8 +163,8 @@ class User extends Model
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('titles', function ($query) {
-                $titles = $this->group->users->map(function ($item) {
-                    return $item->character->titles->pluck('id');
+                $titles = $this->user->characters->map(function ($item) {
+                    return $item->titles->pluck('id');
                 });
 
                 $query->whereIn('entity_id', $titles->flatten());
@@ -183,9 +181,7 @@ class User extends Model
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('alliances', function ($query) {
-                $alliances = $this->group->users->map(function ($item) {
-                    return $item->character->alliance_id;
-                });
+                $alliances = $this->user->characters->pluck('alliance_id');
 
                 $query->whereIn('entity_id', $alliances);
             })
@@ -212,9 +208,10 @@ class User extends Model
      */
     public function buildConnectorNickname(): string
     {
-        $character = $this->group->main_character;
+        $character = $this->user->main_character;
+
         if (is_null($character))
-            $character = $this->group->users->first()->character;
+            $character = $this->user->characters->first();
 
         $nickname = $character->name;
 
@@ -229,7 +226,7 @@ class User extends Model
             if (! is_null($alliance)) 
                 $alliance_ticker = $alliance->ticker ?? '';
             
-            $nickname = sprintf($format, $nickname, $corporation->ticker, $alliance_ticker);
+            $nickname = sprintf($format, $nickname, $corp_ticker, $alliance_ticker);
         }
 
         return $nickname;

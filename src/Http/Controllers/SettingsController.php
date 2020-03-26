@@ -21,6 +21,7 @@
 namespace Warlof\Seat\Connector\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Drivers\Driver;
@@ -93,7 +94,7 @@ class SettingsController extends Controller
 
         $arguments      = [];
         $command_string = explode(' ', $request->input('command'));
-        $command        = array_first($command_string);
+        $command        = Arr::first($command_string);
 
         // add requested driver filter to command arguments, if any
         if (! empty($request->input('driver')))

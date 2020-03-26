@@ -21,6 +21,7 @@
 namespace Warlof\Seat\Connector\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\UserDataTableScope;
 use Warlof\Seat\Connector\Http\DataTables\UserMappingDataTable;
@@ -42,7 +43,7 @@ class UsersController extends Controller
         $available_drivers = config('seat-connector.drivers', []);
 
         // init the driver using either the query parameter or the first available driver
-        $driver = request()->query('driver') ?: array_get(array_last($available_drivers), 'name');
+        $driver = request()->query('driver') ?: Arr::get(Arr::last($available_drivers), 'name');
 
         return $datatable
             ->addScope(new UserDataTableScope($driver))

@@ -25,35 +25,35 @@ use Illuminate\Http\Resources\Json\Resource;
 /**
  * Class UserResource.
  *
- * @SWG\Definition(
+ * @OA\Schema(
  *     description="SeAT to Connector User mapping model",
  *     title="Connector User",
  *     type="object"
  * )
  *
- * @SWG\Property(
+ * @OA\Property(
  *     type="integer",
  *     minimum=1,
- *     description="SeAT Group ID",
- *     property="group_id",
+ *     description="SeAT User ID",
+ *     property="user_id",
  *     example=1
  * )
  *
- * @SWG\Property(
+ * @OA\Property(
  *     type="string",
  *     description="SeAT Connector driver",
  *     property="connector_type",
  *     example="discord"
  * )
  *
- * @SWG\Property(
+ * @OA\Property(
  *     type="string",
  *     description="SeAT Connector entity ID for this driver",
  *     property="connector_id",
  *     example="133312047051046912"
  * )
  *
- * @SWG\Property(
+ * @OA\Property(
  *     type="string",
  *     description="SeAT Connector entity name for this driver",
  *     property="connector_name",
@@ -71,7 +71,7 @@ class UserResource extends Resource
     public function toArray($request)
     {
         return [
-            'group_id'       => $this->group_id,
+            'user_id'        => $this->user_id,
             'connector_type' => $this->connector_type,
             'connector_id'   => $this->connector_id,
             'connector_name' => $this->connector_name,

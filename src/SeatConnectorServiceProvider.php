@@ -20,9 +20,9 @@
 
 namespace Warlof\Seat\Connector;
 
+use App\Providers\AbstractSeatPlugin;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Event;
-use Seat\Services\AbstractSeatPlugin;
 use Warlof\Seat\Connector\Commands\DriverApplyPolicies;
 use Warlof\Seat\Connector\Commands\DriverUpdateSets;
 use Warlof\Seat\Connector\Events\EventLogger;
@@ -171,15 +171,9 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
      */
     private function addApiEndpoints()
     {
-        $current_annotations = config('l5-swagger.paths.annotations');
-        if (! is_array($current_annotations))
-            $current_annotations = [$current_annotations];
-
-        config([
-            'l5-swagger.paths.annotations' => array_unique(array_merge($current_annotations, [
-                __DIR__ . '/Http/Resources',
-                __DIR__ . '/Http/Controllers/Api/V2',
-            ])),
+        $this->registerApiAnnotationsPath([
+            __DIR__ . '/Http/Resources',
+            __DIR__ . '/Http/Controllers/Api/V2',
         ]);
     }
 

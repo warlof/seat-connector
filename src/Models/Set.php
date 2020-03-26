@@ -25,7 +25,7 @@ use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
-use Seat\Web\Models\Group;
+use Seat\Web\Models\User;
 
 /**
  * Class PermissionGroup.
@@ -47,6 +47,13 @@ class Set extends Model
     /**
      * @var array
      */
+    protected $casts = [
+        'is_public' => 'boolean',
+    ];
+
+    /**
+     * @var array
+     */
     protected $fillable = [
         'connector_type', 'connector_id', 'name', 'is_public',
     ];
@@ -54,9 +61,9 @@ class Set extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function groups()
+    public function users()
     {
-        return $this->morphedByMany(Group::class, 'entity', 'seat_connector_set_entity');
+        return $this->morphedByMany(User::class, 'entity', 'seat_connector_set_entity');
     }
 
     /**
@@ -102,7 +109,7 @@ class Set extends Model
 
         // in case the set has been registered in public filter - detach all existing filters
         if ($this->is_public) {
-            $this->groups()->sync([]);
+            $this->users()->sync([]);
             $this->corporations()->sync([]);
             $this->alliances()->sync([]);
             $this->roles()->sync([]);

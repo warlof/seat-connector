@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *

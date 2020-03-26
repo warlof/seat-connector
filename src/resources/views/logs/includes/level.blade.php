@@ -1,26 +1,42 @@
 @switch($row->level)
   @case('debug')
-  <span class="label label-default">{{ ucfirst($row->level) }}</span>
+  <span class="badge badge-default p-2 d-block">
+    <i class="fas fa-bug"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('info')
-  <span class="label label-info">{{ ucfirst($row->level) }}</span>
+  <span class="badge badge-info p-2 d-block">
+    <i class="fas fa-info"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('notice')
-  <span class="label label-success">{{ ucfirst($row->level) }}</span>
+  <span class="badge badge-success p-2 d-block">
+    <i class="fas fa-question-circle"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('warning')
-  <span class="label label-warning">{{ ucfirst($row->level) }}</span>
+  <span class="badge badge-warning p-2 d-block">
+    <i class="fas fa-exclamation"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('error')
-  <span class="label label-danger">{{ ucfirst($row->level) }}</span>
+  <span class="badge badge-danger p-2 d-block">
+    <i class="fas fa-exclamation-circle"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('critical')
-  <span class="label label-danger"><i class="fa fa-free-code-camp"></i> {{ ucfirst($row->level) }}</span>
+  <span class="badge bg-maroon p-2 d-block">
+    <i class="fab fa-free-code-camp"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('alert')
-  <span class="label label-warning"><i class="fa fa-warning"></i> {{ ucfirst($row->level) }}</span>
+  <span class="badge bg-orange p-2 d-block">
+    <i class="fas fa-exclamation-triangle"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
   @case('emergency')
-  <span class="label label-danger"><i class="fa fa-life-ring"></i> {{ ucfirst($row->level) }}</span>
+  <span class="badge bg-pink p-2 d-block">
+    <i class="fas fa-life-ring"></i> {{ ucfirst($row->level) }}
+  </span>
   @break
 @endswitch

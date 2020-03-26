@@ -38,10 +38,12 @@ class LogsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($this->applyScopes($this->query()))
+            ->editColumn('created_at', function ($row) {
+                return view('web::partials.date', ['datetime' => $row->created_at]);
+            })
             ->editColumn('level', function ($row) {
                 return view('seat-connector::logs.includes.level', compact('row'));
             })
-            ->rawColumns(['level'])
             ->make(true);
     }
 
@@ -50,16 +52,7 @@ class LogsDataTable extends DataTable
      */
     public function query()
     {
-        $logs = Log::query()
-            ->select(
-                'created_at',
-                'connector_type',
-                'level',
-                'category',
-                'message'
-            );
-
-        return $logs;
+        return Log::query();
     }
 
     /**
@@ -69,6 +62,9 @@ class LogsDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
+            ->parameters([
+                'drawCallback' => 'function() { $("[data-toggle=tooltip]").tooltip(); }',
+            ])
             ->ajax([
                 'data' => 'function(d) { d.driver = $("#connector-driver").val(); d.level = $("#connector-log-level").data("level"); }',
             ]);

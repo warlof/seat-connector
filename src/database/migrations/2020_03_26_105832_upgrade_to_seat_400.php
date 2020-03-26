@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Warlof\Seat\Connector\Http\Controllers;
-
-use Seat\Web\Http\Controllers\Controller;
-use Warlof\Seat\Connector\Models\User;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
- * Class IdentitiesController.
- *
- * @package Warlof\Seat\Connector\Http\Controllers
+ * Class UpgradeToSeat400.
  */
-class IdentitiesController extends Controller
+class UpgradeToSeat400 extends Migration
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * Run the migrations.
+     *
+     * @return void
      */
-    public function index()
+    public function up()
     {
-        $drivers = collect(config('seat-connector.drivers', []));
-        $identities = User::where('user_id', auth()->user()->id)->get();
+        Schema::table('seat_connector_users', function (Blueprint $table) {
+            $table->unsignedInteger('user_id')->after('group_id');
+        });
+    }
 
-        return view('seat-connector::identities.list', compact('drivers', 'identities'));
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('seat_connector_users', function (Blueprint $table) {
+            $table->dropColumn('user_id');
+        });
     }
 }

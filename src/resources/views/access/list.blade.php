@@ -10,6 +10,13 @@
 @stop
 
 @section('right')
+    @if(empty(config('seat-connector.drivers', [])))
+        <div class="callout callout-warning">
+            <h4>No driver available!</h4>
+            <p>In order to use this page, you need to install a seat-connector driver.</p>
+        </div>
+    @endif
+
     @include('seat-connector::access.includes.table')
 @stop
 

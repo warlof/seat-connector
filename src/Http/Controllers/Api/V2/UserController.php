@@ -25,119 +25,41 @@ use Warlof\Seat\Connector\Http\Resources\UserResource;
 use Warlof\Seat\Connector\Models\User;
 
 /**
- * Class ApiController.
+ * Class UserController.
  *
- * @package Warlof\Seat\Connector\Http\Controllers\Api\V1
+ * @package Warlof\Seat\Connector\Http\Controllers\Api\V2
  */
 class UserController extends ApiController
 {
     /**
-     * @SWG\Get(
-     *     path="/seat-connector/users",
+     * @OA\Get(
+     *     path="/v2/seat-connector/users",
      *     tags={"SeAT Connector"},
      *     summary="Get a list of users",
      *     description="Return list of users along with their mapping",
      *     security={
      *      {"ApiKeyAuth": {}}
      *     },
-     *     @SWG\Response(response=200, description="Successful operation",
-     *      @SWG\Schema(
-     *          @SWG\Property(
+     *     @OA\Response(response=200, description="Successful operation",
+     *       @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(
      *              type="array",
      *              property="data",
-     *              @SWG\Items(ref="#/definitions/UserResource")
+     *              @OA\Items(ref="#/components/schemas/UserResource")
      *          ),
-     *          @SWG\Property(
-     *              type="object",
+     *          @OA\Property(
      *              property="links",
-     *              description="Provide pagination urls for navigation",
-     *              @SWG\Property(
-     *                  type="string",
-     *                  format="uri",
-     *                  property="first",
-     *                  description="First page",
-     *                  example="https://example.com/api/v2/seat-connector/users?page=1"
-     *              ),
-     *              @SWG\Property(
-     *                  type="string",
-     *                  format="uri",
-     *                  property="last",
-     *                  description="Last page",
-     *                  example="https://example.com/api/v2/seat-connector/users?page=3"
-     *              ),
-     *              @SWG\Property(
-     *                  type="string",
-     *                  format="uri",
-     *                  property="prev",
-     *                  description="Previous page",
-     *                  example="https://example.com/api/v2/seat-connector/users?page=1"
-     *              ),
-     *              @SWG\Property(
-     *                  type="string",
-     *                  format="uri",
-     *                  property="next",
-     *                  description="Next page",
-     *                  example="https://example.com/api/v2/seat-connector/users?page=3"
-     *              )
+     *              ref="#/components/schemas/ResourcePaginatedLinks"
      *          ),
-     *          @SWG\Property(
-     *              type="object",
+     *          @OA\Property(
      *              property="meta",
-     *              description="Information related to the paginated response",
-     *              @SWG\Property(
-     *                  type="integer",
-     *                  minimum=1,
-     *                  property="current_page",
-     *                  description="The current page",
-     *                  example=2
-     *              ),
-     *              @SWG\Property(
-     *                  type="integer",
-     *                  minimum=1,
-     *                  property="from",
-     *                  description="The first entity number on the page",
-     *                  example=16
-     *              ),
-     *              @SWG\Property(
-     *                  type="integer",
-     *                  minimum=1,
-     *                  property="last_page",
-     *                  description="The last page available",
-     *                  example=3
-     *              ),
-     *              @SWG\Property(
-     *                  type="string",
-     *                  format="uri",
-     *                  property="path",
-     *                  description="The base endpoint",
-     *                  example="https://example.com/api/v2/seat-connector/users"
-     *              ),
-     *              @SWG\Property(
-     *                  type="integer",
-     *                  minimum=1,
-     *                  property="per_page",
-     *                  description="The pagination step",
-     *                  example=15
-     *              ),
-     *              @SWG\Property(
-     *                  type="integer",
-     *                  minimum=1,
-     *                  property="to",
-     *                  description="The last entity number on the page",
-     *                  example=30
-     *              ),
-     *              @SWG\Property(
-     *                  type="integer",
-     *                  minimum=0,
-     *                  property="total",
-     *                  description="The total of available entities",
-     *                  example=35
-     *              )
+     *              ref="#/components/schemas/ResourcePaginatedMetadata"
      *          )
-     *      )
+     *       )
      *     ),
-     *     @SWG\Response(response=400, description="Bad request"),
-     *     @SWG\Response(response=401, description="Unauthorized")
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=401, description="Unauthorized")
      * )
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection

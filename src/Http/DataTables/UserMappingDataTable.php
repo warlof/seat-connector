@@ -66,6 +66,9 @@ class UserMappingDataTable extends DataTable
      */
     public function query()
     {
+        return User::with('user.main_character')
+            ->select('id', 'connector_id', 'connector_name', 'character_id', 'name');
+        /*
         $users = User::query()
             ->leftJoin((new UserSetting())->getTable(), function ($join) {
                 $join->on((new User())->getTable() . '.group_id', '=', (new UserSetting())->getTable() . '.group_id')
@@ -82,6 +85,7 @@ class UserMappingDataTable extends DataTable
             );
 
         return $users;
+        */
     }
 
     /**

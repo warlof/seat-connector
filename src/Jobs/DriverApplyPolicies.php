@@ -243,7 +243,7 @@ class DriverApplyPolicies implements ShouldQueue
 
         event(new EventLogger($this->driver, 'info', 'policy',
             sprintf('Groups has successfully been updated for the user %s (%s) from group %d.',
-                '', $user->getName(), $profile->group->id)));
+                '', $user->getName(), $profile->user->id)));
     }
 
     /**
@@ -260,7 +260,7 @@ class DriverApplyPolicies implements ShouldQueue
 
             event(new EventLogger($this->driver, 'info', 'policy',
                 sprintf('Nickname from the user %s (%s) from group %d has been updated.',
-                    '', $user->getName(), $profile->group->id)));
+                    '', $user->getName(), $profile->user->id)));
         }
     }
 }

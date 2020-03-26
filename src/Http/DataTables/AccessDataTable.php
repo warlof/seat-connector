@@ -23,9 +23,7 @@ namespace Warlof\Seat\Connector\Http\DataTables;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
-use Seat\Services\Models\UserSetting;
 use Seat\Web\Models\Acl\Role;
-use Seat\Web\Models\Group;
 use Seat\Web\Models\User;
 use Warlof\Seat\Connector\Models\Set;
 use Yajra\DataTables\Services\DataTable;
@@ -56,7 +54,7 @@ class AccessDataTable extends DataTable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Query\Builder
      */
     public function query()
     {
@@ -64,7 +62,7 @@ class AccessDataTable extends DataTable
             ->union($this->applyScopes($this->getTitleQuery()))
             ->union($this->applyScopes($this->getAllianceQuery()))
             ->union($this->applyScopes($this->getRoleQuery()))
-            ->union($this->applyScopes($this->getGroupQuery()))
+            ->union($this->applyScopes($this->getUserQuery()))
             ->union($this->applyScopes($this->getPublicQuery()));
     }
 
@@ -119,7 +117,8 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.name',
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
-                (new CorporationInfo())->getTable() . '.name as entity_name');
+                (new CorporationInfo())->getTable() . '.name as entity_name')
+            ->groupBy('id', 'connector_type', 'connector_id', 'name', 'entity_type', 'entity_id', 'entity_name');
 
         return $query;
     }
@@ -142,7 +141,8 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.name',
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
-                (new CorporationTitle())->getTable() . '.name as entity_name');
+                (new CorporationTitle())->getTable() . '.name as entity_name')
+            ->groupBy('id', 'connector_type', 'connector_id', 'name', 'entity_type', 'entity_id', 'entity_name');
 
         return $query;
     }
@@ -165,7 +165,8 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.name',
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
-                (new Alliance())->getTable() . '.name as entity_name');
+                (new Alliance())->getTable() . '.name as entity_name')
+            ->groupBy('id', 'connector_type', 'connector_id', 'name', 'entity_type', 'entity_id', 'entity_name');
 
         return $query;
     }
@@ -188,7 +189,8 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.name',
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
-                (new Role())->getTable() . '.title as entity_name');
+                (new Role())->getTable() . '.title as entity_name')
+            ->groupBy('id', 'connector_type', 'connector_id', 'name', 'entity_type', 'entity_id', 'entity_name');
 
         return $query;
     }
@@ -196,19 +198,14 @@ class AccessDataTable extends DataTable
     /**
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    private function getGroupQuery()
+    private function getUserQuery()
     {
         $query = Set::
             join('seat_connector_set_entity', 'set_id', 'id')
-            ->join((new Group())->getTable(), function ($join) {
-                $join->on('entity_id', (new Group())->getTable() . '.id');
-                $join->where('entity_type', Group::class);
+            ->join((new User())->getTable(), function ($join) {
+                $join->on('entity_id', (new User())->getTable() . '.id');
+                $join->where('entity_type', User::class);
             })
-            ->join((new UserSetting())->getTable(), function ($join) {
-                $join->on('group_id', (new Group())->getTable() . '.id');
-                $join->where((new UserSetting())->getTable() . '.name', 'main_character_id');
-            })
-            ->join((new User())->getTable(), (new User())->getTable() . '.id', 'value')
             ->select(
                 'seat_connector_sets.id',
                 'seat_connector_sets.connector_type',
@@ -216,11 +213,15 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.name',
                 'seat_connector_set_entity.entity_type',
                 'seat_connector_set_entity.entity_id',
-                (new User())->getTable() . '.name as entity_name');
+                (new User())->getTable() . '.name as entity_name')
+            ->groupBy('id', 'connector_type', 'connector_id', 'name', 'entity_type', 'entity_id', 'entity_name');
 
         return $query;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     private function getPublicQuery()
     {
         $query = Set::where('is_public', true)
@@ -230,7 +231,8 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.connector_id',
                 'seat_connector_sets.name'
             )
-            ->selectRaw('? as entity_type, ? as entity_id, ? as entity_name', ['public', '0', '']);
+            ->selectRaw('? as entity_type, ? as entity_id, ? as entity_name', ['public', '0', ''])
+            ->groupBy('id', 'connector_type', 'connector_id', 'name', 'entity_type', 'entity_id', 'entity_name');
 
         return $query;
     }

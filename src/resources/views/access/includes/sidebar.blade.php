@@ -1,16 +1,17 @@
-<div class="box box-solid">
-  <div class="box-header with-border">
-    <i class="fa fa-plus"></i>
-    <h3 class="box-title">{{ trans('seat-connector::seat.toolbox') }}</h3>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">
+      <i class="fas fa-plus"></i> {{ trans('seat-connector::seat.toolbox') }}
+    </h3>
   </div>
-  <div class="box-body">
+  <div class="card-body">
     <form role="form" method="post" id="connector-toolbox">
       {{ csrf_field() }}
 
         <div class="form-group">
           <label for="connector-driver">{{ trans('seat-connector::seat.driver') }}</label>
           <select name="connector-driver" id="connector-driver" class="form-control">
-            @foreach(config('seat-connector.drivers') as $driver => $metadata)
+            @foreach(config('seat-connector.drivers', []) as $driver => $metadata)
               <option value="{{ $driver }}">{{ ucfirst($metadata['name']) }}</option>
             @endforeach
           </select>
@@ -60,7 +61,7 @@
 
     </form>
   </div>
-  <div class="box-footer">
-    <button type="submit" form="connector-toolbox" class="btn btn-success pull-right">{{ trans('web::seat.add') }}</button>
+  <div class="card-footer">
+    <button type="submit" form="connector-toolbox" class="btn btn-success float-right">{{ trans('web::seat.add') }}</button>
   </div>
 </div>

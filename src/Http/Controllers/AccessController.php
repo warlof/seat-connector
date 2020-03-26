@@ -20,12 +20,13 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Acl\Role;
-use Seat\Web\Models\Group;
+use Seat\Web\Models\User;
 use Warlof\Seat\Connector\Http\DataTables\AccessDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\AccessDataTableScope;
 use Warlof\Seat\Connector\Http\Validations\AccessRuleValidation;
@@ -50,15 +51,15 @@ class AccessController extends Controller
         $available_drivers = config('seat-connector.drivers', []);
 
         // init the driver using either the query parameter or the first available driver
-        $driver = request()->query('driver', array_get(array_last($available_drivers), 'name'));
+        $driver = request()->query('driver', Arr::get(Arr::last($available_drivers), 'name'));
 
         // init the filter type using either the query parameter or public
-        switch (request()->query('filter_type', 'groups')) {
+        switch (request()->query('filter_type', 'users')) {
             case 'public':
                 $filter_type = 'public';
                 break;
-            case 'groups':
-                $filter_type = Group::class;
+            case 'users':
+                $filter_type = User::class;
                 break;
             case 'roles':
                 $filter_type = Role::class;
@@ -166,8 +167,8 @@ class AccessController extends Controller
     private function classAlias(string $class_name): string
     {
         switch ($class_name) {
-            case Group::class:
-                return 'groups';
+            case User::class:
+                return 'users';
             case Role::class:
                 return 'roles';
             case CorporationInfo::class:

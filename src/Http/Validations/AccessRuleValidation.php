@@ -25,7 +25,7 @@ use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
-use Seat\Web\Models\Group;
+use Seat\Web\Models\User;
 
 /**
  * Class AccessRuleValidation.
@@ -49,8 +49,8 @@ class AccessRuleValidation extends FormRequest
     {
         $filter_type = [
             'public',
-            'groups',
-            Group::class,
+            'users',
+            User::class,
             'roles',
             Role::class,
             'corporations',
