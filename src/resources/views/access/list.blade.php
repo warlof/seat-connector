@@ -110,8 +110,8 @@
       });
 
       $('#connector-table-filters li a').click(function() {
-          $('#connector-table-filters li.active').removeClass('active');
-          $(this).parent().addClass('active');
+          $('#connector-table-filters a.active').removeClass('active');
+          $(this).addClass('active');
 
           window.LaravelDataTables["dataTableBuilder"].ajax.reload();
       });
