@@ -140,7 +140,7 @@
 
   </div>
 
-  @foreach($drivers->split(abs($drivers->count() / 3)) as $row)
+  @foreach($drivers->split(ceil($drivers->count() / 3)) as $row)
 
     <div class="row">
 
@@ -150,8 +150,10 @@
 
           <div class="card">
             <div class="card-header">
-              <i class="{{ $driver->icon }}"></i>
-              <h4 class="card-title">{{ ucfirst($driver->name) }}</h4>
+              <h4 class="card-title">
+                <i class="{{ $driver->icon }}"></i>
+                {{ ucfirst($driver->name) }}
+              </h4>
             </div>
             <div class="card-body">
               <form role="form" method="post" id="{{ sprintf('seat-connector-%s', $key) }}" action="{{ route(sprintf('seat-connector.drivers.%s.settings', $key)) }}">
