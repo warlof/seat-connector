@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
