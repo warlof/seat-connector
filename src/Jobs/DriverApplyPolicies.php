@@ -28,6 +28,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Warlof\Seat\Connector\Drivers\IUser;
 use Warlof\Seat\Connector\Events\EventLogger;
+use Warlof\Seat\Connector\Exceptions\MissingDriverClientException;
 use Warlof\Seat\Connector\Models\User;
 
 /**
@@ -88,7 +89,7 @@ class DriverApplyPolicies implements ShouldQueue
     /**
      * Process the job.
      *
-     * @throws \Warlof\Seat\Connector\Jobs\MissingDriverClientException
+     * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverClientException
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function handle()

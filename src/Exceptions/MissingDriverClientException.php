@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Warlof\Seat\Connector\Jobs;
+namespace Warlof\Seat\Connector\Exceptions;
 
 use Exception;
 
 /**
  * Class MissingDriverClientException.
  *
- * @package Warlof\Seat\Connector\Jobs
+ * @package Warlof\Seat\Connector\Exceptions
  */
 class MissingDriverClientException extends Exception
 {

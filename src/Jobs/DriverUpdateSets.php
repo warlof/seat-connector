@@ -26,6 +26,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Warlof\Seat\Connector\Events\EventLogger;
+use Warlof\Seat\Connector\Exceptions\MissingDriverClientException;
 use Warlof\Seat\Connector\Models\Set;
 
 /**
@@ -76,7 +77,7 @@ class DriverUpdateSets implements ShouldQueue
     /**
      * Process the job.
      *
-     * @throws \Warlof\Seat\Connector\Jobs\MissingDriverClientException
+     * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverClientException
      */
     public function handle()
     {
