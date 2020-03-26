@@ -10,7 +10,7 @@
       <p>The administrator of this instance didn't configure any platform yet.<br/>Please come back later.</p>
     </div>
   @else
-    @foreach($drivers->split(abs($drivers->count() / 3)) as $row)
+    @foreach($drivers->split(ceil($drivers->count() / 3)) as $row)
 
       @foreach ($row as $driver => $metadata)
 
