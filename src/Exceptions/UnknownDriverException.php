@@ -21,14 +21,12 @@
 
 namespace Warlof\Seat\Connector\Exceptions;
 
-use Exception;
-
 /**
  * Class UnknownDriverException.
  *
  * @package Warlof\Seat\Connector\Commands
  */
-class UnknownDriverException extends Exception
+class UnknownDriverException extends DriverException
 {
 
 }

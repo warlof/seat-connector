@@ -40,16 +40,19 @@ interface ISet
 
     /**
      * @return \Warlof\Seat\Connector\Drivers\IUser[]
+     * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function getMembers(): array;
 
     /**
      * @param \Warlof\Seat\Connector\Drivers\IUser $user
+     * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function addMember(IUser $user);
 
     /**
      * @param \Warlof\Seat\Connector\Drivers\IUser $user
+     * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function removeMember(IUser $user);
 }

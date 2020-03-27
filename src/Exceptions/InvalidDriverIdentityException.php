@@ -22,11 +22,11 @@
 namespace Warlof\Seat\Connector\Exceptions;
 
 /**
- * Class MissingDriverException.
+ * Class InvalidDriverIdentityException.
  *
  * @package Warlof\Seat\Connector\Exceptions
  */
-class MissingDriverException extends DriverException
+class InvalidDriverIdentityException extends DriverException
 {
 
 }

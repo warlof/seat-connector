@@ -21,9 +21,11 @@
 
 namespace Warlof\Seat\Connector\Http\Controllers;
 
-use Exception;
 use Illuminate\Support\Arr;
 use Seat\Web\Http\Controllers\Controller;
+use Warlof\Seat\Connector\Exceptions\DriverException;
+use Warlof\Seat\Connector\Exceptions\DriverSettingsException;
+use Warlof\Seat\Connector\Exceptions\InvalidDriverIdentityException;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\UserDataTableScope;
 use Warlof\Seat\Connector\Http\DataTables\UserMappingDataTable;
 use Warlof\Seat\Connector\Models\User;
@@ -88,7 +90,9 @@ class UsersController extends Controller
 
             // remove user identity
             $identity->delete();
-        } catch (Exception $e) {
+        } catch (InvalidDriverIdentityException | DriverSettingsException $e) {
+            $identity->delete();
+        } catch (DriverException $e) {
             return redirect()->back()
                 ->with('error', $e->getMessage());
         }
