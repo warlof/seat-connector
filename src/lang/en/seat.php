@@ -30,7 +30,7 @@ return [
     'message'            => 'Message',
     'level'              => 'Level',
 
-    'group_id'           => 'Group ID',
+    'user_id'            => 'User ID',
     'character_id'       => 'Character ID',
     'character_name'     => 'Character Name',
     'connector_id'       => 'Connector ID',

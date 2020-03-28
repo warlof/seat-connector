@@ -21,8 +21,6 @@
 
 namespace Warlof\Seat\Connector\Http\DataTables;
 
-use Seat\Eveapi\Models\Character\CharacterInfo;
-use Seat\Services\Models\UserSetting;
 use Warlof\Seat\Connector\Models\User;
 use Yajra\DataTables\Services\DataTable;
 
@@ -44,21 +42,6 @@ class UserMappingDataTable extends DataTable
             ->editColumn('action', function ($row) {
                 return view('seat-connector::users.partials.delete', compact('row'));
             })
-            ->filterColumn('group_id', function ($query, $keyword) {
-                $query->whereRaw(
-                    sprintf('%s.group_id LIKE ?', (new User())->getTable()),
-                    ["%{$keyword}%"]);
-            })
-            ->filterColumn('character_id', function ($query, $keyword) {
-                $query->whereRaw(
-                    sprintf('%s.character_id LIKE ?', (new CharacterInfo())->getTable()),
-                    ["%{$keyword}%"]);
-            })
-            ->filterColumn('name', function ($query, $keyword) {
-                $query->whereRaw(
-                    sprintf('%s.value LIKE ?', (new UserSetting())->getTable()),
-                    ["%{$keyword}%"]);
-            })
             ->make(true);
     }
 
@@ -67,26 +50,8 @@ class UserMappingDataTable extends DataTable
      */
     public function query()
     {
-        return User::with('user.main_character')
-            ->select('id', 'connector_id', 'connector_name', 'character_id', 'name');
-        /*
-        $users = User::query()
-            ->leftJoin((new UserSetting())->getTable(), function ($join) {
-                $join->on((new User())->getTable() . '.group_id', '=', (new UserSetting())->getTable() . '.group_id')
-                    ->where((new UserSetting())->getTable() . '.name', '=', 'main_character_id');
-            })
-            ->leftJoin((new CharacterInfo())->getTable(), 'character_id', '=', 'value')
-            ->select(
-                (new User())->getTable() . '.id',
-                (new User())->getTable() . '.group_id',
-                'connector_id',
-                'connector_name',
-                'character_id',
-                (new CharacterInfo())->getTable() . '.name'
-            );
-
-        return $users;
-        */
+        return User::with('user')
+            ->select('seat_connector_users.id', 'connector_id', 'connector_name', 'user_id');
     }
 
     /**
@@ -96,6 +61,9 @@ class UserMappingDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
+            ->ajax([
+                'data' => 'function(d) { d.driver = $("#connector-table-filters a.active").data("filter"); }',
+            ])
             ->addAction();
     }
 
@@ -106,15 +74,15 @@ class UserMappingDataTable extends DataTable
     {
         return [
             [
-                'data'  => 'group_id',
-                'title' => trans('seat-connector::seat.group_id'),
+                'data'  => 'user.id',
+                'title' => trans('seat-connector::seat.user_id'),
             ],
             [
-                'data'  => 'character_id',
+                'data'  => 'user.main_character_id',
                 'title' => trans('seat-connector::seat.character_id'),
             ],
             [
-                'data'  => 'name',
+                'data'  => 'user.name',
                 'title' => trans('seat-connector::seat.character_name'),
             ],
             [

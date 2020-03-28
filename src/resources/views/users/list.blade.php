@@ -10,36 +10,32 @@
       <p>In order to use this page, you need to install a seat-connector driver.</p>
     </div>
   @else
-  <div class="nav-tabs-custom" id="seat-connector-users-tabs">
-    <ul class="nav nav-tabs">
-      @foreach(config('seat-connector.drivers', []) as $metadata)
-        @if($loop->last)
-          <li class="active">
-            <a href="#tab_{{ $metadata['name'] }}" role="tab" data-toggle="tab"
-               onclick="driverDataTable('tab_{{ $metadata['name'] }}', '{{ $metadata['name'] }}');">
-              {{ ucfirst($metadata['name']) }}
-            </a>
-          </li>
-        @else
-          <li>
-            <a href="#tab_{{ $metadata['name'] }}" role="tab" data-toggle="tab"
-               onclick="driverDataTable('tab_{{ $metadata['name'] }}', '{{ $metadata['name'] }}');">
-              {{ ucfirst($metadata['name']) }}
-            </a>
-          </li>
-        @endif
-      @endforeach
-    </ul>
-    <div class="tab-content">
-      @foreach(config('seat-connector.drivers',[]) as $metadata)
-        @if($loop->last)
-          @include('seat-connector::users.partials.tabs', ['id' => 'tab_' . $metadata['name'], 'class' => 'tab-pane active', 'metadata' => $metadata])
-        @else
-          @include('seat-connector::users.partials.tabs', ['id' => 'tab_' . $metadata['name'], 'class' => 'tab-pane', 'metadata' => $metadata])
-        @endif
-      @endforeach
+    <div class="card">
+      <div class="card-header">
+        <ul class="nav nav-pills ml-auto p-2" id="connector-table-filters">
+          @foreach(config('seat-connector.drivers', []) as $metadata)
+            <li class="nav-item">
+              @if($loop->last)
+                <a href="#" class="nav-link active" role="tab" data-toggle="pill" aria-expanded="true" data-filter="{{ $metadata['name'] }}">
+                  {{ ucfirst($metadata['name']) }}
+                </a>
+              @else
+                <a href="#" class="nav-link" role="tab" data-toggle="tab" aria-expanded="true" data-filter="{{ $metadata['name'] }}">
+                  {{ ucfirst($metadata['name']) }}
+                </a>
+              @endif
+            </li>
+          @endforeach
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content">
+          <div class="tab-pane active">
+            {!! $dataTable->table(['class' => 'table table-striped table-hover']) !!}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
   @endif
 @stop
 
@@ -47,30 +43,11 @@
   {!! $dataTable->scripts() !!}
 
   <script>
-    // call the driver route and update displayed table
-    function driverDataTable(tab_id, driver) {
-        if (! $.fn.dataTable.isDataTable('#' + tab_id + '_table')) {
-            $('#' + tab_id + '_table').DataTable({
-                dom: 'Bfrtip',
-                processing: true,
-                serverSide: true,
-                order: [[0, 'desc']],
-                ajax: {
-                    url: '{{ route('seat-connector.users') }}',
-                    data: {
-                        driver: driver
-                    }
-                },
-                columns: [
-                    {data: 'group_id', name: 'group_id', type: 'num'},
-                    {data: 'character_id', name: 'character_id', type: 'num'},
-                    {data: 'name', name: 'name', type: 'string'},
-                    {data: 'connector_id', name: 'connector_id', type: 'string'},
-                    {data: 'connector_name', name: 'connector_name', type: 'string'},
-                    {data: 'action', name: 'action', title: 'Action', 'orderable': false, 'searchable': false, 'exportable': false, 'printable': false, 'footer': '', 'defaultContent': ''}
-                ]
-            });
-        }
-    }
+    $('#connector-table-filters li a').click(function() {
+      $('#connector-table-filters a.active').removeClass('active');
+      $(this).addClass('active');
+
+      window.LaravelDataTables["dataTableBuilder"].ajax.reload();
+    });
   </script>
 @endpush
