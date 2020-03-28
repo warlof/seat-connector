@@ -10,13 +10,17 @@
       <p>The administrator of this instance didn't configure any platform yet.<br/>Please come back later.</p>
     </div>
   @else
-    @foreach($drivers->split(ceil($drivers->count() / 3)) as $row)
+    @foreach($drivers->split(ceil($drivers->count() / 4)) as $row)
 
-      @foreach ($row as $driver => $metadata)
+      <div class="row">
 
-        @include('seat-connector::identities.includes.card')
+        @foreach ($row as $driver => $metadata)
 
-      @endforeach
+          @include('seat-connector::identities.includes.card')
+
+        @endforeach
+
+      </div>
 
     @endforeach
 
