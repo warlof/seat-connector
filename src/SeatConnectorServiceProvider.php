@@ -24,10 +24,16 @@ namespace Warlof\Seat\Connector;
 use App\Providers\AbstractSeatPlugin;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Event;
+use Seat\Eveapi\Models\Character\CharacterAffiliation;
+use Seat\Web\Events\UserRoleAdded;
+use Seat\Web\Events\UserRoleRemoved;
 use Warlof\Seat\Connector\Commands\DriverApplyPolicies;
 use Warlof\Seat\Connector\Commands\DriverUpdateSets;
 use Warlof\Seat\Connector\Events\EventLogger;
 use Warlof\Seat\Connector\Listeners\LoggerListener;
+use Warlof\Seat\Connector\Listeners\UserRoleAddedListener;
+use Warlof\Seat\Connector\Listeners\UserRoleRemovedListener;
+use Warlof\Seat\Connector\Observers\CharacterAffiliationObserver;
 
 /**
  * Class SeatConnectorProvider.
@@ -184,5 +190,12 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     private function addEvents()
     {
         Event::listen(EventLogger::class, LoggerListener::class);
+
+        // detect user roles updates
+        Event::listen(UserRoleAdded::class, UserRoleAddedListener::class);
+        Event::listen(UserRoleRemoved::class, UserRoleRemovedListener::class);
+
+        // detect corporation and alliance affiliation updates
+        CharacterAffiliation::observe(CharacterAffiliationObserver::class);
     }
 }

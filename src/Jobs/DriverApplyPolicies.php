@@ -31,6 +31,7 @@ use Warlof\Seat\Connector\Drivers\IUser;
 use Warlof\Seat\Connector\Events\EventLogger;
 use Warlof\Seat\Connector\Exceptions\MissingDriverClientException;
 use Warlof\Seat\Connector\Models\User;
+use Warlof\Seat\Connector\Traits\ConnectorPolicyManagement;
 
 /**
  * Class DriverApplyPolicies.
@@ -39,7 +40,7 @@ use Warlof\Seat\Connector\Models\User;
  */
 class DriverApplyPolicies implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, ConnectorPolicyManagement;
 
     /**
      * @var \Warlof\Seat\Connector\Drivers\IClient
@@ -90,7 +91,7 @@ class DriverApplyPolicies implements ShouldQueue
     /**
      * Process the job.
      *
-     * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverClientException
+     * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function handle()
@@ -129,139 +130,20 @@ class DriverApplyPolicies implements ShouldQueue
     /**
      * @param \Warlof\Seat\Connector\Drivers\IUser $user
      * @throws \Seat\Services\Exceptions\SettingException
+     * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     private function applyPolicy(IUser $user)
     {
-        $sets          = null;
-        $new_nickname  = null;
-        $profile       = User::where('connector_type', $this->driver)
-                             ->where('connector_id', $user->getClientId())
-                             ->first();
+        $profile = User::where('connector_type', $this->driver)
+            ->where('connector_id', $user->getClientId())
+            ->first();
 
         // in case the user is unknown of SeAT; skip the process
         if (is_null($profile))
             return;
 
-        // determine which nickname should be used by the user
-        $expected_nickname = $profile->buildConnectorNickname();
-        if ($user->getName() !== $expected_nickname)
-            $new_nickname = $expected_nickname;
+        $this->handleSetsUpdate($profile, $user);
 
-        $user_sets = $user->getSets();
-
-        // collect all sets which are assigned to the user and determine if they are valid
-        $pending_drops = $this->getDroppableSets($profile, $user_sets);
-
-        // collect all valid sets for the current user
-        $pending_adds = $this->getGrantableSets($profile, $user_sets);
-
-        // check if there is a set to update
-        $are_sets_outdated = $pending_adds->isNotEmpty() || $pending_drops->isNotEmpty();
-
-        if ($are_sets_outdated)
-            $this->updateUserSets($user, $profile, $pending_adds->toArray(), $pending_drops->toArray());
-
-        // check if a nickname update is required
-        if (! is_null($new_nickname))
-            $this->updateUserProfile($user, $profile, $new_nickname);
-    }
-
-    /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param \Warlof\Seat\Connector\Drivers\ISet[] $sets
-     * @return \Illuminate\Support\Collection
-     * @throws \Seat\Services\Exceptions\SettingException
-     */
-    private function getDroppableSets(User $profile, array $sets)
-    {
-        $pending_drops = collect();
-
-        foreach ($sets as $set) {
-            if ($this->terminator || ! $profile->isAllowedSet($set->getId()))
-                $pending_drops->push($set->getId());
-        }
-
-        return $pending_drops;
-    }
-
-    /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param \Warlof\Seat\Connector\Drivers\ISet[] $sets
-     * @return \Illuminate\Support\Collection
-     * @throws \Seat\Services\Exceptions\SettingException
-     */
-    private function getGrantableSets(User $profile, array $sets)
-    {
-        $pending_adds = collect();
-
-        if ($this->terminator)
-            return $pending_adds;
-
-        $allowed_sets = $profile->allowedSets();
-
-        foreach ($allowed_sets as $set_id) {
-            if (empty(array_filter($sets, function ($set) use ($set_id) {
-                return $set->getId() == $set_id;
-            })))
-                $pending_adds->push($set_id);
-        }
-
-        return $pending_adds;
-    }
-
-    /**
-     * @param \Warlof\Seat\Connector\Drivers\IUser $user
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param array $pending_adds
-     * @param array $pending_drops
-     */
-    private function updateUserSets(IUser $user, User $profile, array $pending_adds, array $pending_drops)
-    {
-        // drop all sets which have been marked for a removal
-        foreach ($pending_drops as $set_id) {
-            $set = $this->client->getSet($set_id);
-            $user->removeSet($set);
-        }
-
-        // add all sets which have been marked for an addition
-        foreach ($pending_adds as $set_id) {
-            $set = $this->client->getSet($set_id);
-
-            if (! $set) {
-                logger()->error('Unable to retrieve a valid set from platform.', [
-                    'platform' => $this->driver,
-                    'set ID'   => $set_id,
-                ]);
-
-                event(new EventLogger($this->driver, 'critical', 'policy',
-                    sprintf('Unable to retrieve a valid set with ID %s from platform.', $set_id)));
-
-                continue;
-            }
-
-            $user->addSet($set);
-        }
-
-        event(new EventLogger($this->driver, 'info', 'policy',
-            sprintf('Groups has successfully been updated for the user %s (%s) from group %d.',
-                '', $user->getName(), $profile->user->id)));
-    }
-
-    /**
-     * @param \Warlof\Seat\Connector\Drivers\IUser $user
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param string $nickname
-     */
-    private function updateUserProfile(IUser $user, User $profile, string $nickname)
-    {
-        if ($user->setName($nickname)) {
-
-            $profile->connector_name = $nickname;
-            $profile->save();
-
-            event(new EventLogger($this->driver, 'info', 'policy',
-                sprintf('Nickname from the user %s (%s) from group %d has been updated.',
-                    '', $user->getName(), $profile->user->id)));
-        }
+        $this->handleNicknameUpdate($profile, $user);
     }
 }
