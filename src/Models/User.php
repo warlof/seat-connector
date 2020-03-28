@@ -42,7 +42,7 @@ class User extends Model
      * @var array
      */
     protected $fillable = [
-        'connector_type', 'connector_id', 'connector_name', 'group_id', 'unique_id',
+        'connector_type', 'connector_id', 'connector_name', 'user_id', 'unique_id',
     ];
 
     /**
