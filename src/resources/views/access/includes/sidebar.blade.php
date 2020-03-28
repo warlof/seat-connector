@@ -21,7 +21,7 @@
           <label for="connector-filter-type">{{ trans_choice('web::seat.type', 1) }}</label>
           <select name="entity_type" id="connector-filter-type" class="form-control">
             <option value="public">{{ trans('seat-connector::seat.public_filter') }}</option>
-            <option value="groups">{{ trans('seat-connector::seat.user_filter') }}</option>
+            <option value="users">{{ trans('seat-connector::seat.user_filter') }}</option>
             <option value="roles">{{ trans('seat-connector::seat.role_filter') }}</option>
             <option value="corporations">{{ trans('seat-connector::seat.corporation_filter') }}</option>
             <option value="titles">{{ trans('seat-connector::seat.title_filter') }}</option>
@@ -30,8 +30,8 @@
         </div>
 
         <div class="form-group">
-          <label for="connector-filter-groups">{{ trans('web::seat.username') }}</label>
-          <select name="entity_id" id="connector-filter-groups" class="form-control" disabled></select>
+          <label for="connector-filter-users">{{ trans('web::seat.username') }}</label>
+          <select name="entity_id" id="connector-filter-users" class="form-control" disabled></select>
         </div>
 
         <div class="form-group">

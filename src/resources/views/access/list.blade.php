@@ -25,7 +25,7 @@
       $('#connector-filter-type').change(function() {
           var filter_type = $('#connector-filter-type').val();
 
-          $.each(['connector-filter-groups', 'connector-filter-roles', 'connector-filter-corporations', 'connector-filter-titles', 'connector-filter-alliances'], function (key, value) {
+          $.each(['connector-filter-users', 'connector-filter-roles', 'connector-filter-corporations', 'connector-filter-titles', 'connector-filter-alliances'], function (key, value) {
               if (value === ('connector-filter-' + filter_type)) {
                   $(('#' + value)).prop('disabled', false);
               } else {
@@ -37,9 +37,9 @@
               $('#connector-filter-corporations, #connector-filter-titles').prop('disabled', false);
       }).select2();
 
-      $('#connector-filter-groups').select2({
+      $('#connector-filter-users').select2({
           ajax: {
-              url: '{{ route('fastlookup.groups') }}',
+              url: '{{ route('fastlookup.users') }}',
               dataType: 'json',
               cache: true
           },
