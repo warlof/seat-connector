@@ -1,4 +1,6 @@
-# Structure
+# Driver Implementation
+
+## Structure
 
 Your driver implementation must meat the minimal structure bellow :
 
@@ -19,7 +21,7 @@ Your driver implementation must meat the minimal structure bellow :
 /{Driver}ConnectorServiceProvider.php
 ```
 
-# Configuration
+## Configuration
 
 The file called `seat-connector.config.php` must contain a structure like this :
 
@@ -65,7 +67,7 @@ The field name will also be used by the connector to search its existing value i
 >
 > All your settings will be stored and read as an object.
 
-# Routes
+## Routes
 
 Your driver must register at least the 3 routes bellow. They will be used by the connector in order to proceed settings update and user registration.
 Replace `{driver}` by your driver configuration key.
@@ -78,108 +80,108 @@ Replace `{driver}` by your driver configuration key.
 
 In case the platform for which you want to provide a driver is using OAuth flow, please consider using [Socialite](https://socialiteproviders.netlify.com) as its easy to implement and already provides support for a lot of platforms.
 
-# Classes
+## Classes
 
-## IClient
+### IClient
 
 IClient is the entry point of your driver. It will implement methods which will allow the system to communicate with your platform.
 
 It must contain the following methods :
- - getInstance(): IClient
- - getUsers(): array
- - getSets(): array
- - getUser(string id): ?IUser
- - getSet(string id): ?ISet
+- getInstance(): IClient
+- getUsers(): array
+- getSets(): array
+- getUser(string id): ?IUser
+- getSet(string id): ?ISet
 
-### getInstance()
+#### getInstance()
 
 This method is used by the connector to access your driver implementation and the platform to which it's connected.
 It must return an instance of IClient.
 
 At pattern point of view, this class is a singleton and constructor will never be directly used by the connector itself.
 
-### GetUsers()
+#### GetUsers()
 
 This method must return a list of `IUser` which are user registered on the platform.
 Returned users can be active or not.
 
-### getUser()
+#### getUser()
 
 This method can return an `IUser` related to a registered user on the platform.
 It may return `null` which mean no user related to the `ID` sent in parameter has been found.
 
-### GetSets()
+#### GetSets()
 
 This method must return a list of `ISet` which are the "thing" you want limit access using connector rules.
 It can be either channels, server groups, or anything else.
 
-### GetSet()
+#### GetSet()
 
 This method can return an `ISet` related to a "thing" you want limit access using connector rules.
 It may return `null` which mean no "thing" related to the `ID` sent in parameter has been found.
 
-## ISet
+### ISet
 
 ISet is the representation of your platform user group. It can be a channel, a role, a group or whatever word is used on your platform to call an user pair place.
 
 It must contain the following methods :
 
- - getId(): string
- - getName(): string
- - getMembers(): array
- - addMember(IUser user)
- - removeMember(IUser user)
+- getId(): string
+- getName(): string
+- getMembers(): array
+- addMember(IUser user)
+- removeMember(IUser user)
 
-### getId()
+#### getId()
 
 This method is used by the connector to determine the Set identifier on your platform.
 To improve flexibility, this method have to return a string value - which can be parse by your driver in order to do its own business logic.
 
-### getName()
+#### getName()
 
 This method is used by the connector to determine the Set name on your platform.
 
-### getMembers()
+#### getMembers()
 
 This method is used by the connector to list users which are currently in the Set.
 
-### addMember()
+#### addMember()
 
 This method is used by the connector to add an user inside the Set.
 
-### removeMember()
+#### removeMember()
 
 This method is used by the connector to remove an user from the Set.
 
-## IUser
+### IUser
 
 IUser is the representation of your platform physical user. It can be a chatter, speaker, member or whatever word is used on your platform to call a human.
 
 It must contain the following methods :
 
- - getClientId(): string
- - getUniqueId(): string
- - getName(): string
- - setName(string name)
- - getSets(): array
- - addSet(ISet set)
- - removeSet(ISet set)
+- getClientId(): string
+- getUniqueId(): string
+- getName(): string
+- setName(string name)
+- getSets(): array
+- addSet(ISet set)
+- removeSet(ISet set)
 
-### getClientId()
+#### getClientId()
 
 This method is used by the connector to determine the User identifier on your platform.
 To improve flexibility, this method have to return a string value - which can be parse by your driver in order to do its own business logic.
 
-### getUniqueId()
+#### getUniqueId()
 
 This method is used by the connector to ensure an user is unique across all user *rendez-vous* place on your platform.
 To improve flexibility, this method have to return a string value - which can be parse by your driver in order to do its own business logic.
 
-### getName()
+#### getName()
 
 This method is used by the connector to determine the User nickname on your platform.
 
-### setName()
+#### setName()
 
 This method is used by the connector to update the user nickname on your platform according to the SeAT owner policy.
 
@@ -187,23 +189,23 @@ This method is used by the connector to update the user nickname on your platfor
 > You must take care of the nickname limit from your platform while implementing `setName` method.
 However, please do not throw an exception as the user will not be able to truncated its character name - neither the SeAT instance owner.
 
-### getSets()
+#### getSets()
 
 This method is used by the connector to figure in which set the user is actually.
 
-### addSet()
+#### addSet()
 
 This method is used by the connector to grant a new Set to the user.
 
-### removeSet()
+#### removeSet()
 
 This method is used by the connector to revoke a Set from the user.
 
-# Examples
+## Examples
 
 You can find some implementation example of the new connector on repository listed bellow :
 
- - [Slackbot - Slack Connector Driver](https://github.com/warlof/slackbot/tree/seat-connector)
- - [Discord - Discord Connector Driver](https://github.com/warlof/seat-discord-connector/tree/seat-connector)
- - [Teamspeak - Teamspeak Connector Driver](https://github.com/warlof/seat-teamspeak/tree/seat-connector)
+- [Slackbot - Slack Connector Driver](https://github.com/warlof/slackbot/tree/seat-connector)
+- [Discord - Discord Connector Driver](https://github.com/warlof/seat-discord-connector/tree/seat-connector)
+- [Teamspeak - Teamspeak Connector Driver](https://github.com/warlof/seat-teamspeak/tree/seat-connector)
  
