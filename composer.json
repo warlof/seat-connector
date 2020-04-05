@@ -16,11 +16,10 @@
     }
   },
   "require": {
-    "eveseat/seat": "^4.0",
-    "eveseat/services": "^4.0",
-    "eveseat/web": "^4.0",
-    "eveseat/api": "^4.0",
-    "eveseat/eveapi": "^4.0"
+    "eveseat/services": "^4.0@dev",
+    "eveseat/web": "^4.0@dev",
+    "eveseat/api": "^4.0@dev",
+    "eveseat/eveapi": "^4.0@dev"
   },
   "extra": {
     "laravel": {
