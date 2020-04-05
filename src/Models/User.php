@@ -221,9 +221,11 @@ class User extends Model
             $alliance = is_null($character->alliance_id) ? null : Alliance::find($character->alliance_id);
             $format = setting('seat-connector.format', true) ?: '[%2$s] %1$s';
 
+            $corp_ticker = '';
             if (! is_null($corporation))
                 $corp_ticker = $corporation->ticker ?? '';
 
+            $alliance_ticker = '';
             if (! is_null($alliance)) 
                 $alliance_ticker = $alliance->ticker ?? '';
             
