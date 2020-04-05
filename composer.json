@@ -20,9 +20,7 @@
     "eveseat/services": "^4.0",
     "eveseat/web": "^4.0",
     "eveseat/api": "^4.0",
-    "eveseat/eveapi": "^4.0",
-    "yajra/laravel-datatables-oracle": "~9",
-    "yajra/laravel-datatables-buttons": "^4.0"
+    "eveseat/eveapi": "^4.0"
   },
   "extra": {
     "laravel": {
