@@ -29,6 +29,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Warlof\Seat\Connector\Drivers\IUser;
 use Warlof\Seat\Connector\Events\EventLogger;
+use Warlof\Seat\Connector\Exceptions\InvalidDriverIdentityException;
 use Warlof\Seat\Connector\Exceptions\MissingDriverClientException;
 use Warlof\Seat\Connector\Models\User;
 use Warlof\Seat\Connector\Traits\ConnectorPolicyManagement;
@@ -109,6 +110,9 @@ class DriverApplyPolicies implements ShouldQueue
         // collect all users from the active driver
         $users = $this->client->getUsers();
 
+        if (empty($users))
+            event(new EventLogger($this->driver, 'warning', 'policy', 'No users has been returned by the platform.'));
+
         // loop over each entity and apply policy
         foreach ($users as $user) {
 
@@ -140,7 +144,7 @@ class DriverApplyPolicies implements ShouldQueue
 
         // in case the user is unknown of SeAT; skip the process
         if (is_null($profile))
-            return;
+            throw new InvalidDriverIdentityException(sprintf('The identity with ID %s is unknown by SeAT', $user->getClientId()));
 
         $this->handleSetsUpdate($profile, $user);
 
