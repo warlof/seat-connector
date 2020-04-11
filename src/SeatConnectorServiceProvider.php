@@ -171,7 +171,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
      */
     private function addTranslations()
     {
-        $this->loadTranslationsFrom(__DIR__ . '/lang', 'seat-connector');
+        $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'seat-connector');
     }
 
     /**
