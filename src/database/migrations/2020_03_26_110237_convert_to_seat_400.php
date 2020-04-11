@@ -67,7 +67,7 @@ class ConvertToSeat400 extends Migration
                     ->where('entity_type', 'Seat\Web\Models\Group')
                     ->update([
                         'entity_type' => 'Seat\Web\Models\User',
-                        'user_id' => $migration->new_user_id,
+                        'entity_id'   => $migration->new_user_id,
                     ]);
             });
     }
