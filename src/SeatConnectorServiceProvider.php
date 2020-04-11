@@ -67,7 +67,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     {
         $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.config.php', 'seat-connector.config');
         $this->mergeConfigFrom(__DIR__ . '/Config/package.sidebar.php', 'package.sidebar');
-        $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.permissions.php', 'web.permissions');
+
+        $this->registerPermissions(__DIR__ . '/Config/seat-connector.permissions.php', 'seat-connector');
     }
 
     /**

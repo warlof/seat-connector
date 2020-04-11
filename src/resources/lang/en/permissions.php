@@ -20,12 +20,9 @@
  */
 
 return [
-    'view' => [
-        'label'       => 'seat-connector::permissions.view_label',
-        'description' => 'seat-connector::permissions.view_description',
-    ],
-    'security' => [
-        'label'       => 'seat-connector::permissions.security_label',
-        'description' => 'seat-connector::permissions.security_description',
-    ],
+    'view_label'       => 'View',
+    'view_description' => 'Users with this permission can see a connector entry into the sidebar. They can also see available platforms and register to them.',
+
+    'security_label'       => 'Security',
+    'security_description' => 'Users with this permissions can manage binding between SeAT and platforms. This include users management and access mapping.',
 ];
