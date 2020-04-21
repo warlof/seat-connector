@@ -148,7 +148,7 @@ class User extends Model
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('corporations', function ($query) {
-                $corporations = $this->user->characters->pluck('corporation_id');
+                $corporations = $this->user->characters->pluck('affiliation.corporation_id');
 
                 $query->whereIn('entity_id', $corporations);
             })
@@ -182,7 +182,7 @@ class User extends Model
     {
         $rows = Set::where('connector_type', $this->connector_type)
             ->whereHas('alliances', function ($query) {
-                $alliances = $this->user->characters->pluck('alliance_id');
+                $alliances = $this->user->characters->pluck('affiliation.alliance_id');
 
                 $query->whereIn('entity_id', $alliances);
             })
@@ -217,8 +217,8 @@ class User extends Model
         $nickname = $character->name;
 
         if (setting('seat-connector.ticker', true)) {
-            $corporation = CorporationInfo::find($character->corporation_id);
-            $alliance = is_null($character->alliance_id) ? null : Alliance::find($character->alliance_id);
+            $corporation = CorporationInfo::find($character->affiliation->corporation_id);
+            $alliance = is_null($character->affiliation->alliance_id) ? null : Alliance::find($character->affiliation->alliance_id);
             $format = setting('seat-connector.format', true) ?: '[%2$s] %1$s';
 
             $corp_ticker = '';
