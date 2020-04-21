@@ -125,7 +125,7 @@
                 <dd>If yes is selected, the Character Corporation Ticker will be added to the name according to <code>prefix mask</code>.</dd>
 
                 <dt>Prefix Mask</dt>
-                <dd>This is the pattern which will define how ticker must be put. <code>%1$s</code> is referring to <b>Character Name</b>. <code>%2$s</code> is referring to <b>Corporation Ticker</b>.</dd>
+                <dd>This is the pattern which will define how ticker must be put. <code>%1$s</code> is referring to <b>Character Name</b>. <code>%2$s</code> is referring to <b>Corporation Ticker</b>. <code>%3$s</code> is referring to <b>Alliance Ticker</b>.</dd>
               </dl>
 
             </div>
