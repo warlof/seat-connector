@@ -21,10 +21,10 @@
 
 namespace Warlof\Seat\Connector;
 
-use App\Providers\AbstractSeatPlugin;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Event;
 use Seat\Eveapi\Models\Character\CharacterAffiliation;
+use Seat\Services\AbstractSeatPlugin;
 use Seat\Web\Events\UserRoleAdded;
 use Seat\Web\Events\UserRoleRemoved;
 use Warlof\Seat\Connector\Commands\DriverApplyPolicies;
