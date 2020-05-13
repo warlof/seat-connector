@@ -2,7 +2,8 @@
   "name": "warlof/seat-connector",
   "description": "Provide basic layer for SeAT connectors.",
   "type": "seat-plugin",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "license": "GPL-3.0-or-later",
   "authors": [
     {
@@ -16,10 +17,10 @@
     }
   },
   "require": {
-    "eveseat/services": "^4.0@dev",
-    "eveseat/web": "^4.0@dev",
-    "eveseat/api": "^4.0@dev",
-    "eveseat/eveapi": "^4.0@dev"
+    "eveseat/services": "^4.0",
+    "eveseat/web": "^4.0",
+    "eveseat/api": "^4.0",
+    "eveseat/eveapi": "^4.0"
   },
   "extra": {
     "laravel": {
