@@ -28,9 +28,8 @@ Route::group([
     ], function () {
 
         Route::get('/identities', [
-            'as'         => 'seat-connector.identities',
-            'uses'       => 'IdentitiesController@index',
-            'middleware' => 'bouncer:seat-connector.view',
+            'as'   => 'seat-connector.identities',
+            'uses' => 'IdentitiesController@index',
         ]);
 
         Route::group([
