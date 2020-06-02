@@ -221,13 +221,8 @@ class User extends Model
             $alliance = is_null($character->affiliation->alliance_id) ? null : Alliance::find($character->affiliation->alliance_id);
             $format = setting('seat-connector.format', true) ?: '[%2$s] %1$s';
 
-            $corp_ticker = '';
-            if (! is_null($corporation))
-                $corp_ticker = $corporation->ticker ?? '';
-
-            $alliance_ticker = '';
-            if (! is_null($alliance)) 
-                $alliance_ticker = $alliance->ticker ?? '';
+            $corp_ticker = $corporation->ticker ?? '';
+            $alliance_ticker = $alliance->ticker ?? '';
             
             $nickname = sprintf($format, $nickname, $corp_ticker, $alliance_ticker);
         }
