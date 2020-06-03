@@ -254,7 +254,7 @@ class DriverApplyPolicies implements ShouldQueue
     {
         if ($user->setName($nickname)) {
 
-            $profile->connector_name = $nickname;
+            $profile->connector_name = $user->getName();
             $profile->save();
 
             event(new EventLogger($this->driver, 'info', 'policy',
