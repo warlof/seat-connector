@@ -69,7 +69,7 @@ trait ConnectorPolicyManagement
             return;
 
         if ($identity->setName($new_nickname)) {
-            $profile->connector_name = $new_nickname;
+            $profile->connector_name = $identity->getName();
             $profile->save();
 
             event(new EventLogger($profile->connector_type, 'info', 'policy',
