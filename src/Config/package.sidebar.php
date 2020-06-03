@@ -60,7 +60,7 @@ return [
                 'label'      => 'seat-connector::seat.settings',
                 'icon'       => 'fas fa-cogs',
                 'route'      => 'seat-connector.settings',
-                'permission' => 'superuser',
+                'permission' => 'global.superuser',
             ],
         ],
         'permission'    => 'seat-connector.view',
