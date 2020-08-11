@@ -54,10 +54,6 @@ Route::group([
             'middleware' => 'can:seat-connector.security',
         ], function () {
 
-            Route::get('/logs')
-                ->name('seat-connector.logs')
-                ->uses('LogsController@index');
-
             Route::get('/users')
                 ->name('seat-connector.users')
                 ->uses('UsersController@index');
@@ -95,6 +91,15 @@ Route::group([
                     ->uses('LookupController@getSets');
             });
 
+        });
+
+        Route::group([
+            'middleware' => 'can:seat-connector.logs_review',
+        ], function () {
+
+            Route::get('/logs')
+                ->name('seat-connector.logs')
+                ->uses('LogsController@index');
         });
 
     });

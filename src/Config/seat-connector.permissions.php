@@ -28,4 +28,8 @@ return [
         'label'       => 'seat-connector::permissions.security_label',
         'description' => 'seat-connector::permissions.security_description',
     ],
+    'logs_review' => [
+        'label'       => 'seat-connector::permissions.logs_review_label',
+        'description' => 'seat-connector::permissions.logs_review_description',
+    ],
 ];

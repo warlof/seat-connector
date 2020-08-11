@@ -25,4 +25,7 @@ return [
 
     'security_label'       => 'Security',
     'security_description' => 'Users with this permissions can manage binding between SeAT and platforms. This include users management and access mapping.',
+
+    'logs_review_label'       => 'Logs Review',
+    'logs_review_description' => 'Users with this permissions are able to show SeAT Connector logs.',
 ];
