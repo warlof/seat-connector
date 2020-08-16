@@ -18,10 +18,10 @@
   },
   "require": {
     "ext-json": "*",
-    "eveseat/services": "4.0.x-dev",
-    "eveseat/eveapi": "4.0.x-dev",
-    "eveseat/web": "4.0.x-dev",
-    "eveseat/api": "4.0.x-dev"
+    "eveseat/services": "^4.0.0",
+    "eveseat/eveapi": "^4.0.0",
+    "eveseat/web": "^4.0.0",
+    "eveseat/api": "^4.0.0"
   },
   "extra": {
     "laravel": {
