@@ -50,14 +50,16 @@ class CreateSeatConnectorUsersTable extends Migration
             $table->unique(['connector_type', 'connector_id'], 'uk_users_connector');
             $table->unique(['connector_type', 'group_id'], 'uk_users_seat_group');
 
-            Schema::disableForeignKeyConstraints();
+            if (Schema::hasTable('groups')) {
+                Schema::disableForeignKeyConstraints();
 
-            $table->foreign('group_id', 'fk_groups')
-                ->references('id')
-                ->on('groups')
-                ->onDelete('cascade');
+                $table->foreign('group_id', 'fk_groups')
+                    ->references('id')
+                    ->on('groups')
+                    ->onDelete('cascade');
 
-            Schema::enableForeignKeyConstraints();
+                Schema::enableForeignKeyConstraints();
+            }
         });
     }
 

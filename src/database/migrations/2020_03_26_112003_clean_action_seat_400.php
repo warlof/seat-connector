@@ -37,7 +37,13 @@ class CleanActionSeat400 extends Migration
     public function up()
     {
         Schema::table('seat_connector_users', function (Blueprint $table) {
-            $table->dropIndex('fk_groups');
+            $manager = Schema::getConnection()->getDoctrineSchemaManager();
+            $meta = $manager->listTableDetails('seat_connector_users');
+
+            if ($meta->hasIndex('fk_groups')) {
+                $table->dropIndex('fk_groups');
+            }
+
             $table->dropIndex('uk_users_seat_group');
             $table->dropColumn('group_id');
 
