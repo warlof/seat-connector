@@ -39,7 +39,7 @@ return [
                 'plural'     => true,
                 'icon'       => 'fas fa-list',
                 'route'      => 'seat-connector.logs',
-                'permission' => 'seat-connector.security',
+                'permission' => 'seat-connector.logs_review',
             ],
             [
                 'name'       => 'User Mapping',
