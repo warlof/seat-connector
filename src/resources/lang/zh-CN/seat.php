@@ -30,7 +30,7 @@ return [
     'message'            => '消息',
     'level'              => '级别',
 
-    'group_id'           => '组ID',
+    'user_id'            => '用户 ID',
     'character_id'       => '人物 ID',
     'character_name'     => '人物名',
     'connector_id'       => '授权器 ID',
