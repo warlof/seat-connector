@@ -26,6 +26,7 @@
             <option value="corporations">{{ trans('seat-connector::seat.corporation_filter') }}</option>
             <option value="titles">{{ trans('seat-connector::seat.title_filter') }}</option>
             <option value="alliances">{{ trans('seat-connector::seat.alliance_filter') }}</option>
+            <option value="squads">{{ trans('seat-connector::seat.squad_filter') }}</option>
           </select>
         </div>
 
@@ -52,6 +53,11 @@
         <div class="form-group">
           <label for="connector-filter-alliances">{{ trans('web::seat.alliance') }}</label>
           <select name="entity_id" id="connector-filter-alliances" class="form-control" disabled></select>
+        </div>
+
+        <div class="form-group">
+          <label for="connector-filter-alliances">{{ trans_choice('web::squads.squad', 1) }}</label>
+          <select name="entity_id" id="connector-filter-squads" class="form-control" disabled></select>
         </div>
 
         <div class="form-group">

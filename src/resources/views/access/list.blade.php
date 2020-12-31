@@ -25,7 +25,7 @@
       $('#connector-filter-type').change(function() {
           var filter_type = $('#connector-filter-type').val();
 
-          $.each(['connector-filter-users', 'connector-filter-roles', 'connector-filter-corporations', 'connector-filter-titles', 'connector-filter-alliances'], function (key, value) {
+          $.each(['connector-filter-users', 'connector-filter-roles', 'connector-filter-corporations', 'connector-filter-titles', 'connector-filter-alliances', 'connector-filter-squads'], function (key, value) {
               if (value === ('connector-filter-' + filter_type)) {
                   $(('#' + value)).prop('disabled', false);
               } else {
@@ -82,6 +82,15 @@
       $('#connector-filter-alliances').select2({
           ajax: {
               url: '{{ route('fastlookup.alliances') }}',
+              dataType: 'json',
+              cache: true
+          },
+          minimumInputLength: 3
+      });
+
+      $('#connector-filter-squads').select2({
+          ajax: {
+              url: '{{ route('seat-connector.api.squads') }}',
               dataType: 'json',
               cache: true
           },

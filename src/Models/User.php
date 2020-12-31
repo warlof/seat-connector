@@ -106,6 +106,7 @@ class User extends Model
             ->union($this->getTitleSets())
             ->union($this->getAllianceSets())
             ->union($this->getPublicSets())
+            ->union($this->getSquadSets())
             ->get();
 
         $this->allowed_sets = $rows->unique('connector_id')->pluck('connector_id')->toArray();
@@ -185,6 +186,20 @@ class User extends Model
                 $alliances = $this->user->characters->pluck('affiliation.alliance_id');
 
                 $query->whereIn('entity_id', $alliances);
+            })
+            ->select('connector_id');
+
+        return $rows;
+    }
+
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSquadSets()
+    {
+        $rows = Set::where('connector_type', $this->connector_type)
+            ->whereHas('squads', function ($query) {
+                $query->whereIn('entity_id', $this->user->squads->pluck('id'));
             })
             ->select('connector_id');
 
