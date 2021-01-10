@@ -94,7 +94,7 @@
               dataType: 'json',
               cache: true
           },
-          minimumInputLength: 3
+          minimumInputLength: 1
       });
 
       $('#connector-driver')
