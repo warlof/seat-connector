@@ -27,6 +27,7 @@ use Seat\Eveapi\Models\Character\CharacterAffiliation;
 use Seat\Services\AbstractSeatPlugin;
 use Seat\Web\Events\UserRoleAdded;
 use Seat\Web\Events\UserRoleRemoved;
+use Seat\Web\Models\Squads\SquadMember;
 use Warlof\Seat\Connector\Commands\DriverApplyPolicies;
 use Warlof\Seat\Connector\Commands\DriverUpdateSets;
 use Warlof\Seat\Connector\Events\EventLogger;
@@ -34,6 +35,7 @@ use Warlof\Seat\Connector\Listeners\LoggerListener;
 use Warlof\Seat\Connector\Listeners\UserRoleAddedListener;
 use Warlof\Seat\Connector\Listeners\UserRoleRemovedListener;
 use Warlof\Seat\Connector\Observers\CharacterAffiliationObserver;
+use Warlof\Seat\Connector\Observers\SquadMemberObserver;
 
 /**
  * Class SeatConnectorProvider.
@@ -196,7 +198,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
         Event::listen(UserRoleAdded::class, UserRoleAddedListener::class);
         Event::listen(UserRoleRemoved::class, UserRoleRemovedListener::class);
 
-        // detect corporation and alliance affiliation updates
+        // detect corporation and alliance affiliation updates and squad membership updates
         CharacterAffiliation::observe(CharacterAffiliationObserver::class);
+        SquadMember::observe(SquadMemberObserver::class);
     }
 }
