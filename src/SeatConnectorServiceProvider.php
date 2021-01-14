@@ -45,6 +45,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     /**
      * Bootstrap the application services.
      *
+     * @param \Illuminate\Routing\Router $router
      * @return void
      */
     public function boot(Router $router)
@@ -65,7 +66,6 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/Config/seat-connector.config.php', 'seat-connector.config');
         $this->mergeConfigFrom(__DIR__ . '/Config/package.sidebar.php', 'package.sidebar');
 
         $this->registerPermissions(__DIR__ . '/Config/seat-connector.permissions.php', 'seat-connector');
@@ -117,16 +117,6 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     public function getPackagistVendorName(): string
     {
         return 'warlof';
-    }
-
-    /**
-     * Return the plugin installed version.
-     *
-     * @return string
-     */
-    public function getVersion(): string
-    {
-        return config('seat-connector.config.version');
     }
 
     /**
