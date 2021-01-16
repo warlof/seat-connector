@@ -34,4 +34,9 @@
       {{ trans('seat-connector::seat.alliance_filter') }}
     </a>
   </li>
+  <li class="nav-item">
+    <a href="#" class="nav-link" role="tab" data-toggle="pill" aria-expanded="true" data-filter="squads">
+      {{ trans('seat-connector::seat.squad_filter') }}
+    </a>
+  </li>
 </ul>

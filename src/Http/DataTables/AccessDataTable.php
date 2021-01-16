@@ -26,6 +26,7 @@ use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
+use Seat\Web\Models\Squads\Squad;
 use Seat\Web\Models\User;
 use Warlof\Seat\Connector\Models\Set;
 use Yajra\DataTables\Services\DataTable;
@@ -66,12 +67,14 @@ class AccessDataTable extends DataTable
         $roles = $this->getRoleQuery();
         $users = $this->getUserQuery();
         $public = $this->getPublicQuery();
+        $squads = $this->getSquadQuery();
 
         $union = $corporation->union($titles->getQuery())
             ->union($alliances->getQuery())
             ->union($roles->getQuery())
             ->union($users->getQuery())
-            ->union($public->getQuery());
+            ->union($public->getQuery())
+            ->union($squads->getQuery());
 
         return DB::query()->fromSub($union, 'mapping');
     }
@@ -237,6 +240,29 @@ class AccessDataTable extends DataTable
                 'seat_connector_sets.name'
             )
             ->selectRaw('? as entity_type, ? as entity_id, ? as entity_name', ['public', '0', '']);
+
+        return $query;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function getSquadQuery()
+    {
+        $query = Set::
+            join('seat_connector_set_entity', 'set_id', 'id')
+            ->join((new Squad())->getTable(), function ($join) {
+                $join->on('entity_id', (new Squad())->getTable() . '.id');
+                $join->where('entity_type', Squad::class);
+            })
+            ->select(
+                'seat_connector_sets.id',
+                'seat_connector_sets.connector_type',
+                'seat_connector_sets.connector_id',
+                'seat_connector_sets.name',
+                'seat_connector_set_entity.entity_type',
+                'seat_connector_set_entity.entity_id',
+                (new Squad())->getTable() . '.name as entity_name');
 
         return $query;
     }

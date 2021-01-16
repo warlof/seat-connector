@@ -35,6 +35,7 @@ return [
     'corporation_filter' => 'Corporation Filters',
     'title_filter'       => 'Title Filters',
     'alliance_filter'    => 'Alliance Filters',
+    'squad_filter'       => 'Squad Filters',
 
     'driver'             => 'Driver',
     'sets'               => 'Set|Sets',

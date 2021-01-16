@@ -86,6 +86,10 @@ Route::group([
                     ->name('seat-connector.api.titles')
                     ->uses('LookupController@getTitles');
 
+                Route::get('/squads')
+                    ->name('seat-connector.api.squads')
+                    ->uses('LookupController@getSquads');
+
                 Route::get('/sets')
                     ->name('seat-connector.api.sets')
                     ->uses('LookupController@getSets');

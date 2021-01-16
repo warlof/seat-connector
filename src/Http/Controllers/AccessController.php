@@ -27,6 +27,7 @@ use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Acl\Role;
+use Seat\Web\Models\Squads\Squad;
 use Seat\Web\Models\User;
 use Warlof\Seat\Connector\Http\DataTables\AccessDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\AccessDataTableScope;
@@ -73,6 +74,9 @@ class AccessController extends Controller
                 break;
             case 'alliances':
                 $filter_type = Alliance::class;
+                break;
+            case 'squads':
+                $filter_type = Squad::class;
                 break;
         }
 
@@ -178,6 +182,8 @@ class AccessController extends Controller
                 return 'titles';
             case Alliance::class:
                 return 'alliances';
+            case Squad::class:
+                return 'squads';
             default:
                 return $class_name;
         }
