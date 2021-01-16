@@ -83,6 +83,15 @@
       <h3 class="card-title">
         <i class="fas fa-list"></i> {{ trans('seat-connector::seat.journal') }}
       </h3>
+      <div class="card-tools">
+        <div class="input-group input-group-sm">
+          <form method="post" action="{{ route('seat-connector.logs.destroy') }}">
+            {!! csrf_field() !!}
+            {!! method_field('DELETE') !!}
+            <button class="btn btn-sm btn-danger" type="submit"><i class="fas fa-trash-alt"></i> Clear</button>
+          </form>
+        </div>
+      </div>
     </div>
     <div class="card-body">
       {!! $dataTable->table() !!}

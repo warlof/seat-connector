@@ -24,6 +24,7 @@ namespace Warlof\Seat\Connector\Http\Controllers;
 use Seat\Web\Http\Controllers\Controller;
 use Warlof\Seat\Connector\Http\DataTables\LogsDataTable;
 use Warlof\Seat\Connector\Http\DataTables\Scopes\LogsDataTableScope;
+use Warlof\Seat\Connector\Models\Log;
 
 /**
  * Class LogsController.
@@ -43,5 +44,15 @@ class LogsController extends Controller
         return $datatable
             ->addScope(new LogsDataTableScope($driver, $level))
             ->render('seat-connector::logs.list');
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy()
+    {
+        Log::truncate();
+
+        return redirect()->back();
     }
 }

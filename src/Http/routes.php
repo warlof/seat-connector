@@ -100,6 +100,10 @@ Route::group([
             Route::get('/logs')
                 ->name('seat-connector.logs')
                 ->uses('LogsController@index');
+
+            Route::delete('/logs')
+                ->name('seat-connector.logs.destroy')
+                ->uses('LogsController@destroy');
         });
 
     });
