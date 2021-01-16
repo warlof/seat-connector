@@ -26,6 +26,7 @@ use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
+use Seat\Web\Models\Squads\Squad;
 use Seat\Web\Models\User;
 
 /**
@@ -60,6 +61,8 @@ class AccessRuleValidation extends FormRequest
             Alliance::class,
             'titles',
             CorporationTitle::class,
+            'squads',
+            Squad::class,
         ];
 
         return [

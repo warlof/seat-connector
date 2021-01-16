@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Acl\Role;
+use Seat\Web\Models\Squads\Squad;
 use Warlof\Seat\Connector\Models\Set;
 
 /**
@@ -72,6 +73,26 @@ class LookupController extends Controller
 
         return response()->json([
             'results' => $roles,
+        ]);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSquads(Request $request)
+    {
+        $squads = Squad::where('name', 'like', '%' . $request->query('q', '') . '%')
+                    ->get()
+                    ->map(function ($squad, $key) {
+                        return [
+                            'id'   => $squad->id,
+                            'text' => $squad->name,
+                        ];
+                    });
+
+        return response()->json([
+            'results' => $squads,
         ]);
     }
 

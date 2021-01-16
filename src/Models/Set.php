@@ -26,6 +26,7 @@ use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\Corporation\CorporationTitle;
 use Seat\Web\Models\Acl\Role;
+use Seat\Web\Models\Squads\Squad;
 use Seat\Web\Models\User;
 
 /**
@@ -100,6 +101,14 @@ class Set extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function squads()
+    {
+        return $this->morphedByMany(Squad::class, 'entity', 'seat_connector_set_entity');
+    }
+
+    /**
      * @param array $options
      * @return bool
      */
@@ -115,6 +124,7 @@ class Set extends Model
             $this->alliances()->sync([]);
             $this->roles()->sync([]);
             $this->titles()->sync([]);
+            $this->squads()->sync([]);
         }
 
         return true;
