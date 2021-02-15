@@ -125,7 +125,7 @@ class Driver
             'settings:array' => [
                 'name:string',
                 'label:string',
-                'type:enum(email,hidden,number,password,text,url)',
+                'type:enum(checkbox,email,hidden,number,password,text,url)',
             ],
         ];
 
