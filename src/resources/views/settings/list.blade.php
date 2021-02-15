@@ -160,12 +160,23 @@
                 {{ csrf_field() }}
 
                 @foreach($driver->settings as $field)
-                  <div class="form-group">
-                    <label for="{{ sprintf('seat-connector-%s-%s', $key, $field->name) }}">{{ trans($field->label) }}</label>
-                    <input type="text" name="{{ $field->name }}"
-                           id="{{ sprintf('seat-connector-%s-%s', $key, $field->name) }}" class="form-control"
-                           value="{{ $field->value }}" />
-                  </div>
+                  @switch($field->type)
+                    @case("checkbox")
+                      <div class="form-group">
+                        <label for="{{ sprintf('seat-connector-%s-%s', $key, $field->name) }}">{{ trans($field->label) }}</label>
+                        <input type="checkbox" name="{{ $field->name }}"
+                              id="{{ sprintf('seat-connector-%s-%s', $key, $field->name) }}" class="form-check"
+                              value="1" @if($field->value == 1) checked @endif />
+                      </div>
+                      @break
+                    @default
+                    <div class="form-group">
+                      <label for="{{ sprintf('seat-connector-%s-%s', $key, $field->name) }}">{{ trans($field->label) }}</label>
+                      <input type="text" name="{{ $field->name }}"
+                            id="{{ sprintf('seat-connector-%s-%s', $key, $field->name) }}" class="form-control"
+                            value="{{ $field->value }}" />
+                    </div>
+                  @endswitch
                 @endforeach
               </form>
             </div>
