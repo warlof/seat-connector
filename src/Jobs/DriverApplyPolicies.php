@@ -144,7 +144,7 @@ class DriverApplyPolicies implements ShouldQueue
 
         // in case the user is unknown of SeAT; skip the process
         if (is_null($profile))
-            throw new InvalidDriverIdentityException(sprintf('The identity with ID %s is unknown by SeAT', $user->getClientId()));
+            return;
 
         $this->handleSetsUpdate($profile, $user);
 
