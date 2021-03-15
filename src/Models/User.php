@@ -226,20 +226,24 @@ class User extends Model
     {
         $character = $this->user->main_character;
 
-        if (is_null($character))
+        if (is_null($character->name))
             $character = $this->user->characters->first();
 
-        $nickname = $character->name;
+        $nickname = $this->user->name;
 
-        if (setting('seat-connector.ticker', true)) {
-            $corporation = CorporationInfo::find($character->affiliation->corporation_id);
-            $alliance = is_null($character->affiliation->alliance_id) ? null : Alliance::find($character->affiliation->alliance_id);
-            $format = setting('seat-connector.format', true) ?: '[%2$s] %1$s';
+        if (! is_null($character)) {
+            $nickname = $character->name;
 
-            $corp_ticker = $corporation->ticker ?? '';
-            $alliance_ticker = $alliance->ticker ?? '';
-            
-            $nickname = sprintf($format, $nickname, $corp_ticker, $alliance_ticker);
+            if (setting('seat-connector.ticker', true)) {
+                $corporation = CorporationInfo::find($character->affiliation->corporation_id);
+                $alliance = is_null($character->affiliation->alliance_id) ? null : Alliance::find($character->affiliation->alliance_id);
+                $format = setting('seat-connector.format', true) ?: '[%2$s] %1$s';
+
+                $corp_ticker = $corporation->ticker ?? '';
+                $alliance_ticker = $alliance->ticker ?? '';
+
+                $nickname = sprintf($format, $nickname, $corp_ticker, $alliance_ticker);
+            }
         }
 
         return $nickname;
