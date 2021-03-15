@@ -120,6 +120,10 @@ class DriverApplyPolicies implements ShouldQueue
 
                 $this->applyPolicy($user);
 
+            } catch (InvalidDriverIdentityException $e) {
+
+                logger()->warning($e->getMessage(), $e->getTrace());
+
             } catch (Exception $e) {
 
                 event(new EventLogger($this->driver, 'error', 'policy',
@@ -135,6 +139,7 @@ class DriverApplyPolicies implements ShouldQueue
      * @param \Warlof\Seat\Connector\Drivers\IUser $user
      * @throws \Seat\Services\Exceptions\SettingException
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
+     * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverIdentityException
      */
     private function applyPolicy(IUser $user)
     {
@@ -144,7 +149,7 @@ class DriverApplyPolicies implements ShouldQueue
 
         // in case the user is unknown of SeAT; skip the process
         if (is_null($profile))
-            return;
+            throw new InvalidDriverIdentityException(sprintf('The identity with ID %s is unknown by SeAT', $user->getClientId()));
 
         $this->handleSetsUpdate($profile, $user);
 
