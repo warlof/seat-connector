@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Drivers;
 
 /**
  * Class Field.
- *
- * @package Warlof\Seat\Connector\Drivers
  */
 class Field
 {
@@ -51,15 +49,15 @@ class Field
     /**
      * Field constructor.
      *
-     * @param array $field
+     * @param  array  $field
      */
     public function __construct(string $driver, array $field)
     {
         $this->driver = $driver;
 
-        $this->name  = $field['name'];
+        $this->name = $field['name'];
         $this->label = $field['label'];
-        $this->type  = $field['type'];
+        $this->type = $field['type'];
     }
 
     /**
@@ -88,21 +86,25 @@ class Field
 
     /**
      * @return mixed|null
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function getValue()
     {
-        $name     = $this->name;
+        $name = $this->name;
         $settings = setting(sprintf('seat-connector.drivers.%s', $this->driver), true);
 
-        if (is_null($settings))
+        if (is_null($settings)) {
             return null;
+        }
 
-        if (! is_object($settings))
+        if (! is_object($settings)) {
             return null;
+        }
 
-        if (! property_exists($settings, $this->name))
+        if (! property_exists($settings, $this->name)) {
             return null;
+        }
 
         return $settings->$name;
     }
@@ -115,11 +117,13 @@ class Field
     {
         $method = sprintf('get%s', ucfirst($name));
 
-        if (property_exists($this, $name))
+        if (property_exists($this, $name)) {
             return $this->$name;
+        }
 
-        if (method_exists($this, $method))
+        if (method_exists($this, $method)) {
             return $this->$method();
+        }
 
         return null;
     }

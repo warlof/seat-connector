@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Http\DataTables\Scopes;
@@ -25,8 +25,6 @@ use Yajra\DataTables\Contracts\DataTableScope;
 
 /**
  * Class UserDataTableScope.
- *
- * @package Warlof\Seat\Connector\Http\DataTables\Scopes
  */
 class UserDataTableScope implements DataTableScope
 {
@@ -38,7 +36,7 @@ class UserDataTableScope implements DataTableScope
     /**
      * UserDataTableScope constructor.
      *
-     * @param string $connector_driver
+     * @param  string  $connector_driver
      */
     public function __construct(?string $connector_driver)
     {
@@ -48,7 +46,7 @@ class UserDataTableScope implements DataTableScope
     /**
      * Apply a query scope.
      *
-     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $query
      * @return mixed
      */
     public function apply($query)

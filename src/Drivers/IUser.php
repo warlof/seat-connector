@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Drivers;
 
 /**
- * Interface IUser
- *
- * @package Warlof\Seat\Connector\Drivers
+ * Interface IUser.
  */
 interface IUser
 {
@@ -44,26 +42,30 @@ interface IUser
     public function getName(): string;
 
     /**
-     * @param string $name
+     * @param  string  $name
      * @return bool
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function setName(string $name): bool;
 
     /**
      * @return \Warlof\Seat\Connector\Drivers\ISet[]
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function getSets(): array;
 
     /**
-     * @param \Warlof\Seat\Connector\Drivers\ISet $group
+     * @param  \Warlof\Seat\Connector\Drivers\ISet  $group
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function addSet(ISet $group);
 
     /**
-     * @param \Warlof\Seat\Connector\Drivers\ISet $group
+     * @param  \Warlof\Seat\Connector\Drivers\ISet  $group
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     public function removeSet(ISet $group);

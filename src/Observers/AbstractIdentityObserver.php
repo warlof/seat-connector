@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Observers;
@@ -30,8 +30,6 @@ use Warlof\Seat\Connector\Traits\ConnectorPolicyManagement;
 
 /**
  * Class AbstractIdentityObserver.
- *
- * @package Warlof\Seat\Connector\Observers
  */
 abstract class AbstractIdentityObserver
 {
@@ -48,7 +46,7 @@ abstract class AbstractIdentityObserver
     private $terminator = false;
 
     /**
-     * @param \Seat\Web\Models\User $user
+     * @param  \Seat\Web\Models\User  $user
      */
     public function notifyDrivers(SeatUser $user)
     {
@@ -58,8 +56,9 @@ abstract class AbstractIdentityObserver
         // retrieve all identities bind to the user
         $profiles = User::where('user_id', $user->id)->get();
 
-        if ($drivers->isEmpty())
+        if ($drivers->isEmpty()) {
             return;
+        }
 
         foreach ($drivers as $driver) {
 
@@ -107,8 +106,9 @@ abstract class AbstractIdentityObserver
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param \Warlof\Seat\Connector\Drivers\IUser $identity
+     * @param  \Warlof\Seat\Connector\Models\User  $profile
+     * @param  \Warlof\Seat\Connector\Drivers\IUser  $identity
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */

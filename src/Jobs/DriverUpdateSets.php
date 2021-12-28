@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Jobs;
@@ -32,8 +32,6 @@ use Warlof\Seat\Connector\Models\Set;
 
 /**
  * Class DriverUpdateSets.
- *
- * @package Warlof\Seat\Connector\Jobs
  */
 class DriverUpdateSets implements ShouldQueue
 {
@@ -59,7 +57,7 @@ class DriverUpdateSets implements ShouldQueue
     /**
      * DriverUpdateSets constructor.
      *
-     * @param string $driver
+     * @param  string  $driver
      */
     public function __construct(string $driver)
     {
@@ -89,8 +87,9 @@ class DriverUpdateSets implements ShouldQueue
         $config_key = sprintf('seat-connector.drivers.%s.client', $this->driver);
         $client = config($config_key);
 
-        if (is_null($config_key) || ! class_exists($client))
+        if (is_null($config_key) || ! class_exists($client)) {
             throw new MissingDriverClientException(sprintf('The client for driver %s is missing.', $this->driver));
+        }
 
         // get the driver client
         $this->client = $client::getInstance();
@@ -100,7 +99,6 @@ class DriverUpdateSets implements ShouldQueue
 
         // loop over collected set and update database
         foreach ($sets as $set) {
-
             Set::updateOrCreate([
                 'connector_type' => $this->driver,
                 'connector_id' => $set->getId(),

@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Http\Controllers;
@@ -36,13 +36,11 @@ use Warlof\Seat\Connector\Models\Set;
 
 /**
  * Class AccessManagementController.
- *
- * @package Warlof\Seat\Connector\Http\Controllers
  */
 class AccessController extends Controller
 {
     /**
-     * @param \Warlof\Seat\Connector\Http\DataTables\AccessDataTable $datatable
+     * @param  \Warlof\Seat\Connector\Http\DataTables\AccessDataTable  $datatable
      * @return mixed
      */
     public function index(AccessDataTable $datatable)
@@ -86,8 +84,9 @@ class AccessController extends Controller
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Http\Validations\AccessRuleValidation $request
+     * @param  \Warlof\Seat\Connector\Http\Validations\AccessRuleValidation  $request
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @throws \Exception
      */
     public function create(AccessRuleValidation $request)
@@ -108,9 +107,10 @@ class AccessController extends Controller
         $set = Set::find($request->input('set_id'));
 
         if ($entity_type != 'public') {
-            if ($set->$entity_type()->where($entity_pk, $request->input('entity_id'))->exists())
+            if ($set->$entity_type()->where($entity_pk, $request->input('entity_id'))->exists()) {
                 return redirect()->back()
                     ->with('warning', 'The rule already exists. Nothing has been changed.');
+            }
 
             $set->$entity_type()->attach($request->input('entity_id'));
         }
@@ -124,8 +124,9 @@ class AccessController extends Controller
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Http\Validations\AccessRuleValidation $request
+     * @param  \Warlof\Seat\Connector\Http\Validations\AccessRuleValidation  $request
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @throws \Exception
      */
     public function remove(AccessRuleValidation $request)
@@ -146,9 +147,10 @@ class AccessController extends Controller
         $set = Set::find($request->input('set_id'));
 
         if ($entity_type != 'public') {
-            if (! $set->$entity_type()->where($entity_pk, $request->input('entity_id'))->exists())
+            if (! $set->$entity_type()->where($entity_pk, $request->input('entity_id'))->exists()) {
                 return redirect()->back()
                     ->with('error', 'The rule does not exists.');
+            }
 
             $set->$entity_type()->detach($request->input('entity_id'));
         }
@@ -164,9 +166,9 @@ class AccessController extends Controller
     }
 
     /**
-     * Map Connector class to user friendly alias
+     * Map Connector class to user friendly alias.
      *
-     * @param string $class_name
+     * @param  string  $class_name
      * @return string
      */
     private function classAlias(string $class_name): string

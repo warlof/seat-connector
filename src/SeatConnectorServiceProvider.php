@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector;
@@ -39,15 +39,13 @@ use Warlof\Seat\Connector\Observers\SquadMemberObserver;
 
 /**
  * Class SeatConnectorProvider.
- *
- * @package Warlof\Seat\Connector
  */
 class SeatConnectorServiceProvider extends AbstractSeatPlugin
 {
     /**
      * Bootstrap the application services.
      *
-     * @param \Illuminate\Routing\Router $router
+     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
     public function boot(Router $router)
@@ -78,8 +76,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
      * Return the plugin public name as it should be displayed into settings.
      *
      * @return string
-     * @example SeAT Web
      *
+     * @example SeAT Web
      */
     public function getName(): string
     {
@@ -102,8 +100,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
      * Return the plugin technical name as published on package manager.
      *
      * @return string
-     * @example web
      *
+     * @example web
      */
     public function getPackagistPackageName(): string
     {
@@ -114,8 +112,8 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
      * Return the plugin vendor tag as published on package manager.
      *
      * @return string
-     * @example eveseat
      *
+     * @example eveseat
      */
     public function getPackagistVendorName(): string
     {
@@ -123,7 +121,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Import migrations
+     * Import migrations.
      */
     private function addMigrations()
     {
@@ -131,7 +129,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Register cli commands
+     * Register cli commands.
      */
     private function addCommands()
     {
@@ -142,7 +140,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Register views
+     * Register views.
      */
     private function addViews()
     {
@@ -150,7 +148,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Import routes
+     * Import routes.
      */
     private function addRoutes()
     {
@@ -160,7 +158,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Import translations
+     * Import translations.
      */
     private function addTranslations()
     {
@@ -168,7 +166,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Import API endpoints
+     * Import API endpoints.
      */
     private function addApiEndpoints()
     {
@@ -179,7 +177,7 @@ class SeatConnectorServiceProvider extends AbstractSeatPlugin
     }
 
     /**
-     * Register events listeners
+     * Register events listeners.
      */
     private function addEvents()
     {

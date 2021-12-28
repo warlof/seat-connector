@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Observers;
@@ -27,13 +27,11 @@ use Warlof\Seat\Connector\Jobs\NotifyDriver;
 
 /**
  * Class CharacterAffiliationObserver.
- *
- * @package Warlof\Seat\Connector\Observers
  */
 class CharacterAffiliationObserver
 {
     /**
-     * @param \Seat\Eveapi\Models\Character\CharacterAffiliation $affiliation
+     * @param  \Seat\Eveapi\Models\Character\CharacterAffiliation  $affiliation
      */
     public function updated(CharacterAffiliation $affiliation)
     {
@@ -43,8 +41,9 @@ class CharacterAffiliationObserver
                 $query->where('character_id', $affiliation->character_id);
             })->first();
 
-        if (! $user)
+        if (! $user) {
             return;
+        }
 
         dispatch(new NotifyDriver($user));
     }

@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Listeners;
@@ -28,8 +28,6 @@ use Warlof\Seat\Connector\Observers\AbstractIdentityObserver;
 
 /**
  * Class UserRoleRemovedListener.
- *
- * @package Warlof\Seat\Connector\Listeners
  */
 class UserRoleRemovedListener extends AbstractIdentityObserver implements ShouldQueue
 {
@@ -44,25 +42,26 @@ class UserRoleRemovedListener extends AbstractIdentityObserver implements Should
     public $queue = 'high';
 
     /**
-     * @param \Seat\Web\Events\UserRoleRemoved $event
+     * @param  \Seat\Web\Events\UserRoleRemoved  $event
      */
     public function handle(UserRoleRemoved $event)
     {
         $user = User::find($event->user_id);
 
-        if (! $user)
+        if (! $user) {
             return;
+        }
 
         $this->notifyDrivers($user);
     }
 
     /**
-     * @param \Seat\Web\Events\UserRoleRemoved $event
+     * @param  \Seat\Web\Events\UserRoleRemoved  $event
      * @return bool
      */
     public function shouldQueue(UserRoleRemoved $event)
     {
-        return (User::find($event->user_id) != null);
+        return User::find($event->user_id) != null;
     }
 
     /**

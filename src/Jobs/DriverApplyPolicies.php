@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Jobs;
@@ -36,8 +36,6 @@ use Warlof\Seat\Connector\Traits\ConnectorPolicyManagement;
 
 /**
  * Class DriverApplyPolicies.
- *
- * @package Warlof\Seat\Connector\Jobs
  */
 class DriverApplyPolicies implements ShouldQueue
 {
@@ -68,13 +66,13 @@ class DriverApplyPolicies implements ShouldQueue
     /**
      * DriverApplyPolicies constructor.
      *
-     * @param string $driver
+     * @param  string  $driver
      */
     public function __construct(string $driver, bool $terminator = false)
     {
-        $this->driver     = $driver;
+        $this->driver = $driver;
         $this->terminator = $terminator;
-        $this->tags       = array_merge($this->tags, [$driver]);
+        $this->tags = array_merge($this->tags, [$driver]);
 
         if ($terminator) {
             $this->tags = array_merge($this->tags, ['terminator']);
@@ -100,8 +98,9 @@ class DriverApplyPolicies implements ShouldQueue
         $config_key = sprintf('seat-connector.drivers.%s.client', $this->driver);
         $client = config($config_key);
 
-        if (is_null($config_key) || ! class_exists($client))
+        if (is_null($config_key) || ! class_exists($client)) {
             throw new MissingDriverClientException(sprintf('The client for driver %s is missing.', $this->driver));
+        }
 
         $this->client = $client::getInstance();
 
@@ -110,33 +109,27 @@ class DriverApplyPolicies implements ShouldQueue
         // collect all users from the active driver
         $users = $this->client->getUsers();
 
-        if (empty($users))
+        if (empty($users)) {
             event(new EventLogger($this->driver, 'warning', 'policy', 'No users has been returned by the platform.'));
+        }
 
         // loop over each entity and apply policy
         foreach ($users as $user) {
-
             try {
-
                 $this->applyPolicy($user);
-
             } catch (InvalidDriverIdentityException $e) {
-
                 logger()->warning($e->getMessage(), $e->getTrace());
-
             } catch (Exception $e) {
-
                 event(new EventLogger($this->driver, 'error', 'policy',
                     sprintf('Unable to update the user %s. %s',
                         $user->getName(), $e->getMessage())));
-
             }
-
         }
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Drivers\IUser $user
+     * @param  \Warlof\Seat\Connector\Drivers\IUser  $user
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverIdentityException
@@ -148,8 +141,9 @@ class DriverApplyPolicies implements ShouldQueue
             ->first();
 
         // in case the user is unknown of SeAT; skip the process
-        if (is_null($profile))
+        if (is_null($profile)) {
             throw new InvalidDriverIdentityException(sprintf('The identity with ID %s is unknown by SeAT', $user->getClientId()));
+        }
 
         $this->handleSetsUpdate($profile, $user);
 

@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Http\DataTables\Scopes;
@@ -25,8 +25,6 @@ use Yajra\DataTables\Contracts\DataTableScope;
 
 /**
  * Class AccessDataTableScope.
- *
- * @package Warlof\Seat\Connector\Http\DataTables\Scopes
  */
 class AccessDataTableScope implements DataTableScope
 {
@@ -43,25 +41,26 @@ class AccessDataTableScope implements DataTableScope
     /**
      * AccessDataTableScope constructor.
      *
-     * @param string $filter_type
-     * @param string|null $connector_driver
+     * @param  string  $filter_type
+     * @param  string|null  $connector_driver
      */
-    public function __construct(string $filter_type, ? string $connector_driver)
+    public function __construct(string $filter_type, ?string $connector_driver)
     {
         $this->connector_driver = $connector_driver;
-        $this->filter_type      = $filter_type;
+        $this->filter_type = $filter_type;
     }
 
     /**
      * Apply a query scope.
      *
-     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $query
      * @return mixed
      */
     public function apply($query)
     {
-        if (! empty($this->filter_type))
+        if (! empty($this->filter_type)) {
             $query->where('entity_type', $this->filter_type);
+        }
 
         // apply a dummy filter which will always return no result if we don't have any driver provided
         return is_null($this->connector_driver) ?

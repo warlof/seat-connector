@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Http\Controllers;
@@ -29,13 +29,11 @@ use Warlof\Seat\Connector\Drivers\Driver;
 
 /**
  * Class SettingsController.
- *
- * @package Warlof\Seat\Connector\Http\Controllers
  */
 class SettingsController extends Controller
 {
     /**
-     * return array
+     * return array.
      */
     const ALLOWED_COMMANDS = [
         'seat-connector:sync:sets',
@@ -45,6 +43,7 @@ class SettingsController extends Controller
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
      */
@@ -61,8 +60,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function update(Request $request)
@@ -82,7 +82,7 @@ class SettingsController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      */
     public function dispatch(Request $request)
     {
@@ -93,17 +93,19 @@ class SettingsController extends Controller
             'driver'  => sprintf('in:%s', implode(',', $drivers)),
         ]);
 
-        $arguments      = [];
+        $arguments = [];
         $command_string = explode(' ', $request->input('command'));
-        $command        = Arr::first($command_string);
+        $command = Arr::first($command_string);
 
         // add requested driver filter to command arguments, if any
-        if (! empty($request->input('driver')))
+        if (! empty($request->input('driver'))) {
             $arguments['--driver'][0] = $request->input('driver');
+        }
 
         // add terminator option to command arguments, if any
-        if (count($command_string) > 1)
+        if (count($command_string) > 1) {
             $arguments['--terminator'] = true;
+        }
 
         Artisan::call($command, $arguments);
     }
