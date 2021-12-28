@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Commands;
@@ -27,8 +27,6 @@ use Warlof\Seat\Connector\Exceptions\UnknownDriverException;
 
 /**
  * Class DriverApplyPolicies.
- *
- * @package Warlof\Seat\Connector\Commands
  */
 class DriverApplyPolicies extends Command
 {
@@ -54,33 +52,37 @@ class DriverApplyPolicies extends Command
         $drivers = collect(array_keys(config('seat-connector.drivers')));
         $terminator = $this->option('terminator') ?: false;
 
-        if ($drivers->isEmpty())
+        if ($drivers->isEmpty()) {
             throw new MissingDriverException('No SeAT Connector drivers has been found.' . PHP_EOL .
                 'Please install at least one driver in order to be able to use this command.');
+        }
 
         // request user confirmation before queuing jobs
         if (empty($drivers_parameter)) {
             if (app()->runningInConsole()) {
-                if (!$this->confirm('Sets from all installed drivers will be synchronized. Do you wish to continue?', true))
+                if (! $this->confirm('Sets from all installed drivers will be synchronized. Do you wish to continue?', true)) {
                     return;
+                }
             }
         } else {
             if (app()->runningInConsole()) {
-                if (!$this->confirm(
+                if (! $this->confirm(
                     sprintf('Sets from %s driver(s) will be synchronized. Do you wish to continue?',
-                        implode(',', $drivers_parameter)), true))
+                        implode(',', $drivers_parameter)), true)) {
                     return;
+                }
             }
 
             // ensure all provided drivers are valid
-            if ($drivers->intersect($drivers_parameter)->count() != count($drivers_parameter))
+            if ($drivers->intersect($drivers_parameter)->count() != count($drivers_parameter)) {
                 throw new UnknownDriverException();
+            }
         }
 
         foreach ($drivers as $driver) {
-
-            if (! empty($drivers_parameter) && ! in_array($driver, $drivers_parameter))
+            if (! empty($drivers_parameter) && ! in_array($driver, $drivers_parameter)) {
                 continue;
+            }
 
             dispatch(new \Warlof\Seat\Connector\Jobs\DriverApplyPolicies($driver, $terminator))->onQueue('high');
             $this->info(sprintf('A new Policy job has been enqueue for driver %s', $driver));

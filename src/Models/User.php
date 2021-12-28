@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Models;
@@ -28,8 +28,6 @@ use Seat\Web\Models\User as SeatUser;
 
 /**
  * Class User.
- *
- * @package Warlof\Seat\Connector\Models
  */
 class User extends Model
 {
@@ -75,8 +73,9 @@ class User extends Model
     }
 
     /**
-     * @param string $set_id
+     * @param  string  $set_id
      * @return bool
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function isAllowedSet(string $set_id): bool
@@ -86,6 +85,7 @@ class User extends Model
 
     /**
      * @return array
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function allowedSets(): array
@@ -94,11 +94,13 @@ class User extends Model
 
         $active_tokens = $this->user->refresh_tokens;
 
-        if (empty($active_tokens) || ($strict_mode && ! $this->areAllTokensValid()) || ! $this->isEnabledAccount())
+        if (empty($active_tokens) || ($strict_mode && ! $this->areAllTokensValid()) || ! $this->isEnabledAccount()) {
             return [];
+        }
 
-        if (! empty($this->allowed_sets))
+        if (! empty($this->allowed_sets)) {
             return $this->allowed_sets;
+        }
 
         $rows = $this->getUserSets()
             ->union($this->getRoleSets())
@@ -220,14 +222,16 @@ class User extends Model
 
     /**
      * @return string
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     public function buildConnectorNickname(): string
     {
         $character = $this->user->main_character;
 
-        if (is_null($character->name))
+        if (is_null($character->name)) {
             $character = $this->user->characters->first();
+        }
 
         $nickname = $this->user->name;
 

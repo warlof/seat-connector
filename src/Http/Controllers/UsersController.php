@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Http\Controllers;
@@ -32,8 +32,6 @@ use Warlof\Seat\Connector\Models\User;
 
 /**
  * Class UsersController.
- *
- * @package Warlof\Seat\Connector\Http\Controllers
  */
 class UsersController extends Controller
 {
@@ -54,7 +52,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(int $id)
@@ -62,17 +60,19 @@ class UsersController extends Controller
         // attempt to retrieve requested identity
         $identity = User::find($id);
 
-        if (is_null($identity))
+        if (is_null($identity)) {
             return redirect()->back()
                 ->with('error', 'An error occurred attempting to delete the user mapping. Identity is not found.');
+        }
 
         // load driver instance
         $config_key = sprintf('seat-connector.drivers.%s.client', $identity->connector_type);
         $client = config($config_key);
 
-        if (is_null($config_key) || ! class_exists($client))
+        if (is_null($config_key) || ! class_exists($client)) {
             return redirect()->back()
                 ->with('error', sprintf('The client for driver %s is missing.', $identity->connector_type));
+        }
 
         try {
             $instance = $client::getInstance();
@@ -90,7 +90,7 @@ class UsersController extends Controller
 
             // remove user identity
             $identity->delete();
-        } catch (InvalidDriverIdentityException | DriverSettingsException $e) {
+        } catch (InvalidDriverIdentityException|DriverSettingsException $e) {
             $identity->delete();
         } catch (DriverException $e) {
             return redirect()->back()
