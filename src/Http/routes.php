@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 Route::group([
     'namespace' => 'Warlof\Seat\Connector\Http\Controllers',
 ], function () {
-
     Route::group([
         'prefix'     => 'seat-connector',
         'middleware' => ['web', 'auth', 'locale'],
     ], function () {
-
         Route::get('/identities')
             ->name('seat-connector.identities')
             ->uses('IdentitiesController@index')
@@ -36,7 +34,6 @@ Route::group([
         Route::group([
             'middleware' => 'can:global.superuser',
         ], function () {
-
             Route::get('/settings')
                 ->name('seat-connector.settings')
                 ->uses('SettingsController@index');
@@ -53,7 +50,6 @@ Route::group([
         Route::group([
             'middleware' => 'can:seat-connector.security',
         ], function () {
-
             Route::get('/users')
                 ->name('seat-connector.users')
                 ->uses('UsersController@index');
@@ -77,7 +73,6 @@ Route::group([
             Route::group([
                 'prefix' => 'api',
             ], function () {
-
                 Route::get('/roles')
                     ->name('seat-connector.api.roles')
                     ->uses('LookupController@getRoles');
@@ -94,13 +89,11 @@ Route::group([
                     ->name('seat-connector.api.sets')
                     ->uses('LookupController@getSets');
             });
-
         });
 
         Route::group([
             'middleware' => 'can:seat-connector.logs_review',
         ], function () {
-
             Route::get('/logs')
                 ->name('seat-connector.logs')
                 ->uses('LogsController@index');
@@ -109,7 +102,6 @@ Route::group([
                 ->name('seat-connector.logs.destroy')
                 ->uses('LogsController@destroy');
         });
-
     });
 
     Route::group([
@@ -117,22 +109,15 @@ Route::group([
         'middleware' => ['api.request', 'api.auth'],
         'prefix'     => 'api',
     ], function () {
-
         Route::group([
             'namespace' => 'V2',
             'prefix'    => 'v2',
         ], function () {
-
             Route::group([
                 'prefix' => 'seat-connector',
             ], function () {
-
                 Route::get('/users', 'UserController@index');
-
             });
-
         });
-
     });
-
 });

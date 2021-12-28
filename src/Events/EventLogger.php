@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Events;
 
 /**
  * Class EventLogger.
- *
- * @package Warlof\Seat\Connector\Events
  */
 class EventLogger
 {
@@ -51,16 +49,16 @@ class EventLogger
     /**
      * EventLogger constructor.
      *
-     * @param string $driver
-     * @param string $level
-     * @param string $category
-     * @param string $message
+     * @param  string  $driver
+     * @param  string  $level
+     * @param  string  $category
+     * @param  string  $message
      */
     public function __construct(string $driver, string $level, string $category, string $message)
     {
-        $this->driver   = $driver;
-        $this->level    = $level;
+        $this->driver = $driver;
+        $this->level = $level;
         $this->category = $category;
-        $this->message  = $message;
+        $this->message = $message;
     }
 }

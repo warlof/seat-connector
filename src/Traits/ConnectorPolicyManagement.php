@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Traits;
@@ -27,14 +27,13 @@ use Warlof\Seat\Connector\Models\User;
 
 /**
  * Trait ConnectorPolicyManagement.
- *
- * @package Warlof\Seat\Connector\Traits
  */
 trait ConnectorPolicyManagement
 {
     /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param \Warlof\Seat\Connector\Drivers\IUser $identity
+     * @param  \Warlof\Seat\Connector\Models\User  $profile
+     * @param  \Warlof\Seat\Connector\Drivers\IUser  $identity
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
@@ -55,8 +54,9 @@ trait ConnectorPolicyManagement
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param \Warlof\Seat\Connector\Drivers\IUser $identity
+     * @param  \Warlof\Seat\Connector\Models\User  $profile
+     * @param  \Warlof\Seat\Connector\Drivers\IUser  $identity
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
@@ -65,8 +65,9 @@ trait ConnectorPolicyManagement
         $new_nickname = $profile->buildConnectorNickname();
 
         // identity nick is already up-to-date - we have nothing to do here
-        if ($identity->getName() == $new_nickname)
+        if ($identity->getName() == $new_nickname) {
             return;
+        }
 
         if ($identity->setName($new_nickname)) {
             $profile->connector_name = $identity->getName();
@@ -79,9 +80,10 @@ trait ConnectorPolicyManagement
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param \Warlof\Seat\Connector\Drivers\ISet[] $sets
+     * @param  \Warlof\Seat\Connector\Models\User  $profile
+     * @param  \Warlof\Seat\Connector\Drivers\ISet[]  $sets
      * @return \Illuminate\Support\Collection
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     private function getDroppableSets(User $profile, array $sets)
@@ -89,43 +91,48 @@ trait ConnectorPolicyManagement
         $pending_drops = collect();
 
         foreach ($sets as $set) {
-            if ($this->terminator || ! $profile->isAllowedSet($set->getId()))
+            if ($this->terminator || ! $profile->isAllowedSet($set->getId())) {
                 $pending_drops->push($set->getId());
+            }
         }
 
         return $pending_drops;
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param array $sets
+     * @param  \Warlof\Seat\Connector\Models\User  $profile
+     * @param  array  $sets
      * @return \Illuminate\Support\Collection
+     *
      * @throws \Seat\Services\Exceptions\SettingException
      */
     private function getGrantableSets(User $profile, array $sets)
     {
         $pending_adds = collect();
 
-        if ($this->terminator)
+        if ($this->terminator) {
             return $pending_adds;
+        }
 
         $allowed_sets = $profile->allowedSets();
 
         foreach ($allowed_sets as $set_id) {
             if (empty(array_filter($sets, function ($set) use ($set_id) {
                 return $set->getId() == $set_id;
-            })))
+            }))) {
                 $pending_adds->push($set_id);
+            }
         }
 
         return $pending_adds;
     }
 
     /**
-     * @param \Warlof\Seat\Connector\Drivers\IUser $identity
-     * @param \Warlof\Seat\Connector\Models\User $profile
-     * @param array $pending_adds
-     * @param array $pending_drops
+     * @param  \Warlof\Seat\Connector\Drivers\IUser  $identity
+     * @param  \Warlof\Seat\Connector\Models\User  $profile
+     * @param  array  $pending_adds
+     * @param  array  $pending_drops
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\DriverException
      */
     private function updateUserSets(IUser $identity, User $profile, array $pending_adds, array $pending_drops)

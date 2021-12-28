@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2019, 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Drivers;
@@ -27,8 +27,6 @@ use Warlof\Seat\Connector\Exceptions\MissingDriverSettingsField;
 
 /**
  * Class Driver.
- *
- * @package Warlof\Seat\Connector\Drivers
  */
 class Driver
 {
@@ -55,20 +53,22 @@ class Driver
     /**
      * Driver constructor.
      *
-     * @param array $config
+     * @param  array  $config
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
      */
     public function __construct(array $config)
     {
         $this->checkStructure($config);
 
-        $this->name     =  $config['name'];
-        $this->icon     =  $config['icon'];
-        $this->client   =  $config['client'];
+        $this->name = $config['name'];
+        $this->icon = $config['icon'];
+        $this->client = $config['client'];
         $this->settings = collect();
 
-        foreach ($config['settings'] as $field)
+        foreach ($config['settings'] as $field) {
             $this->settings->push(new Field($this->name, $field));
+        }
     }
 
     /**
@@ -113,7 +113,8 @@ class Driver
     }
 
     /**
-     * @param array $structure
+     * @param  array  $structure
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverException
      */
     private function checkStructure(array $structure)
@@ -133,8 +134,9 @@ class Driver
     }
 
     /**
-     * @param array $schema
-     * @param array $structure
+     * @param  array  $schema
+     * @param  array  $structure
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsType
      * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverSettingsField
@@ -142,14 +144,15 @@ class Driver
     private function validate(array $schema, array $structure)
     {
         foreach ($schema as $element => $component) {
-
-            if (is_int($element))
+            if (is_int($element)) {
                 $element = $component;
+            }
 
             $property = $this->validateNode($element, $structure);
 
-            if (! is_array($component))
+            if (! is_array($component)) {
                 continue;
+            }
 
             foreach ($component as $sub_element) {
                 foreach ($structure[$property] as $value) {
@@ -160,33 +163,37 @@ class Driver
     }
 
     /**
-     * @param string $node
+     * @param  string  $node
      * @param $value
      * @return mixed
+     *
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsException
      * @throws \Warlof\Seat\Connector\Exceptions\InvalidDriverSettingsType
      * @throws \Warlof\Seat\Connector\Exceptions\MissingDriverSettingsField
      */
     private function validateNode(string $node, $value)
     {
-        $parts    = explode(':', $node);
+        $parts = explode(':', $node);
         $property = $parts[0];
-        $type     = $parts[1];
+        $type = $parts[1];
 
-        if (! array_key_exists($property, $value))
+        if (! array_key_exists($property, $value)) {
             throw new MissingDriverSettingsField(sprintf('The property %s is missing.', $property));
+        }
 
-        if (! $this->is($type, $value[$property]))
+        if (! $this->is($type, $value[$property])) {
             throw new InvalidDriverSettingsType(sprintf('The property %s must be of type %s.', $property, $type));
+        }
 
-        if (is_null($value) || empty($value))
+        if (is_null($value) || empty($value)) {
             throw new InvalidDriverSettingsException(sprintf('The property %s is mandatory.', $property));
+        }
 
         return $property;
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      * @param $value
      * @return bool
      */
@@ -195,11 +202,15 @@ class Driver
         $method = sprintf('is_%s', $type);
 
         switch (true) {
-            case ($type == 'class'):
-                if (! is_string($value)) return false;
+            case $type == 'class':
+                if (! is_string($value)) {
+                    return false;
+                }
+
                 return class_exists($value, true);
-            case (strpos($type, 'enum') === 0):
+            case strpos($type, 'enum') === 0:
                 $types = explode(',', substr($type, 5, -1));
+
                 return in_array($value, $types);
                 break;
             default:

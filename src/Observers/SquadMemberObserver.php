@@ -1,9 +1,9 @@
 <?php
 
-/**
+/*
  * This file is part of seat-connector and provides user synchronization between both SeAT and third party platform
  *
- * Copyright (C) 2020  Loïc Leuilliot <loic.leuilliot@gmail.com>
+ * Copyright (C) 2019 to 2022 Loïc Leuilliot <loic.leuilliot@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace Warlof\Seat\Connector\Observers;
@@ -27,14 +27,11 @@ use Warlof\Seat\Connector\Jobs\NotifyDriver;
 
 /**
  * Class SquadMemberObserver.
- *
- * @package Warlof\Seat\Connector\Observers
  */
 class SquadMemberObserver
 {
-
     /**
-     * @param \Seat\Web\Models\Squads\SquadMember $member
+     * @param  \Seat\Web\Models\Squads\SquadMember  $member
      */
     public function created(SquadMember $member)
     {
@@ -42,7 +39,7 @@ class SquadMemberObserver
     }
 
     /**
-     * @param \Seat\Web\Models\Squads\SquadMember $member
+     * @param  \Seat\Web\Models\Squads\SquadMember  $member
      */
     public function updated(SquadMember $member)
     {
@@ -50,7 +47,7 @@ class SquadMemberObserver
     }
 
     /**
-     * @param \Seat\Web\Models\Squads\SquadMember $member
+     * @param  \Seat\Web\Models\Squads\SquadMember  $member
      */
     public function deleted(SquadMember $member)
     {
@@ -58,7 +55,7 @@ class SquadMemberObserver
     }
 
     /**
-     * @param \Seat\Web\Models\Squads\SquadMember $member
+     * @param  \Seat\Web\Models\Squads\SquadMember  $member
      */
     private function handle(SquadMember $member)
     {
@@ -67,8 +64,9 @@ class SquadMemberObserver
             ->where('id', $member->user_id)
             ->first();
 
-        if (! $user)
+        if (! $user) {
             return;
+        }
 
         dispatch(new NotifyDriver($user));
     }
