@@ -69,7 +69,7 @@ class User extends Model
      */
     public function areAllTokensValid(): bool
     {
-        return $this->user->refresh_tokens->count() == $this->user->all_characters->count();
+        return $this->user->refresh_tokens->count() == $this->user->all_characters()->count();
     }
 
     /**
