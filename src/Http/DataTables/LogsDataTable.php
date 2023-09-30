@@ -21,6 +21,7 @@
 
 namespace Warlof\Seat\Connector\Http\DataTables;
 
+use Illuminate\Http\JsonResponse;
 use Warlof\Seat\Connector\Models\Log;
 use Yajra\DataTables\Services\DataTable;
 
@@ -34,7 +35,7 @@ class LogsDataTable extends DataTable
      *
      * @throws \Exception
      */
-    public function ajax()
+    public function ajax(): JsonResponse
     {
         return datatables()
             ->eloquent($this->applyScopes($this->query()))
