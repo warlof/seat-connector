@@ -21,6 +21,7 @@
 
 namespace Warlof\Seat\Connector\Http\DataTables;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Seat\Eveapi\Models\Alliances\Alliance;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
@@ -30,7 +31,6 @@ use Seat\Web\Models\Squads\Squad;
 use Seat\Web\Models\User;
 use Warlof\Seat\Connector\Models\Set;
 use Yajra\DataTables\Services\DataTable;
-use Illuminate\Http\JsonResponse;
 
 /**
  * Class AccessDataTable.

@@ -21,9 +21,9 @@
 
 namespace Warlof\Seat\Connector\Http\DataTables;
 
+use Illuminate\Http\JsonResponse;
 use Warlof\Seat\Connector\Models\User;
 use Yajra\DataTables\Services\DataTable;
-use Illuminate\Http\JsonResponse;
 
 /**
  * Class UserMappingDataTable.
